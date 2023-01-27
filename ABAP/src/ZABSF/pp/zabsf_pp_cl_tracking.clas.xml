@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_TRACKING</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Rastreabilidade</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CALCULATE_NUMBER_OF_BATCHES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Cálcular nº de lotes</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONVERT_CHAR_VALUE_TO_INTERNAL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Conver valor da caracteristica no formato interno</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONVERT_TO_MEINS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Converter para UMB</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONVERT_TO_UNITS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Converter em unidades</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>COPY_CHARS_TO_NEW_BATCH</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Copiar caracteristicas para o novo lote</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_BATCH</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Criar lote</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NEXT_BATCH_NUMBERS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter próximo nº de lote</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NEXT_SEQUENCE_NUMBER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter próximo nº do sequenciador</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>UPDATE_SEQUENCE_TABLE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Actualizar tabela de sequenciador</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

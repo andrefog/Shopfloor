@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZABSF_PP_E_QTDRPOINT</ROLLNAME>
+    <DDLANGUAGE>P</DDLANGUAGE>
+    <DOMNAME>MENG13</DOMNAME>
+    <HEADLEN>31</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>17</SCRLEN2>
+    <SCRLEN3>31</SCRLEN3>
+    <DDTEXT>Shopfloor - Quantidade ponto de contagem anterior</DDTEXT>
+    <REPTEXT>Qtd. ponto de contagem anterior</REPTEXT>
+    <SCRTEXT_S>Qtd.Pc.Ant</SCRTEXT_S>
+    <SCRTEXT_M>Qtd. Pc. anteiror</SCRTEXT_M>
+    <SCRTEXT_L>Qtd. ponto de contagem anterior</SCRTEXT_L>
+    <DTELMASTER>P</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

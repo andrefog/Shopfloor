@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZABSF_PP_E_FLAG_FORM</ROLLNAME>
+    <DDLANGUAGE>P</DDLANGUAGE>
+    <DOMNAME>ZABSF_PP_D_FLAG_FORM</DOMNAME>
+    <HEADLEN>29</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>20</SCRLEN2>
+    <SCRLEN3>29</SCRLEN3>
+    <DDTEXT>Shopfloor - Indicação de outro formulário</DDTEXT>
+    <REPTEXT>Indicação de outro formulário</REPTEXT>
+    <SCRTEXT_S>Ind.OtForm</SCRTEXT_S>
+    <SCRTEXT_M>Ind.Outro formuláriO</SCRTEXT_M>
+    <SCRTEXT_L>Indicação de outro formulário</SCRTEXT_L>
+    <DTELMASTER>P</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

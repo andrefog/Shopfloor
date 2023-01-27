@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_WAIT_ENQUEUE</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Metodos para espera de objetos de bloqueios</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>WAIT_FOR_DEQUEUE_MAT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Espera por desbloqueio de material</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WAIT_FOR_DEQUEUE_ORD</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Espera por desbloqueio de Ordem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>WAIT_FOR_DEQUEUE_RES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Espera por desbloqueio de Reserva</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

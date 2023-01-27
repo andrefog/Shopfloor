@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_ABSF_MOB</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Classe Mobilidade Shopfloor</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_HU_AND_DELIVERY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Verificar se todos os materiais na HU estão na delivery</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_RECEIVED_QUANTITY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter qtd rececionada</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>PRINT_MOVEMENTS_LABEL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Impressão de etiqueta recepçao, transferencia e devolução</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>PRINT_TRANSFER_LABEL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Impressão de etiqueta de transferência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TY_BATCHES_RNG</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Tabela de transferência para SAPLMBIN - lotes/seleç.estoques</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

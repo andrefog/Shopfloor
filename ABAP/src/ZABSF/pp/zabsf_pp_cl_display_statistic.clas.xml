@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_DISPLAY_STATISTIC</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Visualizar dados estatisticos</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>AJUST_TIME_INTERVAL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Ajustar intervalo de horas e calcula capacidade do intervalo</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Construtor</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>DISPLAY_LCD</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtem dados estatisticos do Indicadores OEE</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>DISPLAY_REPORTS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém relatórios gerados</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_CAPACITY_TIME</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter Tempo Total de Capacidades</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_FILTER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtem filtros</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STOPS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter paragens</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INPUTOBJ</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica nova data de referência de seleção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TY_R_ARBPL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Centro de Trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TY_R_AREA</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Area</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TY_R_HNAME</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Nome da hierarquia</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TY_R_SHIFT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Turnos</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TY_T_DATES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Datas</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

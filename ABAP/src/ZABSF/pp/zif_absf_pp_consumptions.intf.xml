@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>ZIF_ABSF_PP_CONSUMPTIONS</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Consumos</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>X</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_CONSUM_MATNR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indicar consumos de Material</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_CONSUM_ORDER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indicar consumos de Ordem de Produção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_BATCH_CONSUMED</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter lotes consumido na Ficha</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_COMPONENTS_MATNR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém componentes com Material</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_COMPONENTS_ORDER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém componentes com Ordem de Produção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REM_COMPONENTS_ORDER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Remover Componentes da Ordem de Produção</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_SXCI" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <SXCI>
+    <IMPLEMENTATION_DATA>
+     <IMP_NAME>ZABSF_PM_BREAKD_CALC</IMP_NAME>
+     <TEXT>Shopfloor PM - Calcular tempo de breakdown ao encerrar a not</TEXT>
+     <IMP_CLASS>ZCL_IM_ABSF_PM_BREAKD_CALC</IMP_CLASS>
+     <EXIT_NAME>NOTIF_EVENT_SAVE</EXIT_NAME>
+     <INTER_NAME>IF_EX_NOTIF_EVENT_SAVE</INTER_NAME>
+     <ACTIVE>X</ACTIVE>
+    </IMPLEMENTATION_DATA>
+    <FILTERS>
+     <item>
+      <FLT_VAL>M1</FLT_VAL>
+     </item>
+     <item>
+      <FLT_VAL>M2</FLT_VAL>
+     </item>
+     <item>
+      <FLT_VAL>S3</FLT_VAL>
+     </item>
+    </FILTERS>
+   </SXCI>
+  </asx:values>
+ </asx:abap>
+</abapGit>

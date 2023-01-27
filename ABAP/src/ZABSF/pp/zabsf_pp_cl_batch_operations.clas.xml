@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_BATCH_OPERATIONS</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Operações de Lote</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>ARBPL_PRINT_ST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados para impressão (Centros de trabalho)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_BATCH_STOCK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Check stock for batch</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_BATCH_STOCK_RPACK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Check stock for batch Repack</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CLOSE_BATCH</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Close Batch</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Construtor</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_BATCH</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Batch Number</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INPUTOBJ</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>RETREIVE_BATCH</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Retreive Batch</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

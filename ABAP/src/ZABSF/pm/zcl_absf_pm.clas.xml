@@ -1,0 +1,403 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_ABSF_PM</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Classe Utilitaires ShopFloor Maintenance</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>ADD_CAUSE_TO_NOTITEM</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Add Cause to Notification Item</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>ADD_MESSAGE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Adds messages to a BAPIRET2 structure</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>ADD_NOTIF_ITEM</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Add Notification Item</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CALC_MINUTES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Processing minutes calculation</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHANGE_EQUIPMENT_STATUS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Change equipment status</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHANGE_EQUI_STATUS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Change Status of Equipment (Sorgal)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHANGE_MOULDE_LOCATION</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Change mold location</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHANGE_NOTIF</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Change/Close maintenance notification</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHANGE_NOTIF_ITEM</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Change Notification Item</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHANGE_ORDER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Change Order</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHANGE_ORDER_EQUIPMENT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Change order equipment</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_IF_MOULDE_IS_CLEAN</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Check if mold is clean to install</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_MOULDE_CHARACTS_EQUIP</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Check if necessary equipment is installed on the machine</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_ORDER_PM_ACTIVITY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Check if it is necessary to change type of order&apos;s activity</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONV_SPOOL_LIST_2_TABLE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Convert spool  list to internal table</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_CONSUMPTIONS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Create consumptions</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_MAINTENANCE_NOTIF</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Create maintenance notification</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_PM_ORDER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Create maintenance order through notification request</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_PR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Create Purchase Requisition (Sorgal)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>DELETE_CAUSE_OF_NOTITEM</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor PM - Delete Cause of Notification Item</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>DELETE_NOTIF_ITEM</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Delete Notification Item</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_CONC</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Activiity</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_CONC_PARC</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Activiity</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_START</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Activiity</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ATTACHMENTS_LIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Attachements List</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ATTACHMENT_FILE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Attachment File</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_BUSINESS_AREA_LIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get business area list</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_CATALOG_CODES_LIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get catalog codes</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_CHECKLIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get checklist</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_CONSUMPTIONS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get consumptions</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_CONTRACTS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Contracts</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_EQUIPMENTS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get equipment list</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_EQUIPMENT_LIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Equipments List</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_EQUIPMENT_TREE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Equipment By Functional Location Tree</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_FUNC_LOCATIONS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get list of functional locations</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_FUNC_LOCATIONS_TREE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Func Locations Tree</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_HR_USERLIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get HR Users List</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_LOCATIONS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get locations</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_MACHINE_SUBEQUIP</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get machine sub-equipment</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_MAINTENANCE_HISTORY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get maintenance history</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_MATERIALS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get list of materials</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_MATERIALS_STOCK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get materials stock</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_MOULDES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get all molds</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_MOULDE_LOCATION</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get mold location</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NOTIFICATION</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get notifications</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NOTIFICATIONS_LIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get notifications list</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NOTIFS_STATUS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Order Status</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NOTIF_CAUSES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get causes and subcauses for notifications</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_NOTIF_TYPES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get notifications types list</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_OPERATOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get operator associated to order</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ORDERS_STATUS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Order Status</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ORDERS_TO_ASSOCIATE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get orders to associate to notification</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ORDER_DETAIL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get order detail</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ORDER_HEADER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get header data from PM order</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ORDER_TYPES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get order types</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PARAMETER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get global config parameter</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PM_ACTIVITIES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get PM activity types</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PM_ORDERS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get list of orders</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PM_ORDERS_MOULD_EXCHANGE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get list of orders</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PM_PLANNER_GROUPS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Maintenance planner groups</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PRIORITIES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Priorities By Priority Type</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PRIORITY_CALC</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Priority Calculation</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_RESP_USERLIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Responsables user list</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_SALES_DOCS_LIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Sales Documents List</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STAGES_MOULDEXCH</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get stages in Mould replacement orders</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_VARIANTS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get equipment list</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_WORKCENTERS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get responsible workstations</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INSTALL_EQUIPMENT_ON_MACHINE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Install equipment on machine</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>OPRID_STATUS_ACTIVE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Status</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>OPRID_STATUS_INACTIVE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Status</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>PRINT_PM_ORDER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Print PM Order (Sorgal)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_CHECKLIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Set checklist</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_OPERATOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Set operator associated to order</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_ORDER_IN_NOTIFICATION</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Set order associated to notification</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_REG_TIME</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Set time records</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_ZMLD_CHECKLIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Set Stage Checklist of ZMLD orders</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>UNINSTALL_EQPMT_FROM_MACHINE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Uninstall equipment on machine</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

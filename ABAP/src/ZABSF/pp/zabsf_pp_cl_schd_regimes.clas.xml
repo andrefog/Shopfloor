@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_SCHD_REGIMES</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Schedules and Regimes</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Classe Constructor</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_INFO_FOR_PRODORDER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Schedule, Regime and Qualification</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_REGIMES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Regimes</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_SCHEDULES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Get Schedules</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Reference date</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SAVE_SCHEDULES_AND_REGIMES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Update ZLP_PP_SF065 with new values</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

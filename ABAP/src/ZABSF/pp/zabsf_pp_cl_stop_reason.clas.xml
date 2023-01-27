@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_STOP_REASON</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Causas de Paragem</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Constructor</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>C_MIN</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Unidade de Pausa</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STOP_REASON_OPR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém pausas de paragem por centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STOP_REASON_WRK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica causa de paragem por centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INPUTOBJ</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica nova data de referência de seleção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_STOP_REASON_OPR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém pausas de paragem por centro de trabalho e operação</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_STOP_REASON_WRK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica causa de paragem por centro de trabalho e operação</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STATUS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Status individual de um objeto</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STSMA</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Esquema de status</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

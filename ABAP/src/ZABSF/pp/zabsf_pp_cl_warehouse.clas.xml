@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_WAREHOUSE</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Armazém</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Construtor</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_DEFECTS_WARE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém defeitos por Armazém</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ORDER_TO_CONF</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Obtém ordens para Movimento de Mercadorias</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STOCK_WAREHOUSE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém stocks dos Armazens</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_WAREHOUSES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém Armazens virtuais</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_WAREHOUSES_DETAIL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém detalhe do Armazens virtual</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INPUTOBJ</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_QUALITY_WARE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indicar qualidade no Armazem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica nova data de referência de seleção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TIPO_ORDEM</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Tipo de Ordem</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

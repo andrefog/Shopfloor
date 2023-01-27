@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_INTF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOINTERF>
+    <CLSNAME>ZIF_ABSF_PP_STATUS</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Status</DESCRIPT>
+    <EXPOSURE>2</EXPOSURE>
+    <STATE>1</STATE>
+    <UNICODE>X</UNICODE>
+   </VSEOINTERF>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STATUS_ORD</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtem status da Ordem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STATUS_VORNR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtem status da Operação</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_STATUS_WRK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtem status do Centro de Trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica nova data de referência de seleção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_STATUS_ORD</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica status da Ordem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_STATUS_VORNR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica status da Operação</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_STATUS_WRK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica status do Centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

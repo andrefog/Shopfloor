@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_REWORK</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Rework</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Constructor</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_ORDER_REWORK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Criar Ordem Rework</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_DEFECTS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém defeitos</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_DEFECTS_LIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém lista de defeitos e sucata</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_OPERATOR_REWORK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtem Operador Rework</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INPUTOBJ</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_QUANTITY_REWORK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica quantidade de Rework e Sucata</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_QUANTITY_SCRAP</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica quantidade de Sucata</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica nova data de referência de seleção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>TIPO_ORDEM</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Tipo de Ordem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>UPDATE_ORDER_REWORK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Update da quantidade da ordem de rework</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

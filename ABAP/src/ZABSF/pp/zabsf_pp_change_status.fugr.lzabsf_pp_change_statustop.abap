@@ -1,0 +1,3 @@
+FUNCTION-POOL ZABSF_PP_CHANGE_STATUS.         "MESSAGE-ID ..
+
+* INCLUDE LZAB_PP_CHANGE_STATUSD...          " Local class definition

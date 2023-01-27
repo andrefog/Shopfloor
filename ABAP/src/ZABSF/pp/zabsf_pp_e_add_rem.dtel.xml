@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZABSF_PP_E_ADD_REM</ROLLNAME>
+    <DDLANGUAGE>P</DDLANGUAGE>
+    <DOMNAME>ZABSF_PP_D_ADD_REM</DOMNAME>
+    <HEADLEN>29</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>19</SCRLEN2>
+    <SCRLEN3>29</SCRLEN3>
+    <DDTEXT>Shopfloor - Adicionar ou Remover Material</DDTEXT>
+    <REPTEXT>Adicionar ou Remover Material</REPTEXT>
+    <SCRTEXT_S>Adic./Rem.</SCRTEXT_S>
+    <SCRTEXT_M>Adic. ou Rem. mater</SCRTEXT_M>
+    <SCRTEXT_L>Adicionar ou Remover Material</SCRTEXT_L>
+    <DTELMASTER>P</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

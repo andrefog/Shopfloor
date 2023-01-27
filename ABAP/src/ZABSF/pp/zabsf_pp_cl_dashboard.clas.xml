@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_DASHBOARD</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Informação adicional ecrã LCD</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CALCULATE_OEE_AVAILABILITY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Calcular Disponibilidade do centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CALCULATE_OEE_INDICATORS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Calcular indicadores OEE para centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CALCULATE_OEE_PERFORMANCE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Calcular Performance e Disponibilidade do centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CALCULATE_OEE_PRODUCTIVITY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Calcular Produtividade do centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CALCULATE_OEE_QUALITY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Calcular Qualidade do centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>COMPARE_STATUS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Comparação de status ordem &lt;-&gt; Centro trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_DASHBOARD_DETAIL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter detalhe adicional dos Centros de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_HIERARCHIES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter todas as hierarquias de centros de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_OPERATORS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter operadores da ordem/operação</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_OPERATOR_MONTHLY_LOG</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter Log mensal do operador</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_WORKCENTERS_LIST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter lista de centros de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_WORKCENTER_FULL_DETAIL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter detalhes do centro de trabalho</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_WORKCENTER_SHORT_DETAIL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter detalhes do centro de trabalho - versão resumida</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INPUTOBJ</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>MAP_VALUES</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Mapeamento de valores para a tabela de saida</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

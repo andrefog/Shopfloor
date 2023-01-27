@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DTEL" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD04V>
+    <ROLLNAME>ZABSF_PP_E_SHIFT_UP</ROLLNAME>
+    <DDLANGUAGE>P</DDLANGUAGE>
+    <DOMNAME>INT4</DOMNAME>
+    <HEADLEN>35</HEADLEN>
+    <SCRLEN1>10</SCRLEN1>
+    <SCRLEN2>15</SCRLEN2>
+    <SCRLEN3>35</SCRLEN3>
+    <DDTEXT>Shopfloor - Disponibilidade do Turno(Posterior)</DDTEXT>
+    <REPTEXT>Disponibilidade do Turno(Posterior)</REPTEXT>
+    <SCRTEXT_S>DispTurnPo</SCRTEXT_S>
+    <SCRTEXT_M>DispTurnPost</SCRTEXT_M>
+    <SCRTEXT_L>Disponibilidade do Turno(Posterior)</SCRTEXT_L>
+    <DTELMASTER>P</DTELMASTER>
+    <REFKIND>D</REFKIND>
+   </DD04V>
+  </asx:values>
+ </asx:abap>
+</abapGit>

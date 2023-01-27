@@ -1,0 +1,272 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZABSF_PM</ARBGB>
+    <MASTERLANG>P</MASTERLANG>
+    <STEXT>Shopfloor PM - Mensagens</STEXT>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>000</MSGNR>
+     <TEXT>Equipamento Alterado com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>001</MSGNR>
+     <TEXT>Notificação Alterada com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>002</MSGNR>
+     <TEXT>Localização do Molde &amp; alterada com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>003</MSGNR>
+     <TEXT>Equipamento &amp; instalado na máquina &amp; com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>004</MSGNR>
+     <TEXT>Equipamento &amp; desinstalado da máquina &amp; com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>005</MSGNR>
+     <TEXT>Notificação encerrada com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>006</MSGNR>
+     <TEXT>Ordem de manutenção &amp; criada com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>007</MSGNR>
+     <TEXT>O Equipamento &amp; está instalado em máquina. Não pode ser alterado!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>008</MSGNR>
+     <TEXT>Consumo da Ordem Produção efectuado com o Documento nº &amp;.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>009</MSGNR>
+     <TEXT>Operd. principal não pode dissociar-se enquanto houver outros associados.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>010</MSGNR>
+     <TEXT>Operação concluída com sucesso.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>011</MSGNR>
+     <TEXT>Operação não concluída.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>012</MSGNR>
+     <TEXT>Não foi encontrado o utilizador &amp; no sistema.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>013</MSGNR>
+     <TEXT>Etapa iniciada com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>014</MSGNR>
+     <TEXT>Erro ao iniciar a Etapa!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>015</MSGNR>
+     <TEXT>Já existem registos posteriores à hora indicada (Último registo às &amp;)</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>016</MSGNR>
+     <TEXT>Necessário definir tipo de notificação a ser criada!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>017</MSGNR>
+     <TEXT>Notificação &amp; criada com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>018</MSGNR>
+     <TEXT>Ocorreu um erro ao realizar operação!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>019</MSGNR>
+     <TEXT>Obrigatório preencher nº da ordem e Etapa da checklist!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>020</MSGNR>
+     <TEXT>Existem etapas na checklist por confirmar.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>021</MSGNR>
+     <TEXT>Molde a instalar não está pronto!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>022</MSGNR>
+     <TEXT>Faltam equipamentos: BCF!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>023</MSGNR>
+     <TEXT>Faltam equipamentos: Bomba de vácuo!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>024</MSGNR>
+     <TEXT>Não existe utilizador SAP para o utulizador HR &amp;1!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>025</MSGNR>
+     <TEXT>Não foram encontrados dados usando a variante &amp;1!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>026</MSGNR>
+     <TEXT>Erro ao executar programa &amp;1. Verifique o log do job &amp;2!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>027</MSGNR>
+     <TEXT>Item adicionado à notificação nº &amp;1!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>028</MSGNR>
+     <TEXT>Item &amp;1 da notificação nº &amp;2 apagado com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>029</MSGNR>
+     <TEXT>Não foram efetuadas alterações!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>030</MSGNR>
+     <TEXT>Localização Funcional não existe!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>031</MSGNR>
+     <TEXT>Item &amp;1 da notificação nº &amp;2 modificado com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>032</MSGNR>
+     <TEXT>Operação não pode continuar. A Ordem e a Notificação não são compatíveis!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>033</MSGNR>
+     <TEXT>Causa adicionada ao item da Notificação nº &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>034</MSGNR>
+     <TEXT>Ordem &amp;1 alterada com sucesso!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>035</MSGNR>
+     <TEXT>Não foram encontradas Ordens para associar à Notificação nº &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>036</MSGNR>
+     <TEXT>Não existem Operações para esta Ordem!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>037</MSGNR>
+     <TEXT>Variante &amp;1 está protegida e não pode ser utilizada!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>038</MSGNR>
+     <TEXT>Garantia Vendedor - Início: &amp;1 | Fim: &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>039</MSGNR>
+     <TEXT>Garantia Fabricante - Início: &amp;1 | Fim: &amp;2</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>040</MSGNR>
+     <TEXT>Não há qualquer registo de inicio de trabalho!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>041</MSGNR>
+     <TEXT>Componentes foram adicionados á Ordem &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PM</ARBGB>
+     <MSGNR>042</MSGNR>
+     <TEXT>Ja existe um registo de inicio de trabalho!</TEXT>
+    </T100>
+   </T100>
+  </asx:values>
+ </asx:abap>
+</abapGit>

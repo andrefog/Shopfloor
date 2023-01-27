@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZABSF_PP_CL_PRDORD</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Shopfloor - Ordens de Produção</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CALCULATE_QTY_ABSOLUTE_DELTA</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Calcular quantidade a confirmar (Absoluta or Delta)</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_AVAILABLE_STOCK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Validar stock dispónivel</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_BATCH_OPEN_FOR_USE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Valida se lote está livre para uso</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_MATERIAL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Verificar existência de material</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONF_REAL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Tipo de confirmação de tempos</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONF_STAND</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Tipo de confirmação de tempos</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Construtor</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONVERT_UNIT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Converter unidades</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>FIRST_VORNR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Nº operação</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_ORDERS_REWORK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém Ordens de Produção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PROD_ORDERS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém Ordens de Produção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PROD_ORDERS_UNASSIGN</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém Ordens de Produção por associar</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_QTY_BOX</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter quantidade por caixa</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_QTY_VORNR</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obtém quantidade em curso e operaçoes em falta</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_QUALIFICATIONS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter dados Qualificação dos operadores</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_QUALI_PERNR_ACTIVE_PRDORD</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter qualificações dos operadores activos na Ord. Produção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_THEORICAL_DATA</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter tempos de ciclo teórico e quantidades teóricas</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_TOTAL_QUANTITY_COUNTER</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter quant. total (scrap e qtd. boa) desde o cnt. inicial</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>INPUTOBJ</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>MEINH_TARGET</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Unidade de medida para a exibição</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>PRDTY_DISCRET</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Tipo de Processamento</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>PRDTY_REPETITIVE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Tipo de Processamento</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SAVE_DATA_CONFIRMATION</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Guardar dados da confirmação</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_BATCH_OPEN_FOR_USE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Guarda lotes disponíveis para uso livre</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_BOX_QUANTITY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Guardar quantidade de caixa</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_QUANTITY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Registo de Quantidades da Ordem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_QUANTITY_ORD</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Registo de Quantidades da Ordem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_QUANTITY_ORD_RPACK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Registo de Quantidades da Ordem Re-Embalagem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_QUANTITY_SCRAP_RPACK</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica quantidade de Sucata Re-Embalagem</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_REFDT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indica nova data de referência de seleção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STATUS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Status individual de um objeto</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>STSMA</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Esquema de status</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
