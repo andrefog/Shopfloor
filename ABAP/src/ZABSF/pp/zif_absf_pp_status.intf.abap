@@ -35,6 +35,7 @@ interface ZIF_ABSF_PP_STATUS
       !OBJTY type J_OBART optional
       !STATUS_OPER type J_STATUS optional
       !ACTIONID type ZABSF_PP_E_ACTION optional
+      !STPRSNID type ZABSF_PP_E_STPRSNID optional
     changing
       !STATUS_OUT type J_STATUS optional
       !RETURN_TAB type BAPIRET2_T .

@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_getshift_detail .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION zabsf_pp_getshift_detail.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AREAID) TYPE  ZABSF_PP_E_AREAID OPTIONAL
 *"     VALUE(WERKS) TYPE  WERKS_D OPTIONAL
@@ -11,8 +11,7 @@ FUNCTION zabsf_pp_getshift_detail .
 *"  EXPORTING
 *"     VALUE(SHIFT_DETAIL) TYPE  ZABSF_PP_S_SHIFT_DETAIL
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-
+*"--------------------------------------------------------------------
   DATA lref_sf_shifts TYPE REF TO zabsf_pp_cl_shift.
   DATA ls_return TYPE bapiret2.
 
@@ -24,8 +23,8 @@ FUNCTION zabsf_pp_getshift_detail .
 
   CALL METHOD lref_sf_shifts->get_shift_detail
     EXPORTING
-      areaid       = inputobj-areaid "Areaid
-      werks        = inputobj-werks  "Areaid
+      areaid       = areaid "Areaid
+      werks        = werks  "Plant
       shiftid      = shiftid
     CHANGING
       shift_detail = shift_detail

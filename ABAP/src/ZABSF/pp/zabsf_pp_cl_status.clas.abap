@@ -23,6 +23,7 @@ public section.
       !METHOD type ZABSF_PP_E_METHOD
       !STATUS_OPER type J_STATUS optional
       !ACTIONID type ZABSF_PP_E_ACTION optional
+      !STPRSNID type ZABSF_PP_E_STPRSNID optional
     changing
       !STATUS_INPUT_TAB type ZABSF_PP_T_STATUS_ORD optional
       !STATUS_OUT type J_STATUS optional
@@ -119,6 +120,7 @@ METHOD status_object.
               vornr      = vornr
               objty      = objty
               actionid   = actionid
+              stprsnid   = stprsnid
             CHANGING
               status_out = status_out
               return_tab = return_tab.

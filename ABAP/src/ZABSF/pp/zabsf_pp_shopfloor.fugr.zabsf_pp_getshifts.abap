@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_getshifts.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_GETSHIFTS.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AREAID) TYPE  ZABSF_PP_E_AREAID OPTIONAL
 *"     VALUE(WERKS) TYPE  WERKS_D OPTIONAL
@@ -12,9 +12,8 @@ FUNCTION zabsf_pp_getshifts.
 *"  EXPORTING
 *"     VALUE(SHIFT_TAB) TYPE  ZABSF_PP_T_SHIFT
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-
-  DATA lref_sf_shifts TYPE REF TO zabsf_pp_cl_shift.
+*"--------------------------------------------------------------------
+DATA lref_sf_shifts TYPE REF TO zabsf_pp_cl_shift.
   DATA ls_return TYPE bapiret2.
 
   CREATE OBJECT lref_sf_shifts
@@ -35,4 +34,9 @@ FUNCTION zabsf_pp_getshifts.
       return_tab = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

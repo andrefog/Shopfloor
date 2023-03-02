@@ -4,12 +4,19 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_FLAG_DEF</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_FLAG_DEF</DOMNAME>
-    <DDTEXT>Shopfloor - Indicação de defeito (Passagem)</DDTEXT>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Indicação de defeito (Passagem)</DDTEXT>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

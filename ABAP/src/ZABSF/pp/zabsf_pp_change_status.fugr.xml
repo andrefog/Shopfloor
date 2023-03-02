@@ -10,6 +10,7 @@
    <FUNCTIONS>
     <item>
      <FUNCNAME>ZABSF_PP_SET_USER_STATUS_VORNR</FUNCNAME>
+     <SHORT_TEXT>Shopfloor - Alterar status de usuário da Operação</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>OBJNR</PARAMETER>
@@ -67,11 +68,13 @@
       <RSFDO>
        <PARAMETER>RETURN_TAB</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Return table</STEXT>
       </RSFDO>
      </DOCUMENTATION>
     </item>
     <item>
      <FUNCNAME>ZABSF_PP_SET_USER_STATUS_WRKCT</FUNCNAME>
+     <SHORT_TEXT>Shopfloor - Alterar status do Centro de Trabalho</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>OBJNR</PARAMETER>

@@ -5,10 +5,8 @@
    <DD25V>
     <VIEWNAME>ZABSF_PP_V_SF079</VIEWNAME>
     <AS4LOCAL>A</AS4LOCAL>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <AGGTYPE>V</AGGTYPE>
     <ROOTTAB>ZABSF_PP079</ROOTTAB>
-    <DDTEXT>Shopfloor - Configuração de visualização/funcionalidades</DDTEXT>
     <VIEWCLASS>C</VIEWCLASS>
     <CUSTOMAUTH>C</CUSTOMAUTH>
     <GLOBALFLAG>X</GLOBALFLAG>
@@ -123,6 +121,15 @@
      <FRKDIR>I</FRKDIR>
     </DD28J>
    </DD28J_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD25_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Configuração de visualização/funcionalidades</DDTEXT>
+    </item>
+   </DD25_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

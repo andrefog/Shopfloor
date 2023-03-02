@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_setquality_warehous.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SETQUALITY_WAREHOUS.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(WAREID) TYPE  ZABSF_PP_E_WAREID
 *"     VALUE(MATNR) TYPE  MATNR
@@ -13,8 +13,8 @@ FUNCTION zabsf_pp_setquality_warehous.
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_warehouse TYPE REF TO zabsf_pp_cl_warehouse.
+*"--------------------------------------------------------------------
+DATA lref_sf_warehouse TYPE REF TO zabsf_pp_cl_warehouse.
 
   CREATE OBJECT lref_sf_warehouse
     EXPORTING
@@ -34,4 +34,9 @@ FUNCTION zabsf_pp_setquality_warehous.
       return_tab = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

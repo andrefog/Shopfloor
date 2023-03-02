@@ -4,9 +4,7 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP_S_WRKCTR_DETAIL</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
-    <DDTEXT>Shopfloor - Detalhe de Centro de Trabalho</DDTEXT>
     <EXCLASS>4</EXCLASS>
    </DD02V>
    <DD03P_TABLE>
@@ -134,7 +132,6 @@
      <LENG>000007</LENG>
      <DECIMALS>000002</DECIMALS>
      <MASK>  DEC</MASK>
-     <DDTEXT>Nº de horas desde a mudança de status</DDTEXT>
     </DD03P>
     <DD03P>
      <FIELDNAME>PRD_SHEET_DEFECTS</FIELDNAME>
@@ -181,6 +178,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Detalhe de Centro de Trabalho</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

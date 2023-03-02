@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_batch_operations.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_BATCH_OPERATIONS.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL_PRINT_ST) TYPE  ZABSF_PP_S_ARBPL_PRINT OPTIONAL
 *"     VALUE(REFDT) TYPE  VVDATUM DEFAULT SY-DATUM
@@ -10,9 +10,8 @@ FUNCTION zabsf_pp_batch_operations.
 *"     VALUE(CREATE_AND_RETREIVE) TYPE  FLAG OPTIONAL
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-
-  DATA: l_langu   TYPE spras.
+*"--------------------------------------------------------------------
+DATA: l_langu   TYPE spras.
 
 
   DATA: lref_print            TYPE REF TO zabsf_pp_cl_print,
@@ -20,8 +19,7 @@ FUNCTION zabsf_pp_batch_operations.
 
 
 *Set local language for user
-  l_langu = inputobj-language.
-  SET LOCALE LANGUAGE l_langu.
+  l_langu = sy-langu.
 
   CREATE OBJECT lref_batch_operations
     EXPORTING
@@ -74,5 +72,9 @@ FUNCTION zabsf_pp_batch_operations.
   ENDIF.
 
   COMMIT WORK AND WAIT.
+
+
+
+
 
 ENDFUNCTION.

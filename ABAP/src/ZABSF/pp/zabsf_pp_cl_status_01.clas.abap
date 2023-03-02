@@ -5,20 +5,20 @@ class ZABSF_PP_CL_STATUS_01 definition
 
 public section.
 
-  interfaces ZIF_absf_pp_STATUS .
+  interfaces ZIF_ABSF_PP_STATUS .
 
   methods CONSTRUCTOR
     importing
       !INITIAL_REFDT type VVDATUM
-      !INPUT_OBJECT type Zabsf_pp_S_INPUTOBJECT optional .
+      !INPUT_OBJECT type ZABSF_PP_S_INPUTOBJECT optional .
 protected section.
 private section.
 
   data REFDT type VVDATUM .
-  data INPUTOBJ type Zabsf_pp_S_INPUTOBJECT .
-  constants OBJTYP_WRK type J_OBART value 'CA'. "#EC NOTEXT
-  constants OBJTYP_ORD type J_OBART value 'OR'. "#EC NOTEXT
-  constants NEW_STATUS type J_STATUS value 'AGU'. "#EC NOTEXT
+  data INPUTOBJ type ZABSF_PP_S_INPUTOBJECT .
+  constants OBJTYP_WRK type J_OBART value 'CA' ##NO_TEXT.
+  constants OBJTYP_ORD type J_OBART value 'OR' ##NO_TEXT.
+  constants NEW_STATUS type J_STATUS value 'AGU' ##NO_TEXT.
 ENDCLASS.
 
 
@@ -376,87 +376,105 @@ METHOD ZIF_ABSF_PP_STATUS~SET_STATUS_ORD.
 ENDMETHOD.
 
 
-method zif_absf_pp_status~set_status_vornr.
+METHOD zif_absf_pp_status~set_status_vornr.
 
-  data: ls_zabsf_pp084 type zabsf_pp084,
-        ls_zabsf_pp021 type zabsf_pp021.
+  DATA: ls_zabsf_pp084 TYPE zabsf_pp084,
+        ls_zabsf_pp021 TYPE zabsf_pp021.
+
+  IF stprsnid IS NOT INITIAL.
+*check IF the STOP reason exists
+    SELECT COUNT(*)
+    FROM zabsf_pp015_t AS a
+    WHERE a~arbpl EQ @arbpl
+        AND a~stprsnid EQ @stprsnid.
+
+    IF sy-subrc NE 0.
+*  Send message
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = 'E'
+          msgno      = '012'
+        CHANGING
+          return_tab = return_tab.
+    ENDIF.
+  ENDIF.
 
 *Check if exist status for operation
-  select single *
-    from zabsf_pp021
-    into @data(ls_pp_sf021)
-   where arbpl eq @arbpl
-     and aufnr eq @aufnr
-     and vornr eq @vornr.
+  SELECT SINGLE *
+    FROM zabsf_pp021
+    INTO @DATA(ls_pp_sf021)
+   WHERE arbpl EQ @arbpl
+     AND aufnr EQ @aufnr
+     AND vornr EQ @vornr.
 
-  if sy-subrc eq 0.
+  IF sy-subrc EQ 0.
 *  Get next status
-    select single status_next
-      from zabsf_pp022
-      into (@data(l_status_next))
-     where objty       eq @objty
-       and status_last eq @ls_pp_sf021-status_oper
-       and actionid    eq @actionid.
+    SELECT SINGLE status_next
+      FROM zabsf_pp022
+      INTO (@DATA(l_status_next))
+     WHERE objty       EQ @objty
+       AND status_last EQ @ls_pp_sf021-status_oper
+       AND actionid    EQ @actionid.
 
-    if sy-subrc eq 0.
+    IF sy-subrc EQ 0.
 *    Update with new status
 *      update zabsf_pp021 from @( value #( base ls_pp_sf021 status_oper = l_status_next ) ).
 
       ls_pp_sf021-status_oper = l_status_next.
-      update zabsf_pp021 from ls_pp_sf021.
+      ls_pp_sf021-stprsnid = stprsnid.
+      UPDATE zabsf_pp021 FROM ls_pp_sf021.
 
-
-      if sy-subrc ne 0.
+      IF sy-subrc NE 0.
 *      Send message
-        call method zabsf_pp_cl_log=>add_message
-          exporting
+        CALL METHOD zabsf_pp_cl_log=>add_message
+          EXPORTING
             msgty      = 'E'
             msgno      = '012'
-          changing
+          CHANGING
             return_tab = return_tab.
-      else.
+      ELSE.
 *      Save record
-        commit work and wait.
+        COMMIT WORK AND WAIT.
 
         status_out = l_status_next.
 
 *      Send message
-        call method zabsf_pp_cl_log=>add_message
-          exporting
+        CALL METHOD zabsf_pp_cl_log=>add_message
+          EXPORTING
             msgty      = 'S'
             msgno      = '013'
-          changing
+          CHANGING
             return_tab = return_tab.
-      endif.
+      ENDIF.
       "eliminiar da tabela de sequências
-      if actionid eq 'INIT'.
-        delete from zabsf_pp084 where werks = inputobj-werks
-                                  and aufnr = aufnr
-                                  and vornr = vornr
-                                  and arbpl = arbpl.
-        commit work.
-      endif.
+      IF actionid EQ 'INIT'.
+        DELETE FROM zabsf_pp084 WHERE werks = inputobj-werks
+                                  AND aufnr = aufnr
+                                  AND vornr = vornr
+                                  AND arbpl = arbpl.
+        COMMIT WORK.
+      ENDIF.
       "inserir novamente na tabela de sequências
-      if l_status_next eq 'AGU'.
+      IF l_status_next EQ 'AGU'.
         "verificar se já existe entrada na tabela
-        select single aufnr
-          from zabsf_pp084
-          into @data(lv_aufnr_var)
-          where werks eq @inputobj-werks
-            and arbpl eq @arbpl
-            and vornr eq @vornr
-            and aufnr eq @aufnr.
+        SELECT SINGLE aufnr
+          FROM zabsf_pp084
+          INTO @DATA(lv_aufnr_var)
+          WHERE werks EQ @inputobj-werks
+            AND arbpl EQ @arbpl
+            AND vornr EQ @vornr
+            AND aufnr EQ @aufnr.
         "se existir, não actualiza
-        if sy-subrc ne 0.
+        IF sy-subrc NE 0.
           "inserir ordem na tabela de sequencias
-          select max( sequence )
-            from zabsf_pp084
-            into @data(lv_sequence_var)
-            where werks eq @inputobj-werks
-              and arbpl eq @arbpl
-              and vornr eq @vornr.
+          SELECT MAX( sequence )
+            FROM zabsf_pp084
+            INTO @DATA(lv_sequence_var)
+            WHERE werks EQ @inputobj-werks
+              AND arbpl EQ @arbpl
+              AND vornr EQ @vornr.
           "incrementar uma posição
-          add 1 to lv_sequence_var.
+          ADD 1 TO lv_sequence_var.
           "inserir linha
 *          modify zabsf_pp084 from @( value #(  werks       = inputobj-werks
 *                                               arbpl       = arbpl
@@ -469,22 +487,21 @@ method zif_absf_pp_status~set_status_vornr.
           ls_zabsf_pp084-aufnr = aufnr.
           ls_zabsf_pp084-vornr = vornr.
           ls_zabsf_pp084-sequence = lv_sequence_var.
-          modify zabsf_pp084 from ls_zabsf_pp084.
+          MODIFY zabsf_pp084 FROM ls_zabsf_pp084.
 
-          commit work.
-        endif.
-      endif.
-
-    endif.
-  else.
+          COMMIT WORK.
+        ENDIF.
+      ENDIF.
+    ENDIF.
+  ELSE.
 *  Get next status
-    select single status_next
-      from zabsf_pp022
-      into @l_status_next
-     where objty       eq @objty
-       and status_last eq 'INI'"BMR - forçar que o primeiro status seja AGU em vez de INI @space
-       and status_next ne @space
-       and actionid    eq @actionid.
+    SELECT SINGLE status_next
+      FROM zabsf_pp022
+      INTO @l_status_next
+     WHERE objty       EQ @objty
+       AND status_last EQ 'INI'"BMR - forçar que o primeiro status seja AGU em vez de INI @space
+       AND status_next NE @space
+       AND actionid    EQ @actionid.
 
 *  Insert new line in database
 *    insert into zabsf_pp021 values @( value #(  arbpl       = arbpl
@@ -496,29 +513,30 @@ method zif_absf_pp_status~set_status_vornr.
     ls_zabsf_pp021-aufnr       = aufnr.
     ls_zabsf_pp021-vornr       = vornr.
     ls_zabsf_pp021-status_oper = l_status_next.
-    insert into zabsf_pp021 values ls_zabsf_pp021.
+    ls_zabsf_pp021-stprsnid = stprsnid.
+    INSERT INTO zabsf_pp021 VALUES ls_zabsf_pp021.
 
-    if sy-subrc ne 0.
+    IF sy-subrc NE 0.
 *    Send message
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '012'
-        changing
+        CHANGING
           return_tab = return_tab.
-    else.
+    ELSE.
 *    Save record
-      commit work and wait.
+      COMMIT WORK AND WAIT.
 
       "inserir ordem na tabela de sequencias
-      select max( sequence )
-        from zabsf_pp084
-        into @lv_sequence_var
-        where werks eq @inputobj-werks
-          and arbpl eq @arbpl
-          and vornr eq @vornr.
+      SELECT MAX( sequence )
+        FROM zabsf_pp084
+        INTO @lv_sequence_var
+        WHERE werks EQ @inputobj-werks
+          AND arbpl EQ @arbpl
+          AND vornr EQ @vornr.
       "incrementar uma posição
-      add 1 to lv_sequence_var.
+      ADD 1 TO lv_sequence_var.
       "inserir linha
 *      modify zabsf_pp084 from @( value #(  werks       = inputobj-werks
 *                                           arbpl       = arbpl
@@ -530,23 +548,24 @@ method zif_absf_pp_status~set_status_vornr.
       ls_zabsf_pp084-aufnr       = aufnr.
       ls_zabsf_pp084-vornr       = vornr.
       ls_zabsf_pp084-sequence    = lv_sequence_var.
-      modify zabsf_pp084 from ls_zabsf_pp084.
+      MODIFY zabsf_pp084 FROM ls_zabsf_pp084.
 
       "commit base de dados
-      commit work and wait.
+      COMMIT WORK AND WAIT.
 
       status_out = l_status_next.
 
 *    Send message
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'S'
           msgno      = '013'
-        changing
+        CHANGING
           return_tab = return_tab.
-    endif.
-  endif.
-endmethod.
+    ENDIF.
+  ENDIF.
+
+ENDMETHOD.
 
 
 METHOD zif_absf_pp_status~set_status_wrk.

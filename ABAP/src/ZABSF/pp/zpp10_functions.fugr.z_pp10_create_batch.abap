@@ -1,14 +1,13 @@
 FUNCTION Z_PP10_CREATE_BATCH.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     REFERENCE(IS_BATCH) TYPE  ZABSF_BATCH
 *"  EXPORTING
 *"     REFERENCE(EV_NEW_CHARG) TYPE  CHARG_D
 *"  TABLES
 *"      RETURN_TAB STRUCTURE  BAPIRET2
-*"----------------------------------------------------------------------
-
+*"--------------------------------------------------------------------
 *Variables
   DATA: l_batch_nr  TYPE charg_d,
         l_batch_new TYPE charg_d.
@@ -52,6 +51,8 @@ FUNCTION Z_PP10_CREATE_BATCH.
 
 *Batch created
   ev_new_charg = l_batch_new.
+
+
 
 
 

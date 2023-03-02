@@ -26,14 +26,14 @@ ENDCLASS.
 CLASS ZCL_SF_BDC IMPLEMENTATION.
 
 
-  method bdc_dynpro.
+method bdc_dynpro.
     append value #( program  = iv_program_var
                     dynpro   = iv_dynpro_var
                     dynbegin = abap_true ) to ch_bdcdata_tab.
   endmethod.
 
 
-  method bdc_field.
+method bdc_field.
     append value #( fnam = iv_fnam_var
                     fval = iv_fval_var ) to ch_bdcdata_tab.
   endmethod.

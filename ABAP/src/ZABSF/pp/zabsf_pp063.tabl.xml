@@ -4,10 +4,10 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP063</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Shopfloor - Associação Horário/Regime</DDTEXT>
+    <DDTEXT>Shopfloor - Regime associated to Work Schedule</DDTEXT>
     <MAINFLAG>X</MAINFLAG>
     <CONTFLAG>C</CONTFLAG>
     <EXCLASS>4</EXCLASS>
@@ -148,6 +148,25 @@
      <CHECKTABLE>ZABSF_PP060</CHECKTABLE>
     </DD08V>
    </DD08V_TABLE>
+   <I18N_LANGS>
+    <LANGU>F</LANGU>
+    <LANGU>P</LANGU>
+    <LANGU>S</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>F</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Regime associated to Work Schedule</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Associação Horário/Regime</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>S</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Regime associated to Work Schedule</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

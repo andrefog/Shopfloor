@@ -1,6 +1,6 @@
-function zabsf_pp_setgoodsmvt_additinal .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SETGOODSMVT_ADDITINAL.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AUFNR) TYPE  AUFNR
 *"     VALUE(COMPONENTS_ST) TYPE  ZABSF_PP_S_COMPONENTS OPTIONAL
@@ -14,7 +14,7 @@ function zabsf_pp_setgoodsmvt_additinal .
 *"     VALUE(VENDOR) TYPE  LIFNR OPTIONAL
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
 *  DATA lref_sf_prdord TYPE REF TO ZABSF_PP_CL_prdord.
 
 
@@ -112,4 +112,9 @@ function zabsf_pp_setgoodsmvt_additinal .
         changing
           return_tab             = return_tab.
   endcase.
-endfunction.
+
+
+
+
+
+ENDFUNCTION.

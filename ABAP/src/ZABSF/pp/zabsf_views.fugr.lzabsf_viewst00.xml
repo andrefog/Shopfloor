@@ -4,13 +4,8 @@
   <asx:values>
    <PROGDIR>
     <NAME>LZABSF_VIEWST00</NAME>
-    <DBAPL>S</DBAPL>
-    <DBNA>D$</DBNA>
     <SUBC>I</SUBC>
-    <APPL>S</APPL>
-    <FIXPT>X</FIXPT>
-    <LDBNAME>D$S</LDBNAME>
-    <UCCHECK>X</UCCHECK>
+    <RLOAD>E</RLOAD>
    </PROGDIR>
   </asx:values>
  </asx:abap>

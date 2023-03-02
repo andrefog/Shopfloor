@@ -7,8 +7,8 @@
 *& AUTHOR(S)      : Bruno Ribeiro - Abaco Consulting
 *& CREATED ON     : 30.03.2020
 *&---------------------------------------------------------------------*
-tables: zpp_labels_t.
-class: gcl_print_label definition deferred.
+TABLES: zpp_labels_t.
+CLASS: gcl_print_label DEFINITION DEFERRED.
 
-data: go_printlbl_obj type ref to gcl_print_label ##NEEDED,
-      go_excption_obj type ref to zcx_bc_exceptions ##NEEDED.
+DATA: go_printlbl_obj TYPE REF TO gcl_print_label ##NEEDED,
+      go_excption_obj TYPE REF TO zcx_pp_exceptions ##NEEDED.

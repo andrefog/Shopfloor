@@ -35,6 +35,7 @@ interface ZIF_ABSF_PP_OPERATOR
       !RPOINT type ZABSF_PP_E_RPOINT
       !TIME type ATIME
       !OPERATOR_TAB type ZABSF_PP_T_OPERADOR
+      !SHIFTID type ZABSF_PP_E_SHIFTID optional
     changing
       !RETURN_TAB type BAPIRET2_T .
   methods GET_OPERATOR_WRKCTR

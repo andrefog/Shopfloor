@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_MAXWRK</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>INT2</DOMNAME>
     <HEADLEN>18</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>18</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Max. de Operadores</DDTEXT>
-    <REPTEXT>Max. de Operadores</REPTEXT>
-    <SCRTEXT_S>Max.Operad</SCRTEXT_S>
-    <SCRTEXT_M>Max. de Operadores</SCRTEXT_M>
-    <SCRTEXT_L>Max. de Operadores</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Max. de Operadores</DDTEXT>
+     <REPTEXT>Max. de Operadores</REPTEXT>
+     <SCRTEXT_S>Max.Operad</SCRTEXT_S>
+     <SCRTEXT_M>Max. de Operadores</SCRTEXT_M>
+     <SCRTEXT_L>Max. de Operadores</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

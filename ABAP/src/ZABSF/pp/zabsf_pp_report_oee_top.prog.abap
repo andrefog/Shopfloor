@@ -166,8 +166,8 @@ PARAMETERS: pa_regt RADIOBUTTON GROUP r1 USER-COMMAND radio DEFAULT 'X',
 SELECTION-SCREEN: END OF BLOCK a1.
 
 SELECTION-SCREEN: BEGIN OF BLOCK a2 WITH FRAME TITLE TEXT-000.
-PARAMETERS: pa_area  TYPE zabsf_pp051-areaid DEFAULT 'PRD'OBLIGATORY,  "Area
-            pa_werks TYPE zabsf_pp051-werks DEFAULT '1010' OBLIGATORY.  "Plant
+PARAMETERS: pa_area  TYPE zabsf_pp051-areaid DEFAULT 'MEC' OBLIGATORY,  "Area
+            pa_werks TYPE zabsf_pp051-werks DEFAULT '0070' OBLIGATORY.  "Plant
 
 SELECT-OPTIONS: so_hname FOR zabsf_pp051-hname   NO INTERVALS MODIF ID sp1,  "Name of hierarchy
                 so_arbpl FOR zabsf_pp051-arbpl   NO INTERVALS MODIF ID sp1,  "Workcenter

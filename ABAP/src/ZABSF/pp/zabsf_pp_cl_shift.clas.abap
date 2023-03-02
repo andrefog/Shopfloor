@@ -95,7 +95,7 @@ method get_shifts.
   constants c_sec type i value '60'.
 
 *Set local language for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
   set locale language l_langu.
 
@@ -399,7 +399,7 @@ METHOD get_shift_detail.
   DATA: l_langu TYPE sy-langu.
 
 *Set local language for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
   SET LOCALE LANGUAGE l_langu.
 
@@ -407,8 +407,8 @@ METHOD get_shift_detail.
   SELECT SINGLE *
     INTO CORRESPONDING FIELDS OF shift_detail
     FROM zabsf_pp001
-   WHERE areaid  EQ inputobj-areaid "Areaid
-     AND werks   EQ inputobj-werks  "Werks
+   WHERE areaid  EQ areaid "Areaid
+     AND werks   EQ werks  "Werks
      AND shiftid EQ shiftid
      AND begda   LE refdt
      AND endda   GE refdt.
@@ -449,16 +449,25 @@ METHOD get_shift_detail.
         initial_refdt = refdt
         input_object  = inputobj.
 
-
     CALL METHOD lref_sf_hrchy->get_hierarchies
       EXPORTING
         areaid     = inputobj-areaid "Areaid
         werks      = inputobj-werks  "Werks
+        oprid      = inputobj-oprid  "Operator ID
         shiftid    = shiftid
       CHANGING
         hrchy_tab  = shift_detail-hrchy_tab
         return_tab = return_tab.
 
+* BEG - João Lopes - 22.12.2022
+* Areas: OPT e MTG - sort hierarchies and work centers by "KTEXT" field
+*        MEC - sort hierarchies and work centers by "ARBPL" field
+    IF areaid <> 'MEC'.
+      SORT shift_detail-hrchy_tab BY ktext.
+    ELSE.
+      SORT shift_detail-hrchy_tab BY hname.
+    ENDIF.
+* END - João Lopes - 22.12.2022
   ELSE.
 *  No Shift detail found
     CALL METHOD zabsf_pp_cl_log=>add_message

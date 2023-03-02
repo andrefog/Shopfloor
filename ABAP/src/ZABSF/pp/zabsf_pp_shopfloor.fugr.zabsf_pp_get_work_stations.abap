@@ -14,9 +14,8 @@ function zabsf_pp_get_work_stations .
         l_langu TYPE spras.
 
 *Set local language for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
-  SET LOCALE LANGUAGE l_langu.
   "obter id do ct
 *  select crhd~objid, crhd~arbpl, crhd~werks, kako~kapid, kako~name
 *    , kakt~ktext

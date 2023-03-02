@@ -4,14 +4,12 @@
   <asx:values>
    <DD40V>
     <TYPENAME>ZABSF_PP_ORDER_TIME_TT</TYPENAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <ROWTYPE>ZABSF_PP_ORDER_TIME_S</ROWTYPE>
     <ROWKIND>S</ROWKIND>
     <DATATYPE>STRU</DATATYPE>
     <ACCESSMODE>T</ACCESSMODE>
     <KEYDEF>D</KEYDEF>
     <KEYKIND>N</KEYKIND>
-    <DDTEXT>Shopfloor - Tempos por ordem de produção</DDTEXT>
    </DD40V>
   </asx:values>
  </asx:abap>

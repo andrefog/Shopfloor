@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZPS_PF</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>AENNR</DOMNAME>
     <HEADLEN>12</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>PF - Plano de Fabrico ALV de rastreabilidade</DDTEXT>
-    <REPTEXT>PF</REPTEXT>
-    <SCRTEXT_S>PF</SCRTEXT_S>
-    <SCRTEXT_M>PF</SCRTEXT_M>
-    <SCRTEXT_L>PF</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>PF - Plano de Fabrico ALV de rastreabilidade</DDTEXT>
+     <REPTEXT>PF</REPTEXT>
+     <SCRTEXT_S>PF</SCRTEXT_S>
+     <SCRTEXT_M>PF</SCRTEXT_M>
+     <SCRTEXT_L>PF</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

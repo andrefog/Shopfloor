@@ -48,9 +48,9 @@ class gcl_print_label implementation.
         print_labels( exporting
                         im_tblabels_tab = lt_tblabels_tab
                         im_aufnrval_var = im_aufnrval_var ).
-      catch zcx_bc_exceptions into data(lo_excption_obj).
+      catch zcx_pp_exceptions into data(lo_excption_obj).
         "lançar exceção
-        raise exception type zcx_bc_exceptions
+        raise exception type zcx_pp_exceptions
           exporting
             msgty = lo_excption_obj->msgty
             msgid = lo_excption_obj->msgid
@@ -87,7 +87,7 @@ class gcl_print_label implementation.
                                 then lc_semifinh_cst ).
     else.
       "Ordem de produção &1 não existe
-      raise exception type zcx_bc_exceptions
+      raise exception type zcx_pp_exceptions
         exporting
           msgty = sy-abcde+4(1)
           msgid = 'ZABSF_PP'
@@ -107,7 +107,7 @@ class gcl_print_label implementation.
         others             = 3.
     if sy-subrc ne 0.
       "Erro ao obter nome do formulário
-      raise exception type zcx_bc_exceptions
+      raise exception type zcx_pp_exceptions
         exporting
           msgty = sy-abcde+4(1)
           msgid = 'ZABSF_PP'
@@ -156,7 +156,7 @@ class gcl_print_label implementation.
         others             = 5.
     if sy-subrc ne 0.
       "Erro ao abrir formulário
-      raise exception type zcx_bc_exceptions
+      raise exception type zcx_pp_exceptions
         exporting
           msgty = sy-abcde+4(1)
           msgid = 'ZABSF_PP'
@@ -198,7 +198,7 @@ class gcl_print_label implementation.
         others           = 4.
     if sy-subrc ne 0.
       "Erro ao encerrar o formulário
-      raise exception type zcx_bc_exceptions
+      raise exception type zcx_pp_exceptions
         exporting
           msgty = sy-abcde+4(1)
           msgid = 'ZABSF_PP'
@@ -224,7 +224,7 @@ class gcl_print_label implementation.
     endif.
     if lv_raiserrr_var eq abap_true.
       "Obrigatório indicar numeração da etiqueta
-      raise exception type zcx_bc_exceptions
+      raise exception type zcx_pp_exceptions
         exporting
           msgty = sy-abcde+4(1)
           msgid = 'ZABSF_PP'
@@ -241,7 +241,7 @@ class gcl_print_label implementation.
 *          and menge eq @im_quantity_var.
 *    if sy-subrc ne 0.
 *      "Nenhuma etiqueta encontrada para os critérios indicados
-*      raise exception type zcx_bc_exceptions
+*      raise exception type zcx_pp_exceptions
 *        exporting
 *          msgty = sy-abcde+4(1)
 *          msgid = 'ZABSF_PP'
@@ -330,9 +330,9 @@ class gcl_print_label implementation.
 *                                         ex_prmvalue_var = lv_valuechr_var ).
 *
 *        lv_operador_var = lv_valuechr_var.
-*      catch zcx_bc_exceptions into data(lo_excprtion_obj).
+*      catch zcx_pp_exceptions into data(lo_excprtion_obj).
 *        "lançar excepção
-*        raise exception type zcx_bc_exceptions
+*        raise exception type zcx_pp_exceptions
 *          exporting
 *            msgty = lo_excprtion_obj->msgty
 *            msgid = lo_excprtion_obj->msgid
@@ -419,7 +419,7 @@ class gcl_print_label implementation.
 *        "validar material
 *        if lv_matdescr_var ne im_matndesc_var.
 *          "Material &1 não associado à ordem de produção &2
-*          raise exception type zcx_bc_exceptions
+*          raise exception type zcx_pp_exceptions
 *            exporting
 *              msgty = sy-abcde+4(1)
 *              msgid = 'ZABSF_PP'

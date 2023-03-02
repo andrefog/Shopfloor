@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_QTDCONF</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>MENGV13</DOMNAME>
     <HEADLEN>18</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Quantidade confirmada</DDTEXT>
-    <REPTEXT>Qtd. Confirmada</REPTEXT>
-    <SCRTEXT_S>QtdConfir</SCRTEXT_S>
-    <SCRTEXT_M>Qtd. Confirmada</SCRTEXT_M>
-    <SCRTEXT_L>Qtd. Confirmada</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Quantidade confirmada</DDTEXT>
+     <REPTEXT>Qtd. Confirmada</REPTEXT>
+     <SCRTEXT_S>QtdConfir</SCRTEXT_S>
+     <SCRTEXT_M>Qtd. Confirmada</SCRTEXT_M>
+     <SCRTEXT_L>Qtd. Confirmada</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

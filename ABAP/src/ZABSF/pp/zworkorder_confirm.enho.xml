@@ -3,7 +3,6 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <TOOL>BADI_IMPL</TOOL>
-   <SHORTTEXT>Enhacement Business Add In ordens PM-/PP-/PS-/PI operação: confirmar</SHORTTEXT>
    <SPOT_NAME>WORKORDER_CONFIRM</SPOT_NAME>
    <IMPL>
     <ENH_BADI_IMPL_DATA>

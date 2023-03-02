@@ -1,42 +1,42 @@
-CLASS zabsf_pp_cl_wait_enqueue DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class ZABSF_PP_CL_WAIT_ENQUEUE definition
+  public
+  final
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    CLASS-METHODS wait_for_dequeue_mat
-      IMPORTING
-        !i_matnr    TYPE matnr
-        !i_werks    TYPE werks_d DEFAULT space
-        !i_charg    TYPE charg_d DEFAULT space
-        !i_max_time TYPE i DEFAULT 10
-      EXPORTING
-        !e_gname    TYPE seqg3-gname
-        !e_garg     TYPE seqg3-garg
-        !e_guname   TYPE seqg3-guname
-        !e_return   TYPE sy-subrc .
-    CLASS-METHODS wait_for_dequeue_ord
-      IMPORTING
-        !i_aufnr       TYPE aufnr DEFAULT space
-        !i_max_time    TYPE i DEFAULT 10
-      EXPORTING
-        !e_gname       TYPE seqg3-gname
-        !e_garg        TYPE seqg3-garg
-        !e_guname      TYPE seqg3-guname
-        !e_return      TYPE sy-subrc
-        !e_enqueue_tab TYPE wlf_seqg3_tab .
-    CLASS-METHODS wait_for_dequeue_res
-      IMPORTING
-        !i_aufnr    TYPE aufnr DEFAULT space
-        !i_max_time TYPE i DEFAULT 10
-      EXPORTING
-        !e_gname    TYPE seqg3-gname
-        !e_garg     TYPE seqg3-garg
-        !e_guname   TYPE seqg3-guname
-        !e_return   TYPE sy-subrc .
-  PROTECTED SECTION.
-  PRIVATE SECTION.
+  class-methods WAIT_FOR_DEQUEUE_MAT
+    importing
+      !I_MATNR type MATNR
+      !I_WERKS type WERKS_D default SPACE
+      !I_CHARG type CHARG_D default SPACE
+      !I_MAX_TIME type I default 10
+    exporting
+      !E_GNAME type SEQG3-GNAME
+      !E_GARG type SEQG3-GARG
+      !E_GUNAME type SEQG3-GUNAME
+      !E_RETURN type SY-SUBRC .
+  class-methods WAIT_FOR_DEQUEUE_ORD
+    importing
+      !I_AUFNR type AUFNR default SPACE
+      !I_MAX_TIME type I default 10
+    exporting
+      !E_GNAME type SEQG3-GNAME
+      !E_GARG type SEQG3-GARG
+      !E_GUNAME type SEQG3-GUNAME
+      !E_RETURN type SY-SUBRC
+      !E_ENQUEUE_TAB type WLF_SEQG3_TAB .
+  class-methods WAIT_FOR_DEQUEUE_RES
+    importing
+      !I_AUFNR type AUFNR default SPACE
+      !I_MAX_TIME type I default 10
+    exporting
+      !E_GNAME type SEQG3-GNAME
+      !E_GARG type SEQG3-GARG
+      !E_GUNAME type SEQG3-GUNAME
+      !E_RETURN type SY-SUBRC .
+protected section.
+private section.
 ENDCLASS.
 
 
@@ -44,7 +44,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_WAIT_ENQUEUE IMPLEMENTATION.
 
 
-  METHOD wait_for_dequeue_mat.
+METHOD wait_for_dequeue_mat.
     DATA: enq  TYPE TABLE OF seqg3,
           wenq TYPE seqg3.
 
@@ -153,7 +153,7 @@ CLASS ZABSF_PP_CL_WAIT_ENQUEUE IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD wait_for_dequeue_ord.
+METHOD wait_for_dequeue_ord.
 *  Internal tables
     DATA: lt_enq TYPE TABLE OF seqg3.
 
@@ -200,7 +200,7 @@ CLASS ZABSF_PP_CL_WAIT_ENQUEUE IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD wait_for_dequeue_res.
+METHOD wait_for_dequeue_res.
 *  Internal tables
     DATA: lt_enq TYPE TABLE OF seqg3.
 

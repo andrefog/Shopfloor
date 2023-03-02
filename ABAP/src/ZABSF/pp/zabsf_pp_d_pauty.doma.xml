@@ -4,27 +4,30 @@
   <asx:values>
    <DD01V>
     <DOMNAME>ZABSF_PP_D_PAUTY</DOMNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DATATYPE>CHAR</DATATYPE>
     <LENG>000001</LENG>
     <OUTPUTLEN>000001</OUTPUTLEN>
     <VALEXI>X</VALEXI>
-    <DDTEXT>Shopfloor - Tipo de Pausa</DDTEXT>
    </DD01V>
    <DD07V_TAB>
     <DD07V>
      <VALPOS>0001</VALPOS>
-     <DDLANGUAGE>P</DDLANGUAGE>
      <DOMVALUE_L>A</DOMVALUE_L>
-     <DDTEXT>Automática</DDTEXT>
     </DD07V>
     <DD07V>
      <VALPOS>0002</VALPOS>
-     <DDLANGUAGE>P</DDLANGUAGE>
      <DOMVALUE_L>M</DOMVALUE_L>
-     <DDTEXT>Manual</DDTEXT>
     </DD07V>
    </DD07V_TAB>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Tipo de Pausa</DDTEXT>
+    </item>
+   </DD01_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

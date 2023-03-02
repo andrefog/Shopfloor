@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_check_batch_stock_r .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_CHECK_BATCH_STOCK_R.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL) TYPE  ARBPL
 *"     VALUE(AUFNR) TYPE  AUFNR
@@ -10,7 +10,7 @@ FUNCTION zabsf_pp_check_batch_stock_r .
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
 *Reference
   DATA: lref_sf_batch  TYPE REF TO zabsf_pp_cl_batch_operations.
 
@@ -40,4 +40,9 @@ FUNCTION zabsf_pp_check_batch_stock_r .
       return_tab = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

@@ -15,6 +15,7 @@ public section.
       !WERKS type WERKS_D
       !SHIFTID type ZABSF_PP_E_SHIFTID
       !HNAME type CR_HNAME
+      !OPRID type ZABSF_PP_E_OPRID optional
       !NO_SHIFT_CHECK type BOOLE_D optional
     changing
       !HRCHY_DETAIL type ZABSF_PP_S_HRCHY_DETAIL
@@ -23,6 +24,7 @@ public section.
     importing
       !AREAID type ZABSF_PP_E_AREAID
       !WERKS type WERKS_D
+      !OPRID type ZABSF_PP_E_OPRID optional
       !SHIFTID type ZABSF_PP_E_SHIFTID
     changing
       !HRCHY_TAB type ZABSF_PP_T_HRCHY
@@ -72,6 +74,14 @@ METHOD get_hierarchies.
 *Field symbols
   FIELD-SYMBOLS: <fs_hrchy> TYPE zabsf_pp_s_hrchy.
 
+  IF oprid IS SUPPLIED.
+    zabsf_pp_cl_utils=>get_user_hrchy_wrkcntr_auth(
+      EXPORTING iv_oprid       = oprid       " Shopfloor - Shopfloor Operator ID
+      IMPORTING er_hierarchies = DATA(lr_hierarchies) " Range For Hierarchies
+    ).
+  ENDIF.
+
+
 **Select basic hierarchy data with a reference date and logon language
 *  SELECT sft002~areaid sft002~shiftid sft002~werks crhh~name AS hname crtx~ktext
 *    INTO CORRESPONDING FIELDS OF TABLE hrchy_tab
@@ -95,7 +105,8 @@ METHOD get_hierarchies.
     FROM zabsf_pp002 AS sft002
    INNER JOIN crhh AS crhh
       ON crhh~name EQ sft002~hname
-   WHERE sft002~areaid  EQ areaid
+   WHERE sft002~hname   IN lr_hierarchies
+     AND sft002~areaid  EQ areaid
      AND sft002~werks   EQ werks
      AND sft002~shiftid EQ shiftid
      AND sft002~begda   LE refdt
@@ -103,6 +114,8 @@ METHOD get_hierarchies.
      AND crhh~objty     EQ 'H'.
 
   IF hrchy_tab[] IS NOT INITIAL.
+    SORT hrchy_tab BY hname.
+
 *  Get hierarchy description
     SELECT crhh~name crtx~ktext
       INTO CORRESPONDING FIELDS OF TABLE lt_crtx
@@ -114,7 +127,7 @@ METHOD get_hierarchies.
      WHERE crhh~name  EQ hrchy_tab-hname
        AND crhh~werks EQ hrchy_tab-werks
        AND crhh~objty EQ 'H'
-       AND crtx~spras EQ inputobj-language.
+       AND crtx~spras EQ sy-langu.
 
     IF lt_crtx[] IS INITIAL.
 *    Get alternative language
@@ -159,50 +172,60 @@ METHOD get_hierarchies.
 ENDMETHOD.
 
 
-method get_hierarchy_detail.
+METHOD get_hierarchy_detail.
 *Reference
-  data lref_sf_wrkctr type ref to zabsf_pp_cl_wrkctr.
+  DATA lref_sf_wrkctr TYPE REF TO zabsf_pp_cl_wrkctr.
 
 *Get hierarchies and corresponding workcenters
-  select single *
-    from zabsf_pp002
-    into corresponding fields of hrchy_detail
-   where shiftid eq shiftid
-     and areaid  eq areaid
-     and werks   eq werks
-     and begda   le refdt
-     and endda   ge refdt.
+  SELECT SINGLE *
+    FROM zabsf_pp002
+    INTO CORRESPONDING FIELDS OF hrchy_detail
+   WHERE shiftid EQ shiftid
+     AND areaid  EQ areaid
+     AND werks   EQ werks
+     AND begda   LE refdt
+     AND endda   GE refdt.
 
-  if sy-subrc = 0.
+  IF sy-subrc = 0.
 *  Creta object workcenters
-    create object lref_sf_wrkctr
-      exporting
+    CREATE OBJECT lref_sf_wrkctr
+      EXPORTING
         initial_refdt = refdt
         input_object  = inputobj.
 
 *  Get workcenters
-    call method lref_sf_wrkctr->get_workcenters
-      exporting
+    CALL METHOD lref_sf_wrkctr->get_workcenters
+      EXPORTING
         hname          = hname
         werks          = werks
+        oprid          = oprid
         no_shift_check = no_shift_check
-      importing
+      IMPORTING
         parent         = hrchy_detail-parent
         ktext          = hrchy_detail-ktext
-      changing
+      CHANGING
         wrkctr_tab     = hrchy_detail-wrkctr_tab
         return_tab     = return_tab.
 
-  else.
+* BEG - João Lopes - 17.11.2022
+* Areas: OPT e MTG - sort hierarchies and work centers by "KTEXT" field
+*        MEC - sort hierarchies and work centers by "ARBPL" field
+    IF areaid <> 'MEC'.
+      SORT hrchy_detail-wrkctr_tab BY ktext.
+    ELSE.
+      SORT hrchy_detail-wrkctr_tab BY arbpl.
+    ENDIF.
+* END - João Lopes
+  ELSE.
 *  No hierarchies found for the input data
-    call method zabsf_pp_cl_log=>add_message
-      exporting
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
         msgty      = 'E'
         msgno      = '005'
-      changing
+      CHANGING
         return_tab = return_tab.
-  endif.
-endmethod.
+  ENDIF.
+ENDMETHOD.
 
 
 METHOD SET_REFDT.

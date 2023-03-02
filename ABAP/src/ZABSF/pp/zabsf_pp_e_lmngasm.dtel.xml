@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_LMNGASM</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>MENG13</DOMNAME>
     <HEADLEN>22</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>18</SCRLEN2>
     <SCRLEN3>22</SCRLEN3>
-    <DDTEXT>Shopfloor - Quantidade boa semanal</DDTEXT>
-    <REPTEXT>Quantidade boa semanal</REPTEXT>
-    <SCRTEXT_S>Qtd.Seman</SCRTEXT_S>
-    <SCRTEXT_M>Quant. boa semanal</SCRTEXT_M>
-    <SCRTEXT_L>Quantidade boa semanal</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Quantidade boa semanal</DDTEXT>
+     <REPTEXT>Quantidade boa semanal</REPTEXT>
+     <SCRTEXT_S>Qtd.Seman</SCRTEXT_S>
+     <SCRTEXT_M>Quant. boa semanal</SCRTEXT_M>
+     <SCRTEXT_L>Quantidade boa semanal</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

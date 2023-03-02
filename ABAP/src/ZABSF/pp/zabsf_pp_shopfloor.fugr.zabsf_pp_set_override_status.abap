@@ -1,14 +1,14 @@
-function zabsf_pp_set_override_status.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SET_OVERRIDE_STATUS.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"     VALUE(AUFNR) TYPE  AUFNR
 *"     VALUE(STATUS) TYPE  FLAG OPTIONAL
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  "variáveis locais
+*"--------------------------------------------------------------------
+"variáveis locais
   data ls_override_str type zabsf_pp080.
   "criar estrutura de actualização
   ls_override_str = value #( aufnr     = |{ aufnr alpha = in }|
@@ -33,4 +33,9 @@ function zabsf_pp_set_override_status.
                                   changing
                                     return_tab = return_tab ).
   endif.
-endfunction.
+
+
+
+
+
+ENDFUNCTION.

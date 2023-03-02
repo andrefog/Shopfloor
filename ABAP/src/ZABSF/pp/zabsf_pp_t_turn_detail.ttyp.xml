@@ -4,14 +4,12 @@
   <asx:values>
    <DD40V>
     <TYPENAME>ZABSF_PP_T_TURN_DETAIL</TYPENAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <ROWTYPE>ZABSF_PP_S_TURN_DETAIL</ROWTYPE>
     <ROWKIND>S</ROWKIND>
     <DATATYPE>STRU</DATATYPE>
     <ACCESSMODE>T</ACCESSMODE>
     <KEYDEF>D</KEYDEF>
     <KEYKIND>N</KEYKIND>
-    <DDTEXT>Shopfloor - Detalher da volta</DDTEXT>
    </DD40V>
   </asx:values>
  </asx:abap>

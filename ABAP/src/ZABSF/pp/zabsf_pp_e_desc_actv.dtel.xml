@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_DESC_ACTV</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_DESC_ACTV</DOMNAME>
     <HEADLEN>30</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Descrição actividade</DDTEXT>
-    <REPTEXT>Descrição actividade</REPTEXT>
-    <SCRTEXT_S>Desc. Actv</SCRTEXT_S>
-    <SCRTEXT_M>Descrição actividade</SCRTEXT_M>
-    <SCRTEXT_L>Descrição actividade</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Descrição actividade</DDTEXT>
+     <REPTEXT>Descrição actividade</REPTEXT>
+     <SCRTEXT_S>Desc. Actv</SCRTEXT_S>
+     <SCRTEXT_M>Descrição actividade</SCRTEXT_M>
+     <SCRTEXT_L>Descrição actividade</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

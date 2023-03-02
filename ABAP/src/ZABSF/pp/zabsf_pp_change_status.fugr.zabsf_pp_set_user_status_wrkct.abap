@@ -1,6 +1,6 @@
-FUNCTION ZABSF_PP_SET_USER_STATUS_WRKCT .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SET_USER_STATUS_WRKCT.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(OBJNR) TYPE  J_OBJNR
 *"     VALUE(OLD_STATUS) TYPE  J_STATUS
@@ -8,8 +8,8 @@ FUNCTION ZABSF_PP_SET_USER_STATUS_WRKCT .
 *"     REFERENCE(MESSAGE_CLASS) TYPE  SY-MSGID DEFAULT 'ZABSF_PP'
 *"  EXPORTING
 *"     REFERENCE(RETURN) TYPE  BAPIRET2
-*"----------------------------------------------------------------------
-  DATA: jest_ins TYPE TABLE OF jest_upd,
+*"--------------------------------------------------------------------
+DATA: jest_ins TYPE TABLE OF jest_upd,
         jest_upd TYPE TABLE OF jest_upd,
         jsto_ins TYPE TABLE OF jsto,
         jsto_upd TYPE TABLE OF jsto_upd,
@@ -127,4 +127,9 @@ FUNCTION ZABSF_PP_SET_USER_STATUS_WRKCT .
     CALL FUNCTION 'BAPI_TRANSACTION_ROLLBACK'.
 
   ENDIF.
+
+
+
+
+
 ENDFUNCTION.

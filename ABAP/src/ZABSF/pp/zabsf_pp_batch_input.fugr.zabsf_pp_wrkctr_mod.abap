@@ -25,7 +25,6 @@ FUNCTION ZABSF_PP_WRKCTR_MOD.
 *"  TABLES
 *"      MESSTAB STRUCTURE  BDCMSGCOLL OPTIONAL
 *"--------------------------------------------------------------------
-
 subrc = 0.
 
 perform bdc_nodata      using NODATA.
@@ -88,5 +87,12 @@ perform close_group using     CTU.
 
 
 
+
+
+
+
+
+
 ENDFUNCTION.
+
 INCLUDE BDCRECXY .

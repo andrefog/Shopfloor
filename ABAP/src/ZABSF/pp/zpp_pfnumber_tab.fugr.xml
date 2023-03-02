@@ -2,9 +2,11 @@
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
-   <AREAT>atualização ampliada de tabelas (gerada)</AREAT>
    <INCLUDES>
+    <SOBJ_NAME>LZPP_PFNUMBER_TABF00</SOBJ_NAME>
+    <SOBJ_NAME>LZPP_PFNUMBER_TABI00</SOBJ_NAME>
     <SOBJ_NAME>LZPP_PFNUMBER_TABT00</SOBJ_NAME>
+    <SOBJ_NAME>LZPP_PFNUMBER_TABTOP</SOBJ_NAME>
     <SOBJ_NAME>SAPLZPP_PFNUMBER_TAB</SOBJ_NAME>
    </INCLUDES>
    <FUNCTIONS>

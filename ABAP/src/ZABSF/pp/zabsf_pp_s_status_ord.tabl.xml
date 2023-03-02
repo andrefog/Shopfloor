@@ -4,9 +4,7 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP_S_STATUS_ORD</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
-    <DDTEXT>Shopfloor - Status da Ordem</DDTEXT>
    </DD02V>
    <DD03P_TABLE>
     <DD03P>
@@ -34,6 +32,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Status da Ordem</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

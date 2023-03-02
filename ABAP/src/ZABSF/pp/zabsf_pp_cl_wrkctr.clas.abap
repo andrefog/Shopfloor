@@ -18,6 +18,7 @@ public section.
       !ACTIONID type ZABSF_PP_E_ACTION optional
       !AUFNR type AUFNR optional
       !VORNR type VORNR optional
+      !IT_ISTAT_FILTERS type STRING_TABLE
     changing
       !WRKCTR_DETAIL type ZABSF_PP_S_WRKCTR_DETAIL
       !RETURN_TAB type BAPIRET2_T .
@@ -26,6 +27,7 @@ public section.
       !HNAME type CR_HNAME
       !WERKS type WERKS_D
       !NO_SHIFT_CHECK type BOOLE_D optional
+      !OPRID type ZABSF_PP_E_OPRID optional
     exporting
       !PARENT type CR_HNAME
       !KTEXT type CR_KTEXT
@@ -58,84 +60,92 @@ METHOD CONSTRUCTOR.
 ENDMETHOD.
 
 
-method get_workcenters.
+METHOD get_workcenters.
 *Internal tables
-  data: lt_crhs type table of crhs,
-        lt_crhd type table of crhd,
-        lt_crtx type table of crtx.
+  DATA: lt_crhs TYPE TABLE OF crhs,
+        lt_crhd TYPE TABLE OF crhd,
+        lt_crtx TYPE TABLE OF crtx.
 
 *Structures
-  data: ls_crhd   type crhd,
-        ls_crtx   type crtx,
-        ls_sf013  type zabsf_pp013,
-        ls_wrkctr type zabsf_pp_s_wrkctr.
+  DATA: ls_crhd   TYPE crhd,
+        ls_crtx   TYPE crtx,
+        ls_sf013  TYPE zabsf_pp013,
+        ls_wrkctr TYPE zabsf_pp_s_wrkctr.
 *Variables
-  data: l_hrchy_objid type cr_objid,
-        l_shiftid     type zabsf_pp_e_shiftid,
-        l_langu       type sy-langu,
-        lv_objid_var  type objid_up.
+  DATA: l_hrchy_objid TYPE cr_objid,
+        l_shiftid     TYPE zabsf_pp_e_shiftid,
+        l_langu       TYPE sy-langu,
+        lv_objid_var  TYPE objid_up.
 
-  clear: l_langu,
+  CLEAR: l_langu,
          l_shiftid,
          parent,
          ktext.
 
 *Set local language for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
-  set locale language l_langu.
+*  SET LOCALE LANGUAGE l_langu.
 
 *Translate to upper case
-  translate inputobj-oprid to upper case.
+  TRANSLATE inputobj-oprid TO UPPER CASE.
 
-  if no_shift_check eq abap_false.
+  IF no_shift_check EQ abap_false.
 *Get shift witch operator is associated
-    select single shiftid
-      from zabsf_pp052
-      into l_shiftid
-     where areaid eq inputobj-areaid
-       and oprid  eq inputobj-oprid.
+    SELECT SINGLE shiftid
+      FROM zabsf_pp052
+      INTO l_shiftid
+     WHERE areaid EQ inputobj-areaid
+       AND oprid  EQ inputobj-oprid.
 
-    if sy-subrc ne 0.
+    IF sy-subrc NE 0.
 *  Operator is not associated with shift
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '061'
           msgv1      = inputobj-oprid
-        changing
+        CHANGING
           return_tab = return_tab.
-      exit.
-    endif.
-  endif.
+      EXIT.
+    ENDIF.
+  ENDIF.
+
+  IF oprid IS SUPPLIED.
+    zabsf_pp_cl_utils=>get_user_hrchy_wrkcntr_auth(
+      EXPORTING iv_oprid       = oprid       " Shopfloor - Shopfloor Operator ID
+      IMPORTING er_hierarchies = DATA(lr_hierarchies) " Range For Hierarchies
+                er_workcenters = DATA(lr_workcenters) " Range for Workcenter
+    ).
+  ENDIF.
+
+  CHECK hname IN lr_hierarchies.
 
 *Get Hierarchy Object ID
-  call function 'CR_HIERARCHY_READ_NAME'
-    exporting
+  CALL FUNCTION 'CR_HIERARCHY_READ_NAME'
+    EXPORTING
       name                = hname
       werks               = werks
-    importing
+    IMPORTING
       objid               = l_hrchy_objid
-    exceptions
+    EXCEPTIONS
       hierarchy_not_found = 1
-      others              = 2.
+      OTHERS              = 2.
 
-  if sy-subrc = 0.
+  IF sy-subrc = 0.
 *  Get hierarchy object relations
-    call function 'CR_HIERARCHY_OBJECTS'
-      exporting
+    CALL FUNCTION 'CR_HIERARCHY_OBJECTS'
+      EXPORTING
         objid               = l_hrchy_objid
-      tables
+      TABLES
         t_crhs              = lt_crhs
-      exceptions
+      EXCEPTIONS
         hierarchy_not_found = 1
-        others              = 2.
+        OTHERS              = 2.
 
-    if sy-subrc = 0.
-
+    IF sy-subrc = 0.
       "remover CTS que tem pais
-      delete lt_crhs
-        where objid_up ne lv_objid_var.
+      DELETE lt_crhs WHERE objid_up NE lv_objid_var.
 
 *    Get workcenter ID and description
 *      select objty objid arbpl
@@ -158,141 +168,148 @@ method get_workcenters.
 *        endif.
 *        clear ls_crhd.
 *      endloop.
-    endif.
-  else.
+    ENDIF.
+  ELSE.
     "obter id do centro de trabalho
-    select single *
-      from crhd
-      into @data(ls_crhd_str)
-        where arbpl eq @hname
-          and werks eq @werks
-          and objty eq 'A'.
-    if sy-subrc eq 0.
+    SELECT SINGLE *
+      FROM crhd
+      INTO @DATA(ls_crhd_str)
+        WHERE arbpl EQ @hname
+          AND werks EQ @werks
+          AND objty EQ 'A'.
+    IF sy-subrc EQ 0.
       "obter filhos od CT
-      select *
-        from crhs
-        into table @lt_crhs
-          where objty_up eq 'A'
-            and objid_up eq @ls_crhd_str-objid.
+      SELECT *
+        FROM crhs
+        INTO TABLE @lt_crhs
+          WHERE objty_up EQ 'A'
+            AND objid_up EQ @ls_crhd_str-objid.
 
       "obter CT parent
-      select single crhd~arbpl, crhd~objid
-        from crhs as crhs
-        inner join crhd as crhd
-         on crhd~objid eq crhs~objid_up
-        into ( @parent, @data(lv_parent_objid_var) )
-         where objid_ho eq @ls_crhd_str-objid
-           and objty_up eq 'A'
-           and objid_up ne @lv_objid_var.
-      if sy-subrc ne 0.
+      SELECT SINGLE crhd~arbpl, crhd~objid
+        FROM crhs AS crhs
+        INNER JOIN crhd AS crhd
+         ON crhd~objid EQ crhs~objid_up
+        INTO ( @parent, @DATA(lv_parent_objid_var) )
+         WHERE objid_ho EQ @ls_crhd_str-objid
+           AND objty_up EQ 'A'
+           AND objid_up NE @lv_objid_var.
+      IF sy-subrc NE 0.
         "obter hierarquia superior
-        select single crhh~name, crhh~objid
-          from crhs as crhs
-          inner join crhh as crhh
-           on crhh~objid eq crhs~objid_hy
-          into ( @parent, @lv_parent_objid_var )
-           where objid_ho eq @ls_crhd_str-objid
-             and objty_hy eq 'H'
-             and objid_up eq @lv_objid_var.
-      endif.
-    endif.
-  endif.
+        SELECT SINGLE crhh~name, crhh~objid
+          FROM crhs AS crhs
+          INNER JOIN crhh AS crhh
+           ON crhh~objid EQ crhs~objid_hy
+          INTO ( @parent, @lv_parent_objid_var )
+           WHERE objid_ho EQ @ls_crhd_str-objid
+             AND objty_hy EQ 'H'
+             AND objid_up EQ @lv_objid_var.
+      ENDIF.
+    ENDIF.
+  ENDIF.
 
-  if lt_crhs[] is not initial.
+  IF lt_crhs[] IS NOT INITIAL.
+*    Get workcenter ID
+    SELECT objty objid arbpl
+      FROM crhd
+      INTO CORRESPONDING FIELDS OF TABLE lt_crhd
+       FOR ALL ENTRIES IN lt_crhs
+     WHERE objty EQ lt_crhs-objty_ho
+       AND objid EQ lt_crhs-objid_ho.
+  ELSE.
 *    Get workcenter ID and description
-    select objty objid arbpl
-      from crhd
-      into corresponding fields of table lt_crhd
-       for all entries in lt_crhs
-     where objty eq lt_crhs-objty_ho
-       and objid eq lt_crhs-objid_ho.
-  else.
-*    Get workcenter ID and description
-    select objty objid arbpl
-      from crhd
-      into corresponding fields of table lt_crhd
-     where werks eq werks.
+    SELECT objty objid arbpl
+      FROM crhd
+      INTO CORRESPONDING FIELDS OF TABLE lt_crhd
+     WHERE werks EQ werks.
 
-  endif.
+  ENDIF.
 
-  if lt_crhd[] is not initial.
-*      Get Workcenter description
-    select *
-      from crtx
-      into corresponding fields of table lt_crtx
-       for all entries in lt_crhd
-     where objty eq lt_crhd-objty
-       and objid eq lt_crhd-objid
-       and spras eq sy-langu.
+  DELETE lt_crhd WHERE arbpl NOT IN lr_workcenters.
 
-    if lt_crtx[] is initial.
-      clear l_langu.
+  IF lt_crhd[] IS NOT INITIAL.
 
-*        Get alternative language
-      select single spras
-        from zabsf_pp061
-        into l_langu
-       where werks      eq werks
-         and is_default ne space.
+*   Get Workcenter description
+    SELECT *
+      FROM crtx
+      INTO CORRESPONDING FIELDS OF TABLE lt_crtx
+       FOR ALL ENTRIES IN lt_crhd
+     WHERE objty EQ lt_crhd-objty
+       AND objid EQ lt_crhd-objid
+       AND spras EQ sy-langu.
 
-      if sy-subrc eq 0.
-*          Get Workcenter description in alternative language
-        select *
-          from crtx
-          into corresponding fields of table lt_crtx
-           for all entries in lt_crhd
-         where objty eq lt_crhd-objty
-           and objid eq lt_crhd-objid
-           and spras eq sy-langu.
-      endif.
-    endif.
+    IF lt_crtx[] IS INITIAL.
+      CLEAR l_langu.
 
-    loop at lt_crhd into ls_crhd.
-      clear ls_wrkctr.
+*     Get alternative language
+      SELECT SINGLE spras
+        FROM zabsf_pp061
+        INTO l_langu
+       WHERE werks      EQ werks
+         AND is_default NE space.
+
+      IF sy-subrc EQ 0.
+*       Get Workcenter description in alternative language
+        SELECT *
+          FROM crtx
+          INTO CORRESPONDING FIELDS OF TABLE lt_crtx
+           FOR ALL ENTRIES IN lt_crhd
+         WHERE objty EQ lt_crhd-objty
+           AND objid EQ lt_crhd-objid
+           AND spras EQ sy-langu.
+      ENDIF.
+    ENDIF.
+
+    LOOP AT lt_crhd INTO ls_crhd.
+      CLEAR ls_wrkctr.
 
 *        Workcenter
       ls_wrkctr-arbpl = ls_crhd-arbpl.
 
 *        Read work center description
-      read table lt_crtx into ls_crtx with key objty = ls_crhd-objty
+      READ TABLE lt_crtx INTO ls_crtx WITH KEY objty = ls_crhd-objty
                                                objid = ls_crhd-objid.
 
-      if sy-subrc eq 0.
+      IF sy-subrc EQ 0.
 *          Work center description
         ls_wrkctr-ktext = ls_crtx-ktext.
-      endif.
+      ENDIF.
       "verificar se é CT ou hierarquia
-      select single * from zabsf_pp013 into ls_sf013
-        where werks = werks
-        and arbpl = ls_crhd-arbpl
-        and begda le sy-datlo
-        and endda ge sy-datlo.
-      if sy-subrc eq 0.
+      SELECT SINGLE *
+        FROM zabsf_pp013
+        INTO ls_sf013
+        WHERE werks EQ werks
+          AND arbpl EQ ls_crhd-arbpl
+          AND begda LE sy-datlo
+          AND endda GE sy-datlo.
+
+      IF sy-subrc EQ 0.
         ls_wrkctr-objty = 'A'.
-      else.
+        ls_wrkctr-prdty = ls_sf013-prdty.
+      ELSE.
         ls_wrkctr-objty = 'H'.
-      endif.
+      ENDIF.
 
       "obter descrição do parent
-      select single ktext
-        from crtx
-        into ktext
-       where objid eq lv_parent_objid_var
-         and spras eq sy-langu.
+      SELECT SINGLE ktext
+        FROM crtx
+        INTO ktext
+       WHERE objid EQ lv_parent_objid_var
+         AND spras EQ sy-langu.
 
-      append ls_wrkctr to wrkctr_tab.
-    endloop.
-  endif.
+      APPEND ls_wrkctr TO wrkctr_tab.
+    ENDLOOP.
+  ENDIF.
 
-  if wrkctr_tab[] is initial.
+  IF wrkctr_tab[] IS INITIAL.
 *     No workcenters found
-    call method zabsf_pp_cl_log=>add_message
-      exporting
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
         msgty      = 'E'
         msgno      = '006'
-      changing
+      CHANGING
         return_tab = return_tab.
-  endif.
+  ENDIF.
 
 
 *  call method zabsf_pp_cl_log=>add_message
@@ -351,7 +368,7 @@ method get_workcenters.
 *      changing
 *        return_tab = return_tab.
   "endif.
-endmethod.
+ENDMETHOD.
 
 
 method get_workcenter_detail.
@@ -394,7 +411,7 @@ method get_workcenter_detail.
   translate inputobj-oprid to upper case.
 
 *Set local language for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
   set locale language l_langu.
 
@@ -491,10 +508,13 @@ method get_workcenter_detail.
         actionid        = actionid
         aufnr           = aufnr
         vornr           = vornr
+        IT_ISTAT_FILTERS = IT_ISTAT_FILTERS
       changing
         oper_wrkctr_tab = wrkctr_detail-oper_wrkctr_tab
         prdord_tab      = wrkctr_detail-prord_tab
         return_tab      = return_tab.
+
+    sort wrkctr_detail-prord_tab by sequence.
 
 *>>SETUP get qualifications.
     if lv_get_qualifications eq abap_true.
@@ -542,7 +562,7 @@ method get_workcenter_detail.
             im_werksval_var = werks
           importing
             ex_valrange_tab = lr_workcent_rng.
-      catch zcx_bc_exceptions .
+      catch zcx_pp_exceptions .
     endtry.
     if wrkctr_detail-arbpl in lr_workcent_rng.
       "flag de impressão de etiqueta lite

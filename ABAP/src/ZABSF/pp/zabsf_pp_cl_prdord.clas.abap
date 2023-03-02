@@ -5,6 +5,47 @@ class ZABSF_PP_CL_PRDORD definition
 
 public section.
 
+  types:
+    BEGIN OF ty_matnr_werks,
+        matnr TYPE matnr,
+        werks TYPE werks_d,
+      END OF ty_matnr_werks .
+  types:
+    tt_matnr_werks TYPE STANDARD TABLE OF ty_matnr_werks WITH DEFAULT KEY .
+
+  methods GET_ORDEROPERATIONS
+    importing
+      !IV_AUFNR type AUFNR
+    exporting
+      !ET_ORDEROPERATIONS type ZABSF_PP_T_PRODORD_OPERATIONS
+      !ET_RETURN type BAPIRET2_TAB .
+  class-methods CHECK_BATCH_OPEN_FOR_USE
+    importing
+      !WERKS type WERKS_D
+      !CHARG type CHARG_D
+    changing
+      !VALID type FLAG .
+  class-methods CREATE_PRODUCTION_BATCH
+    importing
+      !IM_REFBATCH_VAR type CHARG_D optional
+      !IM_REFMATNR_VAR type MATNR
+      !IM_REFWERKS_VAR type WERKS_D
+      !IT_CHARACTS_TAB type ZABSF_PP_TT_BATCH_CHARACT optional
+    exporting
+      !ET_RETURN_TAB type BAPIRET2_T
+      !EX_NEWBATCH_VAR type CHARG_D
+      !EX_ERROR_VAR type FLAG .
+  class-methods GET_MATERIAL_SERIAL_PROFILE
+    importing
+      !IT_MATERIALS type TT_MATNR_WERKS
+    returning
+      value(RT_SERIALPROF) type ZABSF_PP_T_MATERIALSERIALPROF .
+  class-methods UPDATE_RESB_BATCH
+    importing
+      !IM_AUFNR_VAR type AUFNR
+      !IM_RESB_TAB type RESB_T
+    exporting
+      !ET_RETURN_TAB type BAPIRET2_T .
   methods CALCULATE_QTY_ABSOLUTE_DELTA
     importing
       !ARBPL type ARBPL
@@ -15,10 +56,44 @@ public section.
     exporting
       !CONFIRM_QTY type LMNGA
       !RETURN_TAB type BAPIRET2_T .
+  methods CHECK_AVAILABLE_STOCK
+    importing
+      !AREAID type ZABSF_PP_E_AREAID
+      !ARBPL type ARBPL
+      !AUFNR type AUFNR
+      !GOODSMOVEMENTS_TAB type BAPI2017_GM_ITEM_CREATE_T
+      !IS_SCRAP type FLAG optional
+    exporting
+      !MSG_ERROR type FLAG
+      !RETURN_TAB type BAPIRET2_T .
+  methods CHECK_MATERIAL
+    importing
+      !MATNR type MATNR
+    changing
+      !MAKTX type MAKTX
+      !MEINS type MEINS
+      !RETURN_TAB type BAPIRET2_T
+      !XCHPF type XCHPF
+      !MEINS_OUTPUT type MEINS optional .
   methods CONSTRUCTOR
     importing
       !INITIAL_REFDT type VVDATUM
       !INPUT_OBJECT type ZABSF_PP_S_INPUTOBJECT .
+  methods CONVERT_UNIT
+    importing
+      !MATNR type MCEKPO-MATNR
+      !SOURCE_VALUE type I
+      !SOURCE_UNIT type MARA-MEINS
+      !LMNGA type LMNGA
+    changing
+      !PRDQTY_BOX type ZABSF_PP_E_PRDQTY_BOX
+      !BOXQTY type ZABSF_PP_E_BOXQTY
+      !UNIT_ALT type MEINS optional .
+  methods GET_AVAILABILITY_STATUS
+    importing
+      !IM_WERKSVAL_VAR type WERKS_D
+    changing
+      !CH_PRODORDR_STR type ZABSF_PP_S_PRDORD_DETAIL .
   methods GET_ORDERS_REWORK
     importing
       !HNAME type CR_HNAME
@@ -28,21 +103,98 @@ public section.
       !OPER_WRKCTR_TAB type ZABSF_PP_T_OPERADOR
       !PRDORD_TAB type ZABSF_PP_T_PRDORD_DETAIL
       !RETURN_TAB type BAPIRET2_T .
-  methods GET_PROD_ORDERS
+  methods GET_PROD_ORDERS_UNASSIGN
     importing
-      !HNAME type CR_HNAME
       !ARBPL type ARBPL
-      !WERKS type WERKS_D
-      !ACTIONID type ZABSF_PP_E_ACTION
+      !IT_STEUS_FILTERS type STRING_TABLE optional
+    changing
+      !PRDORD_UNASSIGN type ZABSF_PP_T_PRODORD_UNASSIGN
+      !RETURN_TAB type BAPIRET2_T .
+  methods GET_QTY_BOX
+    importing
+      !MATNR type MATNR
+      !SOURCE_VALUE type I
+      !LMNGA type LMNGA
+      !GMEIN type MEINS optional
+      !AUFPL type CO_AUFPL
+      !APLZL type CO_APLZL
+    changing
+      !PRDQTY_BOX type ZABSF_PP_E_PRDQTY_BOX optional
+      !BOXQTY type ZABSF_PP_E_BOXQTY optional
+      !UNIT_ALT type MEINS optional .
+  methods GET_QTY_VORNR
+    importing
+      !AUFNR type AUFNR
+      !VORNR type VORNR
+      !LMNGA type LMNGA
+      !AUFPL type CO_AUFPL
+    changing
+      !QTY_PROC type ZABSF_PP_E_QTY
+      !VORNR_TOT type ZABSF_PP_E_VORNR optional
+      !RETURN_TAB type BAPIRET2_T .
+  methods GET_QUALIFICATIONS
+    importing
+      value(ARBPL) type ARBPL
+      value(INPUTOBJ) type ZABSF_PP_S_INPUTOBJECT
+    changing
+      value(PRORD_TAB) type ZABSF_PP_T_PRDORD_DETAIL
+      value(RETURN_TAB) type BAPIRET2_T .
+  methods GET_QUALI_PERNR_ACTIVE_PRDORD
+    importing
+      !ARBPL type ARBPL
+      !PERNR type PERNR_D
+      !AUFNR type AUFNR
+    exporting
+      !SCALE_ID type SCALE_ID
+      !PROFCY type RATING
+      !PROFC_TEXT type PROFC_TEXT
+      !QUALI type QUALI_D
+      !QTEXT type QTEXT .
+  methods GET_THEORICAL_DATA
+    importing
       !AUFNR type AUFNR optional
       !VORNR type VORNR optional
-    changing
-      !OPER_WRKCTR_TAB type ZABSF_PP_T_OPERADOR
-      !PRDORD_TAB type ZABSF_PP_T_PRDORD_DETAIL
-      !RETURN_TAB type BAPIRET2_T .
-  methods SET_REFDT
+      !AUFPL type CO_AUFPL
+      !APLZL type CO_APLZL
+      !PLNTY type PLNTY optional
+      !PLNNR type PLNNR optional
+    exporting
+      !VGW02 type VGWRT
+      !THEORETICAL_TIME type VGWRT
+      !BMSCH type BMSCH
+      !THEORETICAL_QTY type BMSCH .
+  methods GET_TOTAL_QUANTITY_COUNTER
     importing
-      !NEW_REFDT type VVDATUM .
+      !RUECK type CO_RUECK
+      !FICHA type ZABSF_PP_E_FICHA
+    exporting
+      !TOTAL_QTY type GAMNG .
+  methods PALETE_DATA
+    importing
+      !MATNR type MATNR
+      !BATCH type CHARG_D
+    exporting
+      !PALETE_DATA type ZABSF_PALETE_DATA_TAB
+    changing
+      !RETURN_TAB type BAPIRET2_T .
+  methods SAVE_DATA_CONFIRMATION
+    importing
+      !TIPORD type ZABSF_PP_E_TIPORD default 'N'
+      !IS_CONF_DATA type ZABSF_PP_S_CONF_ADIT_DATA
+    changing
+      !RETURN_TAB type BAPIRET2_T .
+  methods SET_BATCH_OPEN_FOR_USE
+    importing
+      !GOODSMOVEMENTS_TAB type BAPI2017_GM_ITEM_CREATE_T .
+  methods SET_BOX_QUANTITY
+    importing
+      !AUFNR type AUFNR
+      !VORNR type VORNR
+      !AUFPL type CO_AUFPL
+      !APLZL type CO_APLZL
+      !BOXQTY type ZABSF_PP_E_BOXQTY
+    exporting
+      !RETURN_TAB type BAPIRET2_T .
   methods SET_QUANTITY
     importing
       !AREAID type ZABSF_PP_E_AREAID
@@ -72,6 +224,10 @@ public section.
       value(SUPERVISOR) type FLAG optional
       value(INPUTOBJ) type ZABSF_PP_S_INPUTOBJECT optional
       value(VENDOR) type LIFNR optional
+      !MATERIALBATCH type ZABSF_PP_T_MATERIALBATCH optional
+      !MATERIALSERIAL type ZABSF_PP_T_MATERIALSERIAL optional
+      !IV_STORAGE_LOCATION type LGORT_D optional
+      !IV_EQUIPMENT type CHAR100 optional
     exporting
       !CONF_TAB type ZABSF_PP_T_CONFIRMATION
     changing
@@ -91,26 +247,6 @@ public section.
     exporting
       !CONF_TAB type ZABSF_PP_T_CONFIRMATION
     changing
-      !RETURN_TAB type BAPIRET2_T .
-  methods CONVERT_UNIT
-    importing
-      !MATNR type MCEKPO-MATNR
-      !SOURCE_VALUE type I
-      !SOURCE_UNIT type MARA-MEINS
-      !LMNGA type LMNGA
-    changing
-      !PRDQTY_BOX type ZABSF_PP_E_PRDQTY_BOX
-      !BOXQTY type ZABSF_PP_E_BOXQTY
-      !UNIT_ALT type MEINS optional .
-  methods GET_QTY_VORNR
-    importing
-      !AUFNR type AUFNR
-      !VORNR type VORNR
-      !LMNGA type LMNGA
-      !AUFPL type CO_AUFPL
-    changing
-      !QTY_PROC type ZABSF_PP_E_QTY
-      !VORNR_TOT type ZABSF_PP_E_VORNR optional
       !RETURN_TAB type BAPIRET2_T .
   methods SET_QUANTITY_SCRAP_RPACK
     importing
@@ -133,133 +269,22 @@ public section.
     changing
       !AUFNR_REWORK type AUFNR optional
       !RETURN_TAB type BAPIRET2_T .
-  methods CHECK_MATERIAL
+  methods SET_REFDT
     importing
-      !MATNR type MATNR
-    changing
-      !MAKTX type MAKTX
-      !MEINS type MEINS
-      !RETURN_TAB type BAPIRET2_T
-      !XCHPF type XCHPF
-      !MEINS_OUTPUT type MEINS optional .
-  methods GET_QTY_BOX
+      !NEW_REFDT type VVDATUM .
+  methods GET_PROD_ORDERS
     importing
-      !MATNR type MATNR
-      !SOURCE_VALUE type I
-      !LMNGA type LMNGA
-      !GMEIN type MEINS optional
-      !AUFPL type CO_AUFPL
-      !APLZL type CO_APLZL
-    changing
-      !PRDQTY_BOX type ZABSF_PP_E_PRDQTY_BOX optional
-      !BOXQTY type ZABSF_PP_E_BOXQTY optional
-      !UNIT_ALT type MEINS optional .
-  methods SAVE_DATA_CONFIRMATION
-    importing
-      !TIPORD type ZABSF_PP_E_TIPORD default 'N'
-      !IS_CONF_DATA type ZABSF_PP_S_CONF_ADIT_DATA
-    changing
-      !RETURN_TAB type BAPIRET2_T .
-  methods GET_QUALIFICATIONS
-    importing
-      value(ARBPL) type ARBPL
-      value(INPUTOBJ) type ZABSF_PP_S_INPUTOBJECT
-    changing
-      value(PRORD_TAB) type ZABSF_PP_T_PRDORD_DETAIL
-      value(RETURN_TAB) type BAPIRET2_T .
-  methods GET_THEORICAL_DATA
-    importing
+      !HNAME type CR_HNAME
+      !ARBPL type ARBPL
+      !WERKS type WERKS_D
+      !ACTIONID type ZABSF_PP_E_ACTION
       !AUFNR type AUFNR optional
       !VORNR type VORNR optional
-      !AUFPL type CO_AUFPL
-      !APLZL type CO_APLZL
-      !PLNTY type PLNTY optional
-      !PLNNR type PLNNR optional
-    exporting
-      !VGW02 type VGWRT
-      !THEORETICAL_TIME type VGWRT
-      !BMSCH type BMSCH
-      !THEORETICAL_QTY type BMSCH .
-  methods GET_TOTAL_QUANTITY_COUNTER
-    importing
-      !RUECK type CO_RUECK
-      !FICHA type ZABSF_PP_E_FICHA
-    exporting
-      !TOTAL_QTY type GAMNG .
-  methods GET_QUALI_PERNR_ACTIVE_PRDORD
-    importing
-      !ARBPL type ARBPL
-      !PERNR type PERNR_D
-      !AUFNR type AUFNR
-    exporting
-      !SCALE_ID type SCALE_ID
-      !PROFCY type RATING
-      !PROFC_TEXT type PROFC_TEXT
-      !QUALI type QUALI_D
-      !QTEXT type QTEXT .
-  methods SET_BOX_QUANTITY
-    importing
-      !AUFNR type AUFNR
-      !VORNR type VORNR
-      !AUFPL type CO_AUFPL
-      !APLZL type CO_APLZL
-      !BOXQTY type ZABSF_PP_E_BOXQTY
-    exporting
-      !RETURN_TAB type BAPIRET2_T .
-  methods GET_PROD_ORDERS_UNASSIGN
-    importing
-      !ARBPL type ARBPL
+      !IT_ISTAT_FILTERS type STRING_TABLE
     changing
-      !PRDORD_UNASSIGN type ZABSF_PP_T_PRODORD_UNASSIGN
+      !OPER_WRKCTR_TAB type ZABSF_PP_T_OPERADOR
+      !PRDORD_TAB type ZABSF_PP_T_PRDORD_DETAIL
       !RETURN_TAB type BAPIRET2_T .
-  methods CHECK_AVAILABLE_STOCK
-    importing
-      !AREAID type ZABSF_PP_E_AREAID
-      !ARBPL type ARBPL
-      !AUFNR type AUFNR
-      !GOODSMOVEMENTS_TAB type BAPI2017_GM_ITEM_CREATE_T
-      !IS_SCRAP type FLAG optional
-    exporting
-      !MSG_ERROR type FLAG
-      !RETURN_TAB type BAPIRET2_T .
-  methods SET_BATCH_OPEN_FOR_USE
-    importing
-      !GOODSMOVEMENTS_TAB type BAPI2017_GM_ITEM_CREATE_T .
-  class-methods CHECK_BATCH_OPEN_FOR_USE
-    importing
-      !WERKS type WERKS_D
-      !CHARG type CHARG_D
-    changing
-      !VALID type FLAG .
-  methods PALETE_DATA
-    importing
-      !MATNR type MATNR
-      !BATCH type CHARG_D
-    exporting
-      !PALETE_DATA type ZABSF_PALETE_DATA_TAB
-    changing
-      !RETURN_TAB type BAPIRET2_T .
-  methods GET_AVAILABILITY_STATUS
-    importing
-      !IM_WERKSVAL_VAR type WERKS_D
-    changing
-      !CH_PRODORDR_STR type ZABSF_PP_S_PRDORD_DETAIL .
-  class-methods CREATE_PRODUCTION_BATCH
-    importing
-      !IM_REFBATCH_VAR type CHARG_D optional
-      !IM_REFMATNR_VAR type MATNR
-      !IM_REFWERKS_VAR type WERKS_D
-      !IT_CHARACTS_TAB type ZABSF_PP_TT_BATCH_CHARACT optional
-    exporting
-      !ET_RETURN_TAB type BAPIRET2_T
-      !EX_NEWBATCH_VAR type CHARG_D
-      !EX_ERROR_VAR type FLAG .
-  class-methods UPDATE_RESB_BATCH
-    importing
-      !IM_AUFNR_VAR type AUFNR
-      !IM_RESB_TAB type RESB_T
-    exporting
-      !ET_RETURN_TAB type BAPIRET2_T .
 protected section.
 private section.
 
@@ -280,7 +305,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_PRDORD IMPLEMENTATION.
 
 
-  METHOD calculate_qty_absolute_delta.
+METHOD calculate_qty_absolute_delta.
 * Constants
     CONSTANTS: c_objty TYPE cr_objty           VALUE 'A', "Work center
                c_a     TYPE zabsf_pp_e_reg_quant VALUE 'A'. "Absolute
@@ -393,7 +418,7 @@ CLASS ZABSF_PP_CL_PRDORD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD check_available_stock.
+METHOD check_available_stock.
 * Constants
     CONSTANTS: c_261 TYPE bwart VALUE '261'. "GI for order
 
@@ -555,7 +580,7 @@ AND EXISTS ( SELECT rsnum
   ENDMETHOD.
 
 
-  METHOD check_batch_open_for_use.
+METHOD check_batch_open_for_use.
 
     DATA: lv_validation_date TYPE zabsf_pp_e_validation_date,
           lv_valid_days      TYPE zabsf_pp_e_valid_days.
@@ -887,7 +912,7 @@ METHOD CONVERT_UNIT.
 ENDMETHOD.
 
 
-  method create_production_batch.
+method create_production_batch.
     "constantes
     constants: c_kzcla type t156-kzcla value '1', "Option to classify batches
                c_xkcfc type t156-xkcfc value 'X'. "Extended classification via CFC
@@ -981,7 +1006,7 @@ ENDMETHOD.
   endmethod.
 
 
-  method get_availability_status.
+method get_availability_status.
     "obter configuração
     try.
         "ATP Checked
@@ -999,7 +1024,7 @@ ENDMETHOD.
             im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
           importing
             ex_prmvalue_var = data(lv_missingm_var).
-      catch zcx_bc_exceptions.
+      catch zcx_pp_exceptions.
         "sair do processamento
         return.
     endtry.
@@ -1054,6 +1079,26 @@ ENDMETHOD.
       endif.
     endif.
   endmethod.
+
+
+  METHOD get_material_serial_profile.
+    SELECT matnr sernp
+      FROM marc
+      INTO TABLE rt_serialprof
+      FOR ALL ENTRIES IN it_materials
+      WHERE matnr EQ it_materials-matnr
+        AND werks EQ it_materials-werks.
+  ENDMETHOD.
+
+
+  METHOD get_orderoperations.
+    SELECT o~aufnr AS order, c~vornr AS operation, c~ltxa1 AS description
+      FROM afko AS o
+      INNER JOIN afvc AS c
+        ON c~aufpl EQ o~aufpl
+      INTO TABLE @et_orderoperations
+      WHERE o~aufnr EQ @iv_aufnr.
+  ENDMETHOD.
 
 
 METHOD get_orders_rework.
@@ -1379,9 +1424,19 @@ METHOD get_prod_orders.
          l_years.
 
 *Set local language for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
   SET LOCALE LANGUAGE l_langu.
+
+* Start Change ABACO(AON) : 15.12.2022
+* Description: Added filtering support to delete matching status
+  DATA lt_istat_filters TYPE string_table.
+*Set hardcoded status filters
+  lt_istat_filters = VALUE #( ( CONV #( 'I0009' ) ) ).
+
+*Add user defined status filters
+  lt_istat_filters = VALUE #( BASE lt_istat_filters FOR lv_istat_filter IN it_istat_filters ( lv_istat_filter ) ).
+* End Change ABACO(AON) : 15.12.2022
 
 *>> SETUP CONF
   CREATE OBJECT lref_sf_parameters
@@ -1590,42 +1645,128 @@ METHOD get_prod_orders.
                     low    = vornr ) TO lt_vornr_rng.
   ENDIF.
 *Get all orders in workcenter (or only a specific order/operation)
-  SELECT aufk~aufnr aufk~objnr aufk~auart afko~gstrp afko~gltrp afko~gstrs afko~gsuzs afko~gltrs
-         afko~ftrmi afko~gamng afko~gmein afko~plnbez afko~plnty afko~plnnr afko~cy_seqnr afko~stlbez
-         afko~aufpl afko~trmdt afvc~aplzl afvc~vornr afvc~ltxa1 afvc~steus afvc~rueck
-         afvc~rmzhl jest1~stat afvc~zerma t430~autwe t430~ruek
-    INTO CORRESPONDING FIELDS OF TABLE lt_prdord_temp
-    FROM afvc AS afvc
-   INNER JOIN t430 AS t430
-      ON t430~steus EQ afvc~steus
-     "AND t430~ruek EQ '1'
-   INNER JOIN afko AS afko
-      ON afko~aufpl EQ afvc~aufpl
-   INNER JOIN aufk AS aufk
-      ON afko~aufnr EQ aufk~aufnr
-   INNER JOIN zabsf_pp021 AS sf021
-      ON sf021~aufnr EQ aufk~aufnr
-     AND sf021~vornr EQ afvc~vornr
-   INNER JOIN jest AS jest
-      ON jest~objnr EQ aufk~objnr
-     AND jest~stat  EQ 'I0002'
-     AND jest~inact EQ space
-    LEFT OUTER JOIN jest AS jest1
-*      ON jest1~objnr EQ aufk~objnr
-      ON jest1~objnr EQ afvc~objnr
-     AND jest1~stat  EQ 'I0009' " CONF
-     AND jest1~inact EQ space
-   WHERE afvc~arbid EQ l_objid
-     AND ( afko~gstrp GE l_date_past AND
-           afko~gstrp LE l_date_future )
-     AND sf021~arbpl EQ arbpl
-     AND sf021~status_oper IN ('AGU', 'PREP', 'PROC', 'STOP')
-     AND aufk~auart IN r_auart
-     AND aufk~aufnr IN lt_aufnr_rng
-     AND afvc~vornr IN lt_vornr_rng
-     AND t430~ruek IN r_ruek.
+  "ADR - 12/10/22 Verificar se existem Areas para trazer todas as ordens, incluindo as que não estão assignadas
+  DATA:   lr_type_all_op_area_rule     TYPE RANGE OF atnam.
+  TRY.
+      zcl_bc_fixed_values=>get_ranges_value( EXPORTING
+                                               im_paramter_var = zcl_bc_fixed_values=>gc_all_op_tp_area_cst
+                                               im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
+                                             IMPORTING
+                                               ex_valrange_tab = lr_type_all_op_area_rule ).
+    CATCH zcx_pp_exceptions.
+  ENDTRY.
 
-  DELETE lt_prdord_temp WHERE stat = 'I0009'.
+  "area e initial
+  IF lr_type_all_op_area_rule IS INITIAL.
+    "sair do processamento
+    RETURN.
+  ENDIF.
+
+  " ordens assinadas pela area 'AGU', 'PREP', 'PROC', 'STOP' e sem assinar 'INIT'
+  IF inputobj-areaid NOT IN lr_type_all_op_area_rule .
+    " Unicamente as ordens assinadas  STATUS 'AGU', 'PREP', 'PROC', 'STOP'
+    DATA(lr_status_oper) =
+      VALUE plmt_audit_ranges_for_status( sign = 'I' option = 'EQ'
+        ( low = 'AGU' ) ( low = 'PREP') ( low = 'PROC') ( low = 'STOP') ).
+  ELSE.
+
+    lr_status_oper =
+     VALUE plmt_audit_ranges_for_status( sign = 'I' option = 'EQ'
+       ( low = 'AGU' ) ( low = 'PREP') ( low = 'PROC') ( low = 'STOP') ( low = 'INIT') ( low = 'INI') ).
+  ENDIF.
+
+
+  IF inputobj-areaid NOT IN lr_type_all_op_area_rule .
+    " Unicamente as ordens assinadas  STATUS 'AGU', 'PREP', 'PROC', 'STOP'
+*  lr_status_oper =
+*      VALUE plmt_audit_ranges_for_status( sign = 'I' option = 'EQ'
+*        ( low = 'AGU' ) ( low = 'PREP') ( low = 'PROC') ( low = 'STOP') ).
+
+    SELECT aufk~aufnr aufk~objnr aufk~auart afko~gstrp afko~gltrp afko~gstrs afko~gsuzs afko~gltrs
+        afko~ftrmi afko~gamng afko~gmein afko~plnbez afko~plnty afko~plnnr afko~cy_seqnr afko~stlbez
+        afko~aufpl afko~trmdt afvc~aplzl afvc~vornr afvc~ltxa1 afvc~steus afvc~rueck
+        afvc~rmzhl jest1~stat afvc~zerma t430~autwe t430~ruek
+      INTO CORRESPONDING FIELDS OF TABLE lt_prdord_temp
+      FROM afvc AS afvc
+      INNER JOIN t430 AS t430
+        ON t430~steus EQ afvc~steus
+          "AND t430~ruek EQ '1'
+      INNER JOIN afko AS afko
+        ON afko~aufpl EQ afvc~aufpl
+      INNER JOIN aufk AS aufk
+        ON afko~aufnr EQ aufk~aufnr
+
+      INNER JOIN zabsf_pp021 AS sf021
+        ON sf021~aufnr EQ aufk~aufnr AND
+           sf021~vornr EQ afvc~vornr
+      INNER JOIN jest AS jest
+        ON jest~objnr EQ aufk~objnr AND
+           jest~stat  EQ 'I0002' AND
+           jest~inact EQ space
+      LEFT OUTER JOIN jest AS jest1
+*      ON jest1~objnr EQ aufk~objnr
+        ON jest1~objnr EQ afvc~objnr AND
+           jest1~stat  EQ 'I0009' AND " CONF
+           jest1~inact EQ space
+      WHERE afvc~arbid EQ l_objid
+        AND ( afko~gstrp GE l_date_past AND
+              afko~gstrp LE l_date_future )
+        AND sf021~arbpl EQ arbpl
+*        AND sf021~status_oper IN lr_status_oper
+        AND sf021~status_oper IN lr_status_oper
+        AND aufk~auart IN r_auart
+        AND aufk~aufnr IN lt_aufnr_rng
+        AND afvc~vornr IN lt_vornr_rng
+        AND t430~ruek IN r_ruek.
+  ELSE.
+
+    SELECT aufk~aufnr aufk~objnr aufk~auart afko~gstrp afko~gltrp afko~gstrs afko~gsuzs afko~gltrs
+           afko~ftrmi afko~gamng afko~gmein afko~plnbez afko~plnty afko~plnnr afko~cy_seqnr afko~stlbez
+           afko~aufpl afko~trmdt afvc~aplzl afvc~vornr afvc~ltxa1 afvc~steus afvc~rueck
+           afvc~rmzhl jest1~stat afvc~zerma t430~autwe t430~ruek
+      INTO CORRESPONDING FIELDS OF TABLE lt_prdord_temp
+      FROM afvc AS afvc
+      INNER JOIN t430 AS t430
+        ON t430~steus EQ afvc~steus
+          "AND t430~ruek EQ '1'
+      INNER JOIN afko AS afko
+        ON afko~aufpl EQ afvc~aufpl
+      INNER JOIN aufk AS aufk
+        ON afko~aufnr EQ aufk~aufnr
+*      INNER JOIN zabsf_pp021 AS sf021
+*        ON sf021~aufnr EQ aufk~aufnr
+*        AND sf021~vornr EQ afvc~vornr
+      INNER JOIN jest AS jest
+        ON jest~objnr EQ aufk~objnr AND
+           jest~stat  EQ 'I0002' AND
+           jest~inact EQ space
+      LEFT OUTER JOIN jest AS jest1
+*        ON jest1~objnr EQ aufk~objnr
+        ON jest1~objnr EQ afvc~objnr AND
+           jest1~stat  EQ 'I0009' AND " CONF
+           jest1~inact EQ space
+      WHERE afvc~arbid EQ l_objid
+        AND ( afko~gstrp GE l_date_past AND
+              afko~gstrp LE l_date_future )
+*        AND sf021~arbpl EQ arbpl
+*        AND sf021~status_oper IN lr_status_oper
+*        AND sf021~status_oper IN lr_status_oper
+        AND aufk~auart IN r_auart
+        AND aufk~aufnr IN lt_aufnr_rng
+        AND afvc~vornr IN lt_vornr_rng
+        AND t430~ruek IN r_ruek.
+
+  ENDIF.
+
+
+  "END ADR - 12/10/22.
+  "DELETE lt_prdord_temp WHERE stat = 'I0009'.
+* Start Change ABACO(AON) : 15.12.2022
+* Description: Added filtering support to delete matching status
+  LOOP AT lt_istat_filters ASSIGNING FIELD-SYMBOL(<fs_istat_filter>).
+    DELETE lt_prdord_temp WHERE stat = <fs_istat_filter>.
+  ENDLOOP.
+* End Change ABACO(AON) : 15.12.2022
 
 *Fill internal table with the information of orders
   IF lt_prdord_temp[] IS NOT INITIAL.
@@ -1638,10 +1779,10 @@ METHOD get_prod_orders.
 *    Get object
       SELECT SINGLE afvc~objnr
         FROM afvc AS afvc
-       INNER JOIN afko AS afko
+        INNER JOIN afko AS afko
           ON afko~aufpl EQ afvc~aufpl
-       WHERE afko~aufnr EQ @<fs_prdord>-aufnr
-         AND afvc~vornr EQ @<fs_prdord>-vornr
+        WHERE afko~aufnr EQ @<fs_prdord>-aufnr
+          AND afvc~vornr EQ @<fs_prdord>-vornr
         INTO (@DATA(l_objnr)).
 
       IF l_objnr IS NOT INITIAL.
@@ -1649,10 +1790,10 @@ METHOD get_prod_orders.
         SELECT *
           FROM jest
           INTO TABLE @DATA(lt_jest)
-         WHERE objnr EQ @l_objnr
-           AND ( stat EQ 'I0045' OR   "ENTE
-                 stat EQ 'I0009' ) "CONF
-           AND inact EQ @space.
+          WHERE objnr EQ @l_objnr
+            AND ( stat EQ 'I0045' OR   "ENTE
+                  stat EQ 'I0009' ) "CONF
+            AND inact EQ @space.
 
         IF lt_jest[] IS NOT INITIAL.
           DELETE lt_prdord_temp WHERE aufnr EQ <fs_prdord>-aufnr
@@ -1666,43 +1807,43 @@ METHOD get_prod_orders.
     SELECT aufnr, matnr, vornr, gamng, lmnga, gmein, missingqty, boxqty, prdqty_box
       FROM zabsf_pp017
       INTO TABLE @DATA(lt_zabsf_pp017)
-       FOR ALL ENTRIES IN @lt_prdord_temp
-     WHERE aufnr EQ @lt_prdord_temp-aufnr
-       AND vornr EQ @lt_prdord_temp-vornr.
+      FOR ALL ENTRIES IN @lt_prdord_temp
+      WHERE aufnr EQ @lt_prdord_temp-aufnr
+        AND vornr EQ @lt_prdord_temp-vornr.
 
 *  Get status of operation
     SELECT *
       FROM zabsf_pp021
       INTO TABLE @DATA(lt_zabsf_pp021)
-       FOR ALL ENTRIES IN @lt_prdord_temp
-     WHERE arbpl EQ @arbpl
-       AND aufnr EQ @lt_prdord_temp-aufnr
-       AND vornr EQ @lt_prdord_temp-vornr.
+      FOR ALL ENTRIES IN @lt_prdord_temp
+      WHERE arbpl EQ @arbpl
+        AND aufnr EQ @lt_prdord_temp-aufnr
+        AND vornr EQ @lt_prdord_temp-vornr.
 
 *  Get description of field zerma
     SELECT *
       FROM t429t
       INTO TABLE @DATA(lt_t429t)
-       FOR ALL ENTRIES IN @lt_prdord_temp
-     WHERE werks EQ @inputobj-werks
-       AND spras EQ @sy-langu
-       AND zerma EQ @lt_prdord_temp-zerma.
+      FOR ALL ENTRIES IN @lt_prdord_temp
+      WHERE werks EQ @inputobj-werks
+        AND spras EQ @sy-langu
+        AND zerma EQ @lt_prdord_temp-zerma.
 
     "get PEP element of production orders
     SELECT *
       FROM afpo
       INTO TABLE @DATA(lt_afpotabl_tab)
-       FOR ALL ENTRIES IN @lt_prdord_temp
-        WHERE aufnr EQ @lt_prdord_temp-aufnr
-          AND projn NE @abap_false
-          AND xloek EQ @abap_false.
+      FOR ALL ENTRIES IN @lt_prdord_temp
+       WHERE aufnr EQ @lt_prdord_temp-aufnr
+         AND projn NE @abap_false
+         AND xloek EQ @abap_false.
     IF sy-subrc EQ 0.
       "get project PEP
       SELECT *
         FROM prps
         INTO TABLE @DATA(lt_projects_tab)
         FOR ALL ENTRIES IN @lt_afpotabl_tab
-          WHERE pspnr EQ @lt_afpotabl_tab-projn.
+        WHERE pspnr EQ @lt_afpotabl_tab-projn.
     ENDIF.
 
     "sequência das ordens
@@ -1712,10 +1853,10 @@ METHOD get_prod_orders.
         FROM zabsf_pp084
         INTO TABLE @DATA(lt_sequence_tab)
         FOR ALL ENTRIES IN @lt_prdord_temp
-          WHERE werks EQ @werks
-            AND arbpl EQ @arbpl
-            AND aufnr EQ @lt_prdord_temp-aufnr
-            AND vornr EQ @lt_prdord_temp-vornr.
+        WHERE werks EQ @werks
+          AND arbpl EQ @arbpl
+          AND aufnr EQ @lt_prdord_temp-aufnr
+          AND vornr EQ @lt_prdord_temp-vornr.
     ENDIF.
 
 *  Fill internal table with the information of orders
@@ -1765,6 +1906,12 @@ METHOD get_prod_orders.
 *    PEP Element
       lv_pepelemt_var  = COND #( WHEN line_exists( lt_afpotabl_tab[ aufnr = ls_prdord-aufnr ] )
                                 THEN lt_afpotabl_tab[ aufnr = ls_prdord-aufnr ]-projn ).
+
+* Start Change ABACO(AON) : 31.10.2022
+* Description: Added steus
+      ls_prdord-steus = <fs_orders_tmp>-steus.
+* End Change ABACO(AON) : 31.10.2022
+
       "format conversion
       IF lv_pepelemt_var IS NOT INITIAL.
         CALL FUNCTION 'CONVERSION_EXIT_ABPSP_OUTPUT'
@@ -1878,6 +2025,77 @@ METHOD get_prod_orders.
         ls_prdord-rmnga = l_rmnga.
       ENDIF.
 
+* Start Change ABACO(AON) : 09.11.2022
+* Description: Append on ZABSF_PP017
+
+*    Get missing quantity and box
+      READ TABLE lt_zabsf_pp017 INTO DATA(ls_zabsf_pp017) WITH KEY aufnr = <fs_orders_tmp>-aufnr
+                                                          vornr = <fs_orders_tmp>-vornr
+                                                          matnr = ls_prdord-matnr.
+
+      IF sy-subrc EQ 0.
+*      Reverse quantity
+        SELECT SUM( lmnga )
+          FROM afru
+          INTO @DATA(l_reverse)
+         WHERE rueck EQ @<fs_orders_tmp>-rueck
+           AND aufnr EQ @<fs_orders_tmp>-aufnr
+           AND stokz NE @space
+           AND stzhl NE @space.
+
+        ls_prdord-missingqty = <fs_orders_tmp>-gamng - l_lmnga - l_rmnga - l_xmnga - l_reverse.
+
+        ls_prdord-prdqty_box = ls_zabsf_pp017-prdqty_box.
+        ls_prdord-boxqty = ls_zabsf_pp017-boxqty.
+      ELSE.
+*      Calc missing quantity
+        ls_prdord-missingqty = <fs_orders_tmp>-gamng - ( l_lmnga + l_xmnga + l_rmnga ).
+
+*    Quantity of Box
+*     Get basic unit of material
+        SELECT SINGLE meins
+          FROM mara
+          INTO @DATA(ld_meins)
+          WHERE matnr EQ @ls_prdord-matnr.
+
+        IF sy-subrc NE 0.
+          ld_meins = <fs_orders_tmp>-gmein.
+        ENDIF.
+
+*      Quantity to convert
+        l_source_value = <fs_orders_tmp>-gamng.
+        l_matnr = ls_prdord-matnr.
+        DATA(l_source_unit) = ld_meins.
+
+*      Convert Unit
+        CALL METHOD me->convert_unit
+          EXPORTING
+            matnr        = l_matnr
+            source_value = l_source_value
+            source_unit  = l_source_unit
+            lmnga        = l_lmnga
+          CHANGING
+            prdqty_box   = ls_prdord-prdqty_box
+            boxqty       = ls_prdord-boxqty.
+
+*      Insert data in database
+        CLEAR ls_zabsf_pp017.
+        ls_zabsf_pp017-aufnr = <fs_orders_tmp>-aufnr.
+        ls_zabsf_pp017-matnr = ls_prdord-matnr.
+        ls_zabsf_pp017-vornr = <fs_orders_tmp>-vornr.
+        ls_zabsf_pp017-gamng = <fs_orders_tmp>-gamng.
+        ls_zabsf_pp017-lmnga = l_lmnga.
+        ls_zabsf_pp017-missingqty = <fs_orders_tmp>-gamng - ( l_lmnga + l_xmnga + l_rmnga ).
+        ls_zabsf_pp017-gmein = <fs_orders_tmp>-gmein.
+        ls_zabsf_pp017-prdqty_box = ls_prdord-prdqty_box.
+        ls_zabsf_pp017-boxqty = ls_prdord-boxqty.
+
+        DATA ls_zabsf_pp017_alt TYPE zabsf_pp017.
+        MOVE-CORRESPONDING ls_zabsf_pp017 TO ls_zabsf_pp017_alt.
+        INSERT INTO zabsf_pp017 VALUES ls_zabsf_pp017_alt.
+      ENDIF.
+* End Change ABACO(AON) : 09.11.2022
+
 
 *    Get quantity and operation missing
       CALL METHOD me->get_qty_vornr
@@ -1927,10 +2145,21 @@ METHOD get_prod_orders.
         ls_prdord-status = 'INI'.
       ENDIF.
 
+      " Areas com condições para aparecer as ordens já em estado AGU
+      IF inputobj-areaid IN lr_type_all_op_area_rule AND ls_prdord-status IS INITIAL.
+        ls_prdord-status = 'AGU'.
+      ENDIF.
+
 *    Get status of operation
       READ TABLE lt_zabsf_pp021 INTO DATA(ls_zabsf_pp021) WITH KEY arbpl = arbpl
                                                                      aufnr = <fs_orders_tmp>-aufnr
                                                                      vornr = <fs_orders_tmp>-vornr.
+      " Areas com condições para aparecer as ordens já em estado AGU
+      IF inputobj-areaid IN lr_type_all_op_area_rule.
+        IF ls_zabsf_pp021-status_oper EQ 'INI'.
+          ls_zabsf_pp021-status_oper = 'AGU'.
+        ENDIF.
+      ENDIF.
 
       IF sy-subrc EQ 0.
         ls_prdord-status_oper = ls_zabsf_pp021-status_oper.
@@ -2152,7 +2381,8 @@ METHOD get_prod_orders.
                                                                   ch_missing_var  = ls_prdord-missingqty ).
       ELSE.
         "quantida em falta
-        ls_prdord-missingqty = ls_prdord-gamng - ls_prdord-lmnga.
+*02/01/2023 ADR:  se mantem o resto calculado previamente com o scrap.
+*        ls_prdord-missingqty = ls_prdord-gamng - ls_prdord-lmnga.
       ENDIF.
 
       "get plano fabrico
@@ -2219,6 +2449,20 @@ METHOD get_prod_orders.
             AND p14~status EQ 'A'.
 
       APPEND: ls_prdord TO prdord_tab.
+
+*      DATA ls_ZABSF_PP017 TYPE ZABSF_PP017.
+**      INSERT VALUE #( aufnr = ls_prdord-aufnr
+*      ls_ZABSF_PP017 = VALUE #( aufnr = ls_prdord-aufnr
+*                                matnr = ls_prdord-matnr
+*                                vornr = ls_prdord-vornr
+*                                gamng = ls_prdord-gamng
+*                                lmnga = ls_prdord-lmnga "ld_lmnga
+*                                missingqty = ls_prdord-missingqty "<orders_tmp>-gamng - ( ld_lmnga + ld_xmnga + ld_rmnga )
+*                                gmein = ls_prdord-gmein
+*                                prdqty_box = ls_prdord-prdqty_box
+*                                boxqty = ls_prdord-boxqty )." INTO ZABSF_PP017.
+**      INSERT ls_zabsf_pp017 INTO ZABSF_PP017.
+*      INSERT INTO ZABSF_PP017 VALUES ls_zabsf_pp017.
       REFRESH: lt_aufktext_tab.
       CLEAR: lv_pepelemt_var, lv_cuobj_var, lv_matrdesc_var.
     ENDLOOP.
@@ -2248,6 +2492,7 @@ METHOD get_prod_orders.
         IF l_stat IS NOT INITIAL.
 *        Change status of operation
           <fs_order>-status_oper = 'INI'.
+
 
 *        Update in database
           UPDATE zabsf_pp021 SET status_oper = <fs_order>-status_oper
@@ -2294,310 +2539,327 @@ METHOD get_prod_orders.
 ENDMETHOD.
 
 
-  method get_prod_orders_unassign.
+METHOD get_prod_orders_unassign.
 *  Internal tables
-    data: lt_prdord_unassign_tmp type table of ty_prdord_unassign.
+  DATA: lt_prdord_unassign_tmp TYPE TABLE OF ty_prdord_unassign.
 
 *  Structures
-    data: ls_prdord_unassign type zabsf_pp_s_prodord_unassign.
+  DATA: ls_prdord_unassign TYPE zabsf_pp_s_prodord_unassign.
 
 * Class
-    data: lref_sf_parameters type ref to zabsf_pp_cl_parameters,
-          lt_aufktext_tab    type table of tline.
+  DATA: lref_sf_parameters TYPE REF TO zabsf_pp_cl_parameters,
+        lt_aufktext_tab    TYPE TABLE OF tline.
 
 *  Variables
-    data: l_matnr           type mcekpo-matnr,
-          l_date_past       type begda,
-          l_date_future     type begda,
-          l_days            type t5a4a-dlydy,
-          l_months          type t5a4a-dlymo,
-          l_years           type t5a4a-dlyyr,
-          l_langu           type sy-langu,
-          lv_get_only_marco type flag,
-          lv_pepelemt_var   type ps_psp_ele.
+  DATA: l_matnr           TYPE mcekpo-matnr,
+        l_date_past       TYPE begda,
+        l_date_future     TYPE begda,
+        l_days            TYPE t5a4a-dlydy,
+        l_months          TYPE t5a4a-dlymo,
+        l_years           TYPE t5a4a-dlyyr,
+        l_langu           TYPE sy-langu,
+        lv_get_only_marco TYPE flag,
+        lv_pepelemt_var   TYPE ps_psp_ele.
 
 *  Ranges
-    data: r_auart    type range of auart,
-          ls_r_auart like line of r_auart.
+  DATA: r_auart    TYPE RANGE OF auart,
+        ls_r_auart LIKE LINE OF r_auart.
 
 *  Constants
-    constants: c_parid      type zabsf_pp_e_parid value 'DATA_GET',
-               c_parid_at01 type zabsf_pp_e_parid value 'DATA_GET_AT01',
-               c_meins      type meins          value 'MIN',
-               c_time_24    type sy-uzeit       value '240000'.
+  CONSTANTS: c_parid      TYPE zabsf_pp_e_parid VALUE 'DATA_GET',
+             c_parid_at01 TYPE zabsf_pp_e_parid VALUE 'DATA_GET_AT01',
+             c_meins      TYPE meins          VALUE 'MIN',
+             c_time_24    TYPE sy-uzeit       VALUE '240000'.
 
-    refresh: lt_prdord_unassign_tmp.
+  REFRESH: lt_prdord_unassign_tmp.
 
-    clear: l_matnr,
-           l_date_past,
-           l_date_future,
-           l_days,
-           l_months,
-           l_years.
+  CLEAR: l_matnr,
+         l_date_past,
+         l_date_future,
+         l_days,
+         l_months,
+         l_years.
 
-    data: r_ruek    type range of ruek,
-          ls_r_ruek like line of r_ruek.
+  DATA: r_ruek    TYPE RANGE OF ruek,
+        ls_r_ruek LIKE LINE OF r_ruek.
 *  Set local language for user
-    l_langu = inputobj-language.
+  l_langu = sy-langu.
 
-    set locale language l_langu.
+  SET LOCALE LANGUAGE l_langu.
 
 *Setup
 *>> SETUP CONF
-    create object lref_sf_parameters
-      exporting
-        initial_refdt = refdt
-        input_object  = inputobj.
+  CREATE OBJECT lref_sf_parameters
+    EXPORTING
+      initial_refdt = refdt
+      input_object  = inputobj.
 
-    "obter valores da configuração
-    try.
-        call method zcl_bc_fixed_values=>get_single_value
-          exporting
-            im_paramter_var = zcl_bc_fixed_values=>gc_charplan_cst
-            im_modulesp_var = zcl_bc_fixed_values=>gc_material_cst
-            im_werksval_var = inputobj-werks
-          importing
-            ex_prmvalue_var = data(lv_charplan_var).
-      catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
-    endtry.
+  "obter valores da configuração
+  TRY.
+      CALL METHOD zcl_bc_fixed_values=>get_single_value
+        EXPORTING
+          im_paramter_var = zcl_bc_fixed_values=>gc_charplan_cst
+          im_modulesp_var = zcl_bc_fixed_values=>gc_material_cst
+          im_werksval_var = inputobj-werks
+        IMPORTING
+          ex_prmvalue_var = DATA(lv_charplan_var).
+    CATCH zcx_pp_exceptions INTO DATA(lo_bcexceptions_obj).
+  ENDTRY.
 
-    call method lref_sf_parameters->get_output_settings
-      exporting
-        parid           = lref_sf_parameters->c_marco_only
-      importing
-        parameter_value = lv_get_only_marco
-      changing
-        return_tab      = return_tab.
+  CALL METHOD lref_sf_parameters->get_output_settings
+    EXPORTING
+      parid           = lref_sf_parameters->c_marco_only
+    IMPORTING
+      parameter_value = lv_get_only_marco
+    CHANGING
+      return_tab      = return_tab.
 
-    if lv_get_only_marco eq abap_true.
+  IF lv_get_only_marco EQ abap_true.
 
 * Marco operations Range
-      ls_r_ruek-option = 'EQ'.
-      ls_r_ruek-low = '1'.
-      ls_r_ruek-sign = 'I'.
-      append ls_r_ruek to r_ruek.
-    endif.
+    ls_r_ruek-option = 'EQ'.
+    ls_r_ruek-low = '1'.
+    ls_r_ruek-sign = 'I'.
+    APPEND ls_r_ruek TO r_ruek.
+  ENDIF.
 
 *  Get objid of workcenter
-    select single objid
-      from crhd
-      into (@data(l_objid))
-     where arbpl eq @arbpl
-       and werks eq @inputobj-werks.
+  SELECT SINGLE objid
+    FROM crhd
+    INTO (@DATA(l_objid))
+   WHERE arbpl EQ @arbpl
+     AND werks EQ @inputobj-werks.
 
 *  Get all order type
-    select *
-      from zabsf_pp019
-      into table @data(lt_zabsf_pp019)
-     where areaid eq @inputobj-areaid.
+  SELECT *
+    FROM zabsf_pp019
+    INTO TABLE @DATA(lt_zabsf_pp019)
+   WHERE areaid EQ @inputobj-areaid.
 
-    if sy-subrc eq 0.
-      refresh r_auart.
+  IF sy-subrc EQ 0.
+    REFRESH r_auart.
 
-      loop at lt_zabsf_pp019 into data(ls_zabsf_pp019).
-        clear: ls_r_auart.
-        ls_r_auart-sign = 'I'.
-        ls_r_auart-option = 'EQ'.
-        ls_r_auart-low = ls_zabsf_pp019-auart.
+    LOOP AT lt_zabsf_pp019 INTO DATA(ls_zabsf_pp019).
+      CLEAR: ls_r_auart.
+      ls_r_auart-sign = 'I'.
+      ls_r_auart-option = 'EQ'.
+      ls_r_auart-low = ls_zabsf_pp019-auart.
 
-        append ls_r_auart to r_auart.
-      endloop.
-    endif.
+      APPEND ls_r_auart TO r_auart.
+    ENDLOOP.
+  ENDIF.
 
 *  Get type area
-    select single tarea_id
-      from zabsf_pp008
-      into (@data(l_tarea_id))
-     where areaid eq @inputobj-areaid
-       and werks  eq @inputobj-werks
-       and endda  ge @refdt
-       and begda  le @refdt.
+  SELECT SINGLE tarea_id
+    FROM zabsf_pp008
+    INTO (@DATA(l_tarea_id))
+   WHERE areaid EQ @inputobj-areaid
+     AND werks  EQ @inputobj-werks
+     AND endda  GE @refdt
+     AND begda  LE @refdt.
 
 *  Get number of year to get orders
-    if l_tarea_id eq 'AT01'.
-      select single parva
-        from zabsf_pp032
-        into (@data(l_date_get))
-       where parid eq @c_parid_at01.
-    else.
-      select single parva
-        from zabsf_pp032
-        into (@l_date_get)
-       where parid eq @c_parid.
-    endif.
+  IF l_tarea_id EQ 'AT01'.
+    SELECT SINGLE parva
+      FROM zabsf_pp032
+      INTO (@DATA(l_date_get))
+     WHERE parid EQ @c_parid_at01.
+  ELSE.
+    SELECT SINGLE parva
+      FROM zabsf_pp032
+      INTO (@l_date_get)
+     WHERE parid EQ @c_parid.
+  ENDIF.
 
 *  ld_years = ld_date_get.
-    l_months = l_date_get.
+  l_months = l_date_get.
 
 *  Date in past
-    call function 'RP_CALC_DATE_IN_INTERVAL'
-      exporting
-        date      = sy-datum
-        days      = l_days
-        months    = l_months
-        signum    = '-'
-        years     = l_years
-      importing
-        calc_date = l_date_past.
+  CALL FUNCTION 'RP_CALC_DATE_IN_INTERVAL'
+    EXPORTING
+      date      = sy-datum
+      days      = l_days
+      months    = l_months
+      signum    = '-'
+      years     = l_years
+    IMPORTING
+      calc_date = l_date_past.
 
 *  Date in future
-    call function 'RP_CALC_DATE_IN_INTERVAL'
-      exporting
-        date      = sy-datum
-        days      = l_days
-        months    = l_months
-        signum    = '+'
-        years     = l_years
-      importing
-        calc_date = l_date_future.
+  CALL FUNCTION 'RP_CALC_DATE_IN_INTERVAL'
+    EXPORTING
+      date      = sy-datum
+      days      = l_days
+      months    = l_months
+      signum    = '+'
+      years     = l_years
+    IMPORTING
+      calc_date = l_date_future.
 
 *  Get all orders in workcenter
-    select aufk~aufnr afko~gstrs afko~gsuzs afko~plnbez afko~stlbez
-           afvc~vornr afvc~ltxa1 jest1~stat
-      into corresponding fields of table lt_prdord_unassign_tmp
-      from afvc as afvc
-     inner join t430 as t430
-        on t430~steus eq afvc~steus
- "      AND t430~ruek EQ '1'
-     inner join afko as afko
-        on afko~aufpl eq afvc~aufpl
-     inner join aufk as aufk
-        on afko~aufnr eq aufk~aufnr
-     inner join jest as jest
-        on jest~objnr eq aufk~objnr
-       and jest~stat  eq 'I0002'
-       and jest~inact eq space
-      left outer join jest as jest1
+  SELECT aufk~aufnr afko~gstrs afko~gsuzs afko~plnbez afko~stlbez afko~gamng
+         afvc~vornr afvc~ltxa1 jest1~stat afvc~steus
+    INTO CORRESPONDING FIELDS OF TABLE lt_prdord_unassign_tmp
+    FROM afvc AS afvc
+   INNER JOIN t430 AS t430
+      ON t430~steus EQ afvc~steus
+"      AND t430~ruek EQ '1'
+   INNER JOIN afko AS afko
+      ON afko~aufpl EQ afvc~aufpl
+   INNER JOIN aufk AS aufk
+      ON afko~aufnr EQ aufk~aufnr
+   INNER JOIN jest AS jest
+      ON jest~objnr EQ aufk~objnr
+     AND jest~stat  EQ 'I0002'
+     AND jest~inact EQ space
+    LEFT OUTER JOIN jest AS jest1
 *      ON jest1~objnr EQ aufk~objnr
-        on jest1~objnr eq afvc~objnr
-       and jest1~stat  eq 'I0009' " CONF
-       and jest1~inact eq space
-     where afvc~arbid eq l_objid
-       and ( afko~gstrp ge l_date_past and
-             afko~gstrp le l_date_future )
-       and aufk~auart in r_auart
-           and t430~ruek in r_ruek.
+      ON jest1~objnr EQ afvc~objnr
+     AND jest1~stat  EQ 'I0009' " CONF
+     AND jest1~inact EQ space
+   WHERE afvc~arbid EQ l_objid
+     AND ( afko~gstrp GE l_date_past AND
+           afko~gstrp LE l_date_future )
+     AND aufk~auart IN r_auart
+         AND t430~ruek IN r_ruek.
 
-    delete lt_prdord_unassign_tmp where stat = 'I0009'.
+* Start Change ABACO(AON) : 21.12.2022
+* Description: Added filtering support to delete matching steus
+  LOOP AT it_steus_filters ASSIGNING FIELD-SYMBOL(<fs_steus_filter>).
+    DELETE lt_prdord_unassign_tmp WHERE steus = <fs_steus_filter>.
+  ENDLOOP.
+* End Change ABACO(AON) : 21.12.2022
 
-    if lt_prdord_unassign_tmp[] is not initial.
+  DELETE lt_prdord_unassign_tmp WHERE stat = 'I0009'.
+
+  IF lt_prdord_unassign_tmp[] IS NOT INITIAL.
 *    Get all orders with initial status
-      select *
-        from zabsf_pp021
-        into table @data(lt_sf021)
-       where arbpl eq @arbpl
-         and status_oper in ('AGU', 'PREP', 'PROC', 'STOP').
+    SELECT *
+      FROM zabsf_pp021
+      INTO TABLE @DATA(lt_sf021)
+     WHERE arbpl EQ @arbpl
+       AND status_oper IN ('AGU', 'PREP', 'PROC', 'STOP').
 
-      "elementos pep
-      select *
-        from afpo
-        into table @data(lt_afpotabl_tab)
-        for all entries in @lt_prdord_unassign_tmp
-       where aufnr eq @lt_prdord_unassign_tmp-aufnr
-         and projn ne @abap_false.
+    "elementos pep
+    SELECT *
+      FROM afpo
+      INTO TABLE @DATA(lt_afpotabl_tab)
+      FOR ALL ENTRIES IN @lt_prdord_unassign_tmp
+     WHERE aufnr EQ @lt_prdord_unassign_tmp-aufnr
+       AND projn NE @abap_false.
 
-      loop at lt_prdord_unassign_tmp into data(ls_prdord_unassign_tmp).
+    LOOP AT lt_prdord_unassign_tmp INTO DATA(ls_prdord_unassign_tmp).
 *      Check status
-        read table lt_sf021 into data(ls_sf021) with key aufnr = ls_prdord_unassign_tmp-aufnr
-                                                         vornr = ls_prdord_unassign_tmp-vornr.
+      READ TABLE lt_sf021 INTO DATA(ls_sf021) WITH KEY aufnr = ls_prdord_unassign_tmp-aufnr
+                                                       vornr = ls_prdord_unassign_tmp-vornr.
 
-        if sy-subrc ne 0.
-          clear ls_prdord_unassign.
+      IF sy-subrc NE 0.
+        CLEAR ls_prdord_unassign.
 
 *        Move same fields
-          move-corresponding ls_prdord_unassign_tmp to ls_prdord_unassign.
+        MOVE-CORRESPONDING ls_prdord_unassign_tmp TO ls_prdord_unassign.
 
 *        Material
-          if ls_prdord_unassign_tmp-plnbez is not initial.
-            ls_prdord_unassign-matnr = ls_prdord_unassign_tmp-plnbez.
-          else.
-            ls_prdord_unassign-matnr = ls_prdord_unassign_tmp-stlbez.
-          endif.
+        IF ls_prdord_unassign_tmp-plnbez IS NOT INITIAL.
+          ls_prdord_unassign-matnr = ls_prdord_unassign_tmp-plnbez.
+        ELSE.
+          ls_prdord_unassign-matnr = ls_prdord_unassign_tmp-stlbez.
+        ENDIF.
+
+        CALL FUNCTION 'CONVERSION_EXIT_MATN1_OUTPUT'
+          EXPORTING
+            input  = ls_prdord_unassign-matnr
+          IMPORTING
+            output = ls_prdord_unassign-matnr.
 
 *    Material Description
-          select single cuobj
-            from afpo
-            into @data(lv_cuobj_var)
-             where aufnr eq @ls_prdord_unassign-aufnr.
-          "read data from classification
-          zcl_mm_classification=>get_material_desc_by_object( exporting
-                                                                im_cuobj_var       = lv_cuobj_var
-                                                              importing
-                                                                ex_description_var = data(lv_matrdesc_var) ).
-          if lv_matrdesc_var is not initial.
-            ls_prdord_unassign-maktx = lv_matrdesc_var.
-          else.
-            "get description from database table
-            select single maktx
-              from makt
-              into @ls_prdord_unassign-maktx
-             where matnr eq @ls_prdord_unassign-matnr
-               and spras eq @sy-langu.
-          endif.
+        SELECT cuobj UP TO 1 ROWS
+          FROM afpo
+          INTO @DATA(lv_cuobj_var)
+           WHERE aufnr EQ @ls_prdord_unassign-aufnr.
+        ENDSELECT.
+        "read data from classification
+        zcl_mm_classification=>get_material_desc_by_object( EXPORTING
+                                                              im_cuobj_var       = lv_cuobj_var
+                                                            IMPORTING
+                                                              ex_description_var = DATA(lv_matrdesc_var) ).
+        IF lv_matrdesc_var IS NOT INITIAL.
+          ls_prdord_unassign-maktx = lv_matrdesc_var.
+        ELSE.
+          "get description from database table
+          SELECT SINGLE maktx
+            FROM makt
+            INTO @ls_prdord_unassign-maktx
+           WHERE matnr EQ @ls_prdord_unassign-matnr
+             AND spras EQ @sy-langu.
+        ENDIF.
 *        Sched_ time
-          if ls_prdord_unassign-gsuzs eq c_time_24.
-            ls_prdord_unassign-gsuzs = ls_prdord_unassign-gsuzs - 1.
-          endif.
+        IF ls_prdord_unassign-gsuzs EQ c_time_24.
+          ls_prdord_unassign-gsuzs = ls_prdord_unassign-gsuzs - 1.
+        ENDIF.
 
-          "obter configuração
-          call method zcl_mm_classification=>get_classification_config
-            exporting
-              im_instance_cuobj_var = lv_cuobj_var
-            importing
-              ex_classfication_tab  = data(lt_classfic_tab)
-            exceptions
-              instance_not_found    = 1
-              others                = 2.
-          if sy-subrc <> 0.
-          endif.
+        "obter configuração
+        CALL METHOD zcl_mm_classification=>get_classification_config
+          EXPORTING
+            im_instance_cuobj_var = lv_cuobj_var
+          IMPORTING
+            ex_classfication_tab  = DATA(lt_classfic_tab)
+          EXCEPTIONS
+            instance_not_found    = 1
+            OTHERS                = 2.
+        IF sy-subrc <> 0.
+        ENDIF.
 
-          "elemento PEP
-          lv_pepelemt_var  = cond #( when line_exists( lt_afpotabl_tab[ aufnr = ls_prdord_unassign-aufnr ] )
-                                     then lt_afpotabl_tab[ aufnr = ls_prdord_unassign-aufnr ]-projn ).
-          if lv_pepelemt_var is not initial.
-            call function 'CONVERSION_EXIT_ABPSP_OUTPUT'
-              exporting
-                input  = lv_pepelemt_var
-              importing
-                output = ls_prdord_unassign-schematics.
-          endif.
-          "plano de fabrico
-          ls_prdord_unassign-production_plan = cond #( when line_exists( lt_classfic_tab[ atnam = lv_charplan_var ] )
-                                                       then lt_classfic_tab[ atnam = lv_charplan_var ]-atwrt ).
+        "elemento PEP
+        lv_pepelemt_var  = COND #( WHEN line_exists( lt_afpotabl_tab[ aufnr = ls_prdord_unassign-aufnr ] )
+                                   THEN lt_afpotabl_tab[ aufnr = ls_prdord_unassign-aufnr ]-projn ).
+        IF lv_pepelemt_var IS NOT INITIAL.
+          CALL FUNCTION 'CONVERSION_EXIT_ABPSP_OUTPUT'
+            EXPORTING
+              input  = lv_pepelemt_var
+            IMPORTING
+              output = ls_prdord_unassign-schematics.
+        ENDIF.
+        " plano de fabrico
+        ls_prdord_unassign-production_plan = COND #( WHEN line_exists( lt_classfic_tab[ atnam = lv_charplan_var ] )
+                                                     THEN lt_classfic_tab[ atnam = lv_charplan_var ]-atwrt ).
 
-          "obter programa de corte
-          call function 'READ_TEXT'
-            exporting
-              id                      = 'KOPF'
-              language                = sy-langu
-              name                    = conv tdobname( |{ sy-mandt }{ ls_prdord_unassign-aufnr alpha = in }| )
-              object                  = 'AUFK'
-            tables
-              lines                   = lt_aufktext_tab
-            exceptions
-              id                      = 1
-              language                = 2
-              name                    = 3
-              not_found               = 4
-              object                  = 5
-              reference_check         = 6
-              wrong_access_to_archive = 7
-              others                  = 8.
-          if sy-subrc <> 0.
-          endif.
-          if line_exists( lt_aufktext_tab[ 1 ] ).
-            "primeira linha do texto
-            ls_prdord_unassign-program = lt_aufktext_tab[ 1 ]-tdline.
-          endif.
-          append ls_prdord_unassign to prdord_unassign.
-        endif.
-        clear: ls_prdord_unassign, lv_pepelemt_var.
-      endloop.
-    endif.
-  endmethod.
+        " quantidade a produzir
+        ls_prdord_unassign-quantitytomake = ls_prdord_unassign_tmp-gamng.
+
+        "obter programa de corte
+        CALL FUNCTION 'READ_TEXT'
+          EXPORTING
+            id                      = 'KOPF'
+            language                = sy-langu
+            name                    = CONV tdobname( |{ sy-mandt }{ ls_prdord_unassign-aufnr ALPHA = IN }| )
+            object                  = 'AUFK'
+          TABLES
+            lines                   = lt_aufktext_tab
+          EXCEPTIONS
+            id                      = 1
+            language                = 2
+            name                    = 3
+            not_found               = 4
+            object                  = 5
+            reference_check         = 6
+            wrong_access_to_archive = 7
+            OTHERS                  = 8.
+        IF sy-subrc <> 0.
+        ENDIF.
+        IF line_exists( lt_aufktext_tab[ 1 ] ).
+          "primeira linha do texto
+          ls_prdord_unassign-program = lt_aufktext_tab[ 1 ]-tdline.
+        ENDIF.
+        APPEND ls_prdord_unassign TO prdord_unassign.
+      ENDIF.
+      CLEAR: ls_prdord_unassign, lv_pepelemt_var.
+    ENDLOOP.
+  ENDIF.
+ENDMETHOD.
 
 
-  METHOD get_qty_box.
+METHOD get_qty_box.
 *  Variables
     DATA: l_source_unit TYPE mara-meins.
 
@@ -2724,7 +2986,7 @@ METHOD GET_QTY_VORNR.
         FROM t430
         INTO CORRESPONDING FIELDS OF TABLE lt_t430
      FOR ALL ENTRIES IN lt_afvc
-       WHERE steus EQ lt_afvc-steus.
+       WHERE steus EQ lt_afvc-steus and steus ne 'PP01'.
 "BMR COmment 23.04.2020         "AND ruek  EQ '1'.
 
 *    Order by last operation
@@ -2783,7 +3045,7 @@ METHOD GET_QTY_VORNR.
 ENDMETHOD.
 
 
-  METHOD get_qualifications.
+METHOD get_qualifications.
 
     CONSTANTS: c_gen_autonomous(1)  VALUE 1,     "Autonomous
                c_gen_no_qualific(1) VALUE 2,     "No qualification
@@ -3021,7 +3283,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  METHOD GET_QUALI_PERNR_ACTIVE_PRDORD.
+METHOD GET_QUALI_PERNR_ACTIVE_PRDORD.
 *  Internal tables
     DATA: lt_objects TYPE TABLE OF hrsobid,
           lt_profile TYPE TABLE OF hrpe_profq.
@@ -3162,7 +3424,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  METHOD get_theorical_data.
+METHOD get_theorical_data.
 *  Internal
     DATA: lt_return_tab TYPE bapiret2_t.
 
@@ -3364,7 +3626,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  METHOD get_total_quantity_counter.
+METHOD get_total_quantity_counter.
     IF ficha IS NOT INITIAL OR ficha NE 0.
 *    Get last record saved if final counter
       SELECT * UP TO 1 ROWS
@@ -3423,7 +3685,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  METHOD palete_data.
+METHOD palete_data.
     DATA: lv_por_completar TYPE lqua-verme,
           lv_verme_palete  TYPE lqua-verme.
     DATA: ls_palete_data TYPE zabsf_palete_data.
@@ -3477,7 +3739,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  method save_data_confirmation.
+method save_data_confirmation.
 *  Internal tables
     data: lt_pp_sf065 type table of zabsf_pp065.
 
@@ -3697,7 +3959,7 @@ ENDMETHOD.
   endmethod.
 
 
-  METHOD set_batch_open_for_use.
+METHOD set_batch_open_for_use.
 * Constants
     CONSTANTS: c_261 TYPE bwart VALUE '261'. "GI for order
     DATA: ls_ZABSF_PP078 TYPE zabsf_pp078.
@@ -3716,7 +3978,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  METHOD set_box_quantity.
+METHOD set_box_quantity.
 *  Structures
     DATA: ls_orderdata  TYPE bapi_pp_order_change,
           ls_orderdatax TYPE bapi_pp_order_changex,
@@ -4228,126 +4490,129 @@ METHOD set_quantity.
 ENDMETHOD.
 
 
-method set_quantity_ord.
+METHOD set_quantity_ord.
+
 *Internal tables
-  data: lt_qty_conf                type zabsf_pp_t_qty_conf,
-        lt_timeticket_prop         type table of bapi_pp_timeticket,
-        lt_goodsmovements_prop     type table of bapi2017_gm_item_create,
-        lt_link_conf_goodsmov_prop type table of bapi_link_conf_goodsmov,
-        lt_timetickets             type table of bapi_pp_timeticket,
-        lt_goodsmovements          type table of bapi2017_gm_item_create,
-        lt_link_conf_goodsmov      type table of bapi_link_conf_goodsmov,
-        lt_detail_return           type table of bapi_coru_return,
-        lt_create_batch            type zabsf_pp_t_goodmovements,
-        lt_goodsmovements_new      type table of bapi2017_gm_item_create,
-        lt_return_tab2             type bapiret2_t.
+  DATA: lt_qty_conf                TYPE zabsf_pp_t_qty_conf,
+        lt_timeticket_prop         TYPE TABLE OF bapi_pp_timeticket,
+        lt_goodsmovements_prop     TYPE TABLE OF bapi2017_gm_item_create,
+        lt_link_conf_goodsmov_prop TYPE TABLE OF bapi_link_conf_goodsmov,
+        lt_timetickets             TYPE TABLE OF bapi_pp_timeticket,
+        lt_goodsmovements          TYPE TABLE OF bapi2017_gm_item_create,
+        lt_link_conf_goodsmov      TYPE TABLE OF bapi_link_conf_goodsmov,
+        lt_detail_return           TYPE TABLE OF bapi_coru_return,
+        lt_create_batch            TYPE zabsf_pp_t_goodmovements,
+        lt_goodsmovements_new      TYPE TABLE OF bapi2017_gm_item_create,
+        lt_return_tab2             TYPE bapiret2_t,
+        lt_return_tab3             TYPE bapiret2_t.
 
 *Structures
-  data: ls_propose            type bapi_pp_conf_prop,
-        ls_timeticket_prop    type bapi_pp_timeticket,
-        ls_timetickets        type bapi_pp_timeticket,
-        ls_goodsmovements     type bapi2017_gm_item_create,
-        ls_link_conf_goodsmov type bapi_link_conf_goodsmov,
-        ls_return             type bapiret1,
-        ls_return_conf        type bapiret2,
-        ls_conf_data          type zabsf_pp_s_conf_adit_data,
-        ls_create_batch       type zabsf_pp_s_goodmovements,
-        ls_conf_tab           type zabsf_pp_s_confirmation,
-        ls_goodsmovements_new type bapi2017_gm_item_create,
-        lv_no101_var          type flag.
+  DATA: ls_propose            TYPE bapi_pp_conf_prop,
+        ls_timeticket_prop    TYPE bapi_pp_timeticket,
+        ls_timetickets        TYPE bapi_pp_timeticket,
+        ls_goodsmovements     TYPE bapi2017_gm_item_create,
+        ls_link_conf_goodsmov TYPE bapi_link_conf_goodsmov,
+        ls_return             TYPE bapiret1,
+        ls_return_conf        TYPE bapiret2,
+        ls_conf_data          TYPE zabsf_pp_s_conf_adit_data,
+        ls_create_batch       TYPE zabsf_pp_s_goodmovements,
+        ls_conf_tab           TYPE zabsf_pp_s_confirmation,
+        ls_goodsmovements_new TYPE bapi2017_gm_item_create,
+        lv_no101_var          TYPE flag.
 
 *Reference
-  data: lref_sf_prdord type ref to zabsf_pp_cl_prdord.
+  DATA: lref_sf_prdord TYPE REF TO zabsf_pp_cl_prdord.
 
 *Variables
-  data: l_source_value type i,
-        l_conf_no      type co_rueck,
-        l_conf_cnt     type co_rmzhl,
-        l_new_batch    type charg_d,
-        l_langu        type spras,
-        l_flag         type flag,
-        l_wait_cancel  type i,
-        l_stock        type labst,
-        l_entry_qnt    type	erfmg,
-        l_index        type sy-tabix,
-        lv_umb_qtt     type bstmg.
+  DATA: l_source_value TYPE i,
+        l_conf_no      TYPE co_rueck,
+        l_conf_cnt     TYPE co_rmzhl,
+        l_new_batch    TYPE charg_d,
+        l_langu        TYPE spras,
+        l_flag         TYPE flag,
+        l_wait_cancel  TYPE i,
+        l_stock        TYPE labst,
+        l_entry_qnt    TYPE  erfmg,
+        l_index        TYPE sy-tabix,
+        lv_umb_qtt     TYPE bstmg.
 
-  data: lv_lenum_lines type i.
+  DATA: lv_lenum_lines TYPE i.
 
-  data:
-    ls_batchattributes   type bapibatchatt,
-    ls_batchattributes_e type bapibatchatt,
-    ls_batchattributesx  type bapibatchattx,
-    ls_return_chg        type bapiret2,
-    lt_return_chg        type bapiret2_t,
-    lv_matnr_chg         type bapibatchkey-material,
-    lv_charg_chg         type bapibatchkey-batch,
-    lv_werks_chg         type bapibatchkey-plant.
+  DATA:
+    ls_batchattributes   TYPE bapibatchatt,
+    ls_batchattributes_e TYPE bapibatchatt,
+    ls_batchattributesx  TYPE bapibatchattx,
+    ls_return_chg        TYPE bapiret2,
+    lt_return_chg        TYPE bapiret2_t,
+    lv_matnr_chg         TYPE bapibatchkey-material,
+    lv_charg_chg         TYPE bapibatchkey-batch,
+    lv_werks_chg         TYPE bapibatchkey-plant.
 
-  data: ls_zpp10_datas_lote type zpp10_datas_lote,
-        lr_steus_rng        type range of steus,
-        lr_zpp2_copy_rng    type range of atnam,
-        lt_characts_tab     type zabsf_pp_tt_batch_charact,
-        lv_operador_var     type atnam,
-        lv_aramador_var     type atnam.
+  DATA: ls_zpp10_datas_lote TYPE zpp10_datas_lote,
+        lr_steus_rng        TYPE RANGE OF steus,
+        lr_zpp2_copy_rng    TYPE RANGE OF atnam,
+        lt_characts_tab     TYPE zabsf_pp_tt_batch_charact,
+        lv_operador_var     TYPE atnam,
+        lv_aramador_var     TYPE atnam.
 
 *Constants
-  constants: c_101         type bwart          value '101', "GR goods receipt
-             c_261         type bwart          value '261', "GI for order
-             c_mtart_verp  type mtart          value 'VERP', "Material type - Packing
-             c_inspection  type aufart         value 'ZINS',
-             c_wait_cancel type zabsf_pp_e_parid value 'WAIT_CANCEL'.
+  CONSTANTS: c_101         TYPE bwart          VALUE '101', "GR goods receipt
+             c_261         TYPE bwart          VALUE '261', "GI for order
+             c_mtart_verp  TYPE mtart          VALUE 'VERP', "Material type - Packing
+             c_inspection  TYPE aufart         VALUE 'ZINS',
+             c_wait_cancel TYPE zabsf_pp_e_parid VALUE 'WAIT_CANCEL'.
 
 
 *Set language local for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
-  set locale language l_langu.
+  SET LOCALE LANGUAGE l_langu.
 
 *Translate to upper case
-  translate inputobj-oprid to upper case.
+  TRANSLATE inputobj-oprid TO UPPER CASE.
 
 *>>SETUP
-  data: lref_sf_parameters type ref to zabsf_pp_cl_parameters,
-        ls_output_settings type zabsf_pp_s_visual_settings.
+  DATA: lref_sf_parameters TYPE REF TO zabsf_pp_cl_parameters,
+        ls_output_settings TYPE zabsf_pp_s_visual_settings.
 
-  create object lref_sf_parameters
-    exporting
+  CREATE OBJECT lref_sf_parameters
+    EXPORTING
       initial_refdt = refdt
       input_object  = inputobj.
 
-  call method lref_sf_parameters->get_output_settings
-    exporting
+  CALL METHOD lref_sf_parameters->get_output_settings
+    EXPORTING
       get_all        = abap_true
-    importing
+    IMPORTING
       all_parameters = ls_output_settings
-    changing
+    CHANGING
       return_tab     = return_tab.
 
-  if backoffice is initial.
+*  IF backoffice IS INITIAL.
+  IF shiftid IS INITIAL.
 *  Get shift witch operator is associated
-    select single shiftid
-      from zabsf_pp052
-      into (@data(l_shiftid))
-     where areaid eq @inputobj-areaid
-       and oprid  eq @inputobj-oprid.
+    SELECT SINGLE shiftid
+      FROM zabsf_pp052
+      INTO (@DATA(l_shiftid))
+     WHERE areaid EQ @inputobj-areaid
+       AND oprid  EQ @inputobj-oprid.
 
-    if sy-subrc ne 0.
+    IF sy-subrc NE 0.
 *    Operator is not associated with shift
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '061'
           msgv1      = inputobj-oprid
-        changing
+        CHANGING
           return_tab = return_tab.
 
-      exit.
-    endif.
-  else.
+      EXIT.
+    ENDIF.
+  ELSE.
 *  Shift ID
     l_shiftid = shiftid.
-  endif.
+  ENDIF.
 
   "obter configuração impressão de etiquetas por operação
 *  try.
@@ -4398,51 +4663,51 @@ method set_quantity_ord.
 *  endtry.
 
   "obter chaves de controlo para impressão de etiquetas
-  read table qty_conf_tab into data(ls_confoper_str) index 1.
-  if sy-subrc eq 0.
+  READ TABLE qty_conf_tab INTO DATA(ls_confoper_str) INDEX 1.
+  IF sy-subrc EQ 0.
     "dados da operação
-    select single afko~aufnr, afvc~vornr, afvc~steus
-      from afko as afko
-      inner join afvc as afvc
-      on afvc~aufpl eq afko~aufpl
-          into @data(ls_operation_str)
-      where afko~aufnr eq @ls_confoper_str-aufnr
-      and afvc~vornr eq @ls_confoper_str-vornr
-      and afvc~loekz eq @space.
-  endif.
+    SELECT SINGLE afko~aufnr, afvc~vornr, afvc~steus
+      FROM afko AS afko
+      INNER JOIN afvc AS afvc
+      ON afvc~aufpl EQ afko~aufpl
+          INTO @DATA(ls_operation_str)
+      WHERE afko~aufnr EQ @ls_confoper_str-aufnr
+      AND afvc~vornr EQ @ls_confoper_str-vornr
+      AND afvc~loekz EQ @space.
+  ENDIF.
 
-  if ls_confoper_str-rueck is not initial.
+  IF ls_confoper_str-rueck IS NOT INITIAL.
     "verificar se confirmaçao anterior pertence à ordem+operação
-    select single afko~aufnr, afvc~vornr, afvc~steus
-      from afko as afko
-     inner join afvc as afvc
-        on afvc~aufpl eq afko~aufpl
-            into @data(ls_labelcheck_str)
-     where afko~aufnr eq @ls_confoper_str-aufnr
-       and afvc~rueck eq @ls_confoper_str-rueck.
-    if sy-subrc ne 0.
+    SELECT SINGLE afko~aufnr, afvc~vornr, afvc~steus
+      FROM afko AS afko
+     INNER JOIN afvc AS afvc
+        ON afvc~aufpl EQ afko~aufpl
+            INTO @DATA(ls_labelcheck_str)
+     WHERE afko~aufnr EQ @ls_confoper_str-aufnr
+       AND afvc~rueck EQ @ls_confoper_str-rueck.
+    IF sy-subrc NE 0.
       "Etiqueta não pertence a esta ordem
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgid      = 'ZABSF_PP'
           msgty      = 'E'
           msgno      = '143'
           msgv1      = arbpl
           msgv2      = werks
-        changing
+        CHANGING
           return_tab = return_tab.
       "sair do processamento
-      return.
-    endif.
-  else.
-    select single afko~aufnr, afvc~vornr, afvc~steus
-      from afko as afko
-      inner join afvc as afvc
-      on afvc~aufpl eq afko~aufpl
-          into @ls_operation_str
-      where afko~aufnr eq @ls_confoper_str-aufnr
-      and afvc~vornr eq @ls_confoper_str-vornr.
-  endif.
+      RETURN.
+    ENDIF.
+  ELSE.
+    SELECT SINGLE afko~aufnr, afvc~vornr, afvc~steus
+      FROM afko AS afko
+      INNER JOIN afvc AS afvc
+      ON afvc~aufpl EQ afko~aufpl
+          INTO @ls_operation_str
+      WHERE afko~aufnr EQ @ls_confoper_str-aufnr
+      AND afvc~vornr EQ @ls_confoper_str-vornr.
+  ENDIF.
 
   "flag de impressão de etiquetas
 *  data(lv_printlabel_var) = cond #( when ls_operation_str-steus in lr_steus_rng
@@ -4468,52 +4733,59 @@ method set_quantity_ord.
 *      return.
 *    endif.
 *  endif.
-*Check lenght of time
-  data(l_lengh) = strlen( inputobj-timeconf ).
-  data(l_wait) = 20.
 
-  if l_lengh lt 6.
-    concatenate '0' inputobj-timeconf into data(l_time).
-  else.
+  " Check lenght of time
+  DATA(l_lengh) = strlen( inputobj-timeconf ).
+  DATA(l_wait) = 20.
+
+  IF l_lengh LT 6.
+    CONCATENATE '0' inputobj-timeconf INTO DATA(l_time).
+  ELSE.
+    CLEAR l_lengh.
     l_time = inputobj-timeconf - l_wait.
-  endif.
+    l_lengh = strlen( l_time ).
+
+    IF l_lengh LT 6.
+      CONCATENATE '0' l_time INTO l_time.
+    ENDIF.
+  ENDIF.
 
   "obter posto de trabalho
-  select single kapid
-    from zabsf_pp014
-    into @data(lv_workstation_id_var)
-      where aufnr eq @ls_confoper_str-aufnr
-        and vornr eq @ls_confoper_str-vornr
-        and arbpl eq @arbpl
-        and oprid eq @inputobj-oprid
-        and kapid ne @space
-        and status eq 'A'.
-  if sy-subrc eq 0.
-    select single name
-      from kako
-      into @data(lv_workstation_var)
-        where kapid eq @lv_workstation_id_var.
-  endif.
+  SELECT SINGLE kapid
+    FROM zabsf_pp014
+    INTO @DATA(lv_workstation_id_var)
+      WHERE aufnr EQ @ls_confoper_str-aufnr
+        AND vornr EQ @ls_confoper_str-vornr
+        AND arbpl EQ @arbpl
+        AND oprid EQ @inputobj-oprid
+        AND kapid NE @space
+        AND status EQ 'A'.
+  IF sy-subrc EQ 0.
+    SELECT SINGLE name
+      FROM kako
+      INTO @DATA(lv_workstation_var)
+        WHERE kapid EQ @lv_workstation_id_var.
+  ENDIF.
 
 
 *Get process type
-  select single prdty
-    from zabsf_pp013
-    into (@data(l_prdty))
-   where areaid eq @areaid
-     and werks  eq @werks
-     and arbpl  eq @arbpl.
+  SELECT SINGLE prdty
+    FROM zabsf_pp013
+    INTO (@DATA(l_prdty))
+   WHERE areaid EQ @areaid
+     AND werks  EQ @werks
+     AND arbpl  EQ @arbpl.
 
-  if sy-subrc eq 0.
-    case l_prdty.
-      when prdty_discret. "Discret
-        refresh: lt_timeticket_prop,
+  IF sy-subrc EQ 0.
+    CASE l_prdty.
+      WHEN prdty_discret. "Discret
+        REFRESH: lt_timeticket_prop,
                  lt_goodsmovements_prop,
                  lt_link_conf_goodsmov_prop,
                  lt_timetickets,
                  lt_detail_return.
 
-        clear: ls_propose.
+        CLEAR: ls_propose.
 
 *      Propose data for confirmation quantity
         ls_propose-goodsmovement = abap_true.
@@ -4521,87 +4793,125 @@ method set_quantity_ord.
 *      To change
         lt_qty_conf[] = qty_conf_tab[].
 
-        loop at lt_qty_conf assigning field-symbol(<fs_qty_conf>).
-          clear ls_timeticket_prop.
-*<<BMR
+        LOOP AT lt_qty_conf ASSIGNING FIELD-SYMBOL(<fs_qty_conf>).
+          CLEAR ls_timeticket_prop.
+
 *        Insert data for confirmation
 *        Production Order
           ls_timeticket_prop-orderid = <fs_qty_conf>-aufnr.
 *        Production Order Operation
           ls_timeticket_prop-operation = <fs_qty_conf>-vornr.
-*        Production Order Quantity
-*>> BMR 03.05.2018 -  calculate delta based on UMB of material
+*        Production Order Unit Quantity
+
+***** BEGIN JOL - 01/02/2023 - convert the Confirmation Unit
+          CALL FUNCTION 'CONVERSION_EXIT_CUNIT_INPUT'
+            EXPORTING
+              input          = <fs_qty_conf>-gmein
+              language       = 'P'
+            IMPORTING
+*             LONG_TEXT      = LONG_TEXT
+              output         = <fs_qty_conf>-gmein
+*             SHORT_TEXT     = SHORT_TEXT
+            EXCEPTIONS
+              unit_not_found = 1
+              OTHERS         = 2.
+          IF sy-subrc <> 0.
+* Implement suitable error handling here
+          ENDIF.
+
           ls_timeticket_prop-conf_quan_unit = <fs_qty_conf>-gmein.
+***** END JOL - 01/02/2023
 
-          select single meins from mara into @data(lv_meins)
-            where matnr eq @<fs_qty_conf>-matnr.
+          SELECT SINGLE meins FROM mara INTO @DATA(lv_meins)
+            WHERE matnr EQ @<fs_qty_conf>-matnr.
 
-          call function 'MD_CONVERT_MATERIAL_UNIT'
-            exporting
+          CALL FUNCTION 'MD_CONVERT_MATERIAL_UNIT'
+            EXPORTING
               i_matnr              = <fs_qty_conf>-matnr
               i_in_me              = <fs_qty_conf>-gmein
               i_out_me             = lv_meins
               i_menge              = <fs_qty_conf>-lmnga
-            importing
+            IMPORTING
               e_menge              = lv_umb_qtt
-            exceptions
+            EXCEPTIONS
               error_in_application = 1
               error                = 2
-              others               = 3.
+              OTHERS               = 3.
 
 *<< BMR
-          call method me->calculate_qty_absolute_delta
-            exporting
+          CALL METHOD me->calculate_qty_absolute_delta
+            EXPORTING
               arbpl       = arbpl
               aufnr       = <fs_qty_conf>-aufnr
               vornr       = <fs_qty_conf>-vornr
               matnr       = <fs_qty_conf>-matnr
               lmnga       = lv_umb_qtt
-            importing
+            IMPORTING
               confirm_qty = ls_timeticket_prop-yield
               return_tab  = return_tab.
 
-          if return_tab[] is not initial.
-            data(l_error) = abap_true.
-            exit.
-          endif.
+          IF return_tab[] IS NOT INITIAL.
+            DATA(l_error) = abap_true.
+            EXIT.
+          ENDIF.
 
           <fs_qty_conf>-lmnga = ls_timeticket_prop-yield.
 *BMR - reconverter para a medida da confirmação
-          call function 'MD_CONVERT_MATERIAL_UNIT'
-            exporting
+          CALL FUNCTION 'MD_CONVERT_MATERIAL_UNIT'
+            EXPORTING
               i_matnr              = <fs_qty_conf>-matnr
               i_in_me              = lv_meins
               i_out_me             = <fs_qty_conf>-gmein
               i_menge              = <fs_qty_conf>-lmnga
-            importing
+            IMPORTING
               e_menge              = ls_timeticket_prop-yield
-            exceptions
+            EXCEPTIONS
               error_in_application = 1
               error                = 2
-              others               = 3.
+              OTHERS               = 3.
 
-          append ls_timeticket_prop to lt_timeticket_prop.
+          APPEND ls_timeticket_prop TO lt_timeticket_prop.
 
 *        Propose data to confirmation
-          call function 'BAPI_PRODORDCONF_GET_TT_PROP'
-            exporting
+          CALL FUNCTION 'BAPI_PRODORDCONF_GET_TT_PROP'
+            EXPORTING
               propose            = ls_propose
-            importing
+            IMPORTING
               return             = ls_return
-            tables
+            TABLES
               timetickets        = lt_timeticket_prop
               goodsmovements     = lt_goodsmovements_prop
               link_conf_goodsmov = lt_link_conf_goodsmov_prop
               detail_return      = lt_detail_return.
 
-          if ls_return is not initial.
-*          Message error
-            append ls_return to return_tab.
+          DATA lv_material TYPE string.
 
-            loop at lt_detail_return into data(ls_detail_return).
-              if ( ls_detail_return-type ne 'I' and ls_detail_return-type ne 'S' ).
-                clear ls_return_conf.
+          LOOP AT lt_goodsmovements_prop ASSIGNING FIELD-SYMBOL(<ls_goodsmovement>).
+            CALL FUNCTION 'CONVERSION_EXIT_MATN1_OUTPUT'
+              EXPORTING
+                input  = <ls_goodsmovement>-material
+              IMPORTING
+                output = lv_material.
+
+            <ls_goodsmovement>-batch = VALUE #( materialbatch[ material = lv_material ]-batch OPTIONAL ).
+          ENDLOOP.
+
+* Start Change ABACO(AON) : 15.11.2022
+* Description: Change the storage location
+          IF iv_storage_location IS NOT INITIAL.
+            LOOP AT lt_goodsmovements_prop ASSIGNING FIELD-SYMBOL(<fs_goodsmovements_prop>).
+              <fs_goodsmovements_prop>-stge_loc = iv_storage_location.
+            ENDLOOP.
+          ENDIF.
+* End Change ABACO(AON) : 15.11.2022
+
+          IF ls_return IS NOT INITIAL.
+*          Message error
+            APPEND ls_return TO return_tab.
+
+            LOOP AT lt_detail_return INTO DATA(ls_detail_return).
+              IF ( ls_detail_return-type NE 'I' AND ls_detail_return-type NE 'S' ).
+                CLEAR ls_return_conf.
 
                 ls_return_conf-type = ls_detail_return-type.
                 ls_return_conf-id = ls_detail_return-id.
@@ -4612,56 +4922,56 @@ method set_quantity_ord.
                 ls_return_conf-message_v3 = ls_detail_return-message_v3.
                 ls_return_conf-message_v4 = ls_detail_return-message_v4.
 
-                append ls_return_conf to return_tab.
-              endif.
-            endloop.
+                APPEND ls_return_conf TO return_tab.
+              ENDIF.
+            ENDLOOP.
 
 *          If exist error exit program
             l_error = abap_true.
-          endif.
-        endloop.
+          ENDIF.
+        ENDLOOP.
 
-        read table lt_goodsmovements_prop into data(ls_goodsmovements_tmp) with key move_type = '101'.
-        if sy-subrc eq 0.
+        READ TABLE lt_goodsmovements_prop INTO DATA(ls_goodsmovements_tmp) WITH KEY move_type = '101'.
+        IF sy-subrc EQ 0.
           "verficar se todos componentes foram consumidos
-          zabsf_pp_cl_consumptions=>check_consumption( exporting
+          zabsf_pp_cl_consumptions=>check_consumption( EXPORTING
                                                          im_aufnr_var  = ls_confoper_str-aufnr
-                                                       importing
+                                                       IMPORTING
                                                          et_return_tab = return_tab
-                                                         et_resb_tab   = data(lt_resb_tab) ).
-          if return_tab is not initial.
+                                                         et_resb_tab   = DATA(lt_resb_tab) ).
+          IF return_tab IS NOT INITIAL.
             "sair do processamento
-            return.
-          endif.
+            RETURN.
+          ENDIF.
           "verificar se existem items para alterar
-          if lt_resb_tab is not initial.
+          IF lt_resb_tab IS NOT INITIAL.
             "ordenar tabela de items da ordem
-            sort lt_resb_tab by posnr.
+            SORT lt_resb_tab BY posnr.
             "actualizar ordem com os lotes consumidos
-            zabsf_pp_cl_prdord=>update_resb_batch( exporting
+            zabsf_pp_cl_prdord=>update_resb_batch( EXPORTING
                                                      im_aufnr_var  = ls_confoper_str-aufnr
                                                      im_resb_tab   = lt_resb_tab
-                                                   importing
+                                                   IMPORTING
                                                      et_return_tab = return_tab ).
 
-            if return_tab is not initial.
+            IF return_tab IS NOT INITIAL.
               "sair do processamento
-              return.
-            endif.
-          endif.
-        endif.
+              RETURN.
+            ENDIF.
+          ENDIF.
+        ENDIF.
 
 *      Exit if exist errors
-        if l_error is not initial.
-          exit.
-        endif.
+        IF l_error IS NOT INITIAL.
+          EXIT.
+        ENDIF.
 
-        clear ls_timeticket_prop.
+        CLEAR ls_timeticket_prop.
 
 *      Create data to confirmation
-        if lt_timeticket_prop[] is not initial.
-          loop at lt_timeticket_prop into ls_timeticket_prop.
-            clear ls_timetickets.
+        IF lt_timeticket_prop[] IS NOT INITIAL.
+          LOOP AT lt_timeticket_prop INTO ls_timeticket_prop.
+            CLEAR ls_timetickets.
 
 *          Line for quantity
             ls_timetickets-conf_no = ls_timeticket_prop-conf_no.
@@ -4670,44 +4980,44 @@ method set_quantity_ord.
             ls_timetickets-sequence = ls_timeticket_prop-sequence.
 
 *          Record date
-            if inputobj-dateconf is not initial.
+            IF inputobj-dateconf IS NOT INITIAL.
               ls_timetickets-exec_start_date = ls_timetickets-exec_fin_date = inputobj-dateconf.
               ls_timetickets-postg_date = inputobj-dateconf.
-            else.
+            ELSE.
               ls_timetickets-postg_date = ls_timeticket_prop-postg_date.
-            endif.
+            ENDIF.
 
 *          Record time
-            if l_time is not initial.
+            IF l_time IS NOT INITIAL.
               ls_timetickets-exec_start_time = ls_timetickets-exec_fin_time = l_time.
-            endif.
+            ENDIF.
 
             ls_timetickets-plant = ls_timeticket_prop-plant.
             ls_timetickets-kaptprog = l_shiftid.
 
 *          Counter Number of employees in Production Order
-            select count( * )
-              from zabsf_pp014
-              into (@data(l_nr_operator))
-             where arbpl  eq @arbpl
-               and aufnr  eq @ls_timeticket_prop-orderid
-               and vornr  eq @ls_timeticket_prop-operation
-               and tipord eq @tipord
-               and status eq 'A'.
+            SELECT COUNT( * )
+              FROM zabsf_pp014
+              INTO (@DATA(l_nr_operator))
+             WHERE arbpl  EQ @arbpl
+               AND aufnr  EQ @ls_timeticket_prop-orderid
+               AND vornr  EQ @ls_timeticket_prop-operation
+               AND tipord EQ @tipord
+               AND status EQ 'A'.
 
-            if l_nr_operator is not initial.
+            IF l_nr_operator IS NOT INITIAL.
 *            Number of employees
               ls_timetickets-no_of_employee = l_nr_operator.
-            endif.
+            ENDIF.
 
 *          Get good quantity to confirm
-            read table lt_qty_conf into data(ls_qty_conf) with key aufnr = ls_timeticket_prop-orderid
+            READ TABLE lt_qty_conf INTO DATA(ls_qty_conf) WITH KEY aufnr = ls_timeticket_prop-orderid
                                                                    vornr = ls_timeticket_prop-operation.
 
-            if sy-subrc eq 0.
+            IF sy-subrc EQ 0.
 *            Good quantity
 *              ls_timetickets-yield = ls_qty_conf-lmnga.
-            endif.
+            ENDIF.
 
             ls_timetickets-yield = ls_timeticket_prop-yield.
 
@@ -4716,124 +5026,124 @@ method set_quantity_ord.
             ls_timetickets-ex_created_by = inputobj-oprid.
             ls_timetickets-conf_text = lv_workstation_var.
 
-            append ls_timetickets to lt_timetickets.
-          endloop.
-        endif.
+            APPEND ls_timetickets TO lt_timetickets.
+          ENDLOOP.
+        ENDIF.
 
 *      Create data to goods movements
-        if lt_goodsmovements_prop[] is not initial.
+        IF lt_goodsmovements_prop[] IS NOT INITIAL.
 *        Read production order and operation
-          read table lt_qty_conf into ls_qty_conf index 1.
+          READ TABLE lt_qty_conf INTO ls_qty_conf INDEX 1.
 
-          if sy-subrc eq 0.
+          IF sy-subrc EQ 0.
 *          Production order
-            data(l_aufnr) = ls_qty_conf-aufnr.
+            DATA(l_aufnr) = ls_qty_conf-aufnr.
 *           Production order operation
-            data(l_vornr) = ls_qty_conf-vornr.
-          endif.
+            DATA(l_vornr) = ls_qty_conf-vornr.
+          ENDIF.
 
 *        Get batches consumption
-          select *
-            from zabsf_pp069
-            into table @data(lt_pp_sf069)
-           where werks eq @inputobj-werks
-             and aufnr eq @l_aufnr
-             and vornr eq @l_vornr.
+          SELECT *
+            FROM zabsf_pp069
+            INTO TABLE @DATA(lt_pp_sf069)
+           WHERE werks EQ @inputobj-werks
+             AND aufnr EQ @l_aufnr
+             AND vornr EQ @l_vornr.
 
-          clear l_index.
-          loop at lt_goodsmovements_prop into data(ls_goodsmovements_prop).
-            clear ls_goodsmovements.
+          CLEAR l_index.
+          LOOP AT lt_goodsmovements_prop INTO DATA(ls_goodsmovements_prop).
+            CLEAR ls_goodsmovements.
             l_index = sy-tabix.
 
 *          Move same fields to output table
-            move-corresponding ls_goodsmovements_prop to ls_goodsmovements.
+            MOVE-CORRESPONDING ls_goodsmovements_prop TO ls_goodsmovements.
 
-*          Movement type
-            case ls_goodsmovements_prop-move_type.
-              when c_101. "GR goods receipt
-*              Get batch production
-                select single batch
-                  from zabsf_pp066
-                  into (@data(l_batch))
-                 where werks eq @inputobj-werks
-                   and aufnr eq @l_aufnr
-                   and vornr eq @l_vornr.
+**          Movement type
+*            CASE ls_goodsmovements_prop-move_type.
+*              WHEN c_101. "GR goods receipt
+**              Get batch production
+*                SELECT SINGLE batch
+*                  FROM zabsf_pp066
+*                  INTO (@DATA(l_batch))
+*                 WHERE werks EQ @inputobj-werks
+*                   AND aufnr EQ @l_aufnr
+*                   AND vornr EQ @l_vornr.
+*
+*                IF sy-subrc EQ 0.
+*
+*                  SELECT SINGLE mtart FROM mara
+*                    INTO @DATA(lv_mtart)
+*                    WHERE matnr = @ls_goodsmovements_prop-material.
+*
+*                  ls_goodsmovements-batch = l_batch.
+*
+**                Batch Production
+*                  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+*                    EXPORTING
+*                      input  = l_batch
+*                    IMPORTING
+*                      output = ls_goodsmovements-batch.
+*                ENDIF.
+**                 Old batch
+*                DATA(l_old_batch) = ls_goodsmovements-batch.
+*
+*                "obrigatório ter o lote associado
+*                IF ls_goodsmovements-batch IS INITIAL.
+**                  call method zabsf_pp_cl_log=>add_message
+**                    exporting
+**                      msgty      = 'E'
+**                      msgno      = '126'
+**                    changing
+**                      return_tab = return_tab.
+**                  return.
+*                ENDIF.
+*              WHEN c_261. "GI for order
+*
+*                IF ls_qty_conf-charg_t[] IS NOT INITIAL.
+*                  LOOP AT ls_qty_conf-charg_t INTO DATA(ls_charg) WHERE matnr EQ ls_goodsmovements_prop-material.
+**                  Batch consumption
+*                    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+*                      EXPORTING
+*                        input  = ls_charg-charg
+*                      IMPORTING
+*                        output = ls_goodsmovements-batch.
+*                  ENDLOOP.
+*                ELSE.
+**                Get batch consumption for material
+*                  READ TABLE lt_pp_sf069 INTO DATA(ls_pp_sf069_temp) WITH KEY matnr = ls_goodsmovements_prop-material.
+*
+*                  IF sy-subrc EQ 0.
+**                  Batch consumption
+*                    CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+*                      EXPORTING
+*                        input  = ls_pp_sf069_temp-batch
+*                      IMPORTING
+*                        output = ls_goodsmovements-batch.
+*                  ENDIF.
+*                ENDIF.
+*            ENDCASE.
 
-                if sy-subrc eq 0.
-
-                  select single mtart from mara
-                    into @data(lv_mtart)
-                    where matnr = @ls_goodsmovements_prop-material.
-
-                  ls_goodsmovements-batch = l_batch.
-
-*                Batch Production
-                  call function 'CONVERSION_EXIT_ALPHA_INPUT'
-                    exporting
-                      input  = l_batch
-                    importing
-                      output = ls_goodsmovements-batch.
-                endif.
-*                 Old batch
-                data(l_old_batch) = ls_goodsmovements-batch.
-
-                "obrigatório ter o lote associado
-                if ls_goodsmovements-batch is initial.
-*                  call method zabsf_pp_cl_log=>add_message
-*                    exporting
-*                      msgty      = 'E'
-*                      msgno      = '126'
-*                    changing
-*                      return_tab = return_tab.
-*                  return.
-                endif.
-              when c_261. "GI for order
-
-                if ls_qty_conf-charg_t[] is not initial.
-                  loop at ls_qty_conf-charg_t into data(ls_charg) where matnr eq ls_goodsmovements_prop-material.
-*                  Batch consumption
-                    call function 'CONVERSION_EXIT_ALPHA_INPUT'
-                      exporting
-                        input  = ls_charg-charg
-                      importing
-                        output = ls_goodsmovements-batch.
-                  endloop.
-                else.
-*                Get batch consumption for material
-                  read table lt_pp_sf069 into data(ls_pp_sf069_temp) with key matnr = ls_goodsmovements_prop-material.
-
-                  if sy-subrc eq 0.
-*                  Batch consumption
-                    call function 'CONVERSION_EXIT_ALPHA_INPUT'
-                      exporting
-                        input  = ls_pp_sf069_temp-batch
-                      importing
-                        output = ls_goodsmovements-batch.
-                  endif.
-                endif.
-            endcase.
-
-            read table lt_goodsmovements assigning field-symbol(<fs_goods>)
-                  with key material = ls_goodsmovements_prop-material
+            READ TABLE lt_goodsmovements ASSIGNING FIELD-SYMBOL(<fs_goods>)
+                  WITH KEY material = ls_goodsmovements_prop-material
                            move_type = c_261.
-            if ( sy-subrc = 0 ).
+            IF ( sy-subrc = 0 ).
               <fs_goods>-entry_qnt = <fs_goods>-entry_qnt +
                                      ls_goodsmovements-entry_qnt.
-              delete lt_link_conf_goodsmov_prop index l_index.
-              continue.
-            else.
-              if ( l_index is initial ).
+              DELETE lt_link_conf_goodsmov_prop INDEX l_index.
+              CONTINUE.
+            ELSE.
+              IF ( l_index IS INITIAL ).
                 l_index = sy-tabix + 1.
-              else.
+              ELSE.
                 l_index = l_index + 1.
-              endif.
-            endif.
+              ENDIF.
+            ENDIF.
 
 *          Append to output table
-            append ls_goodsmovements to lt_goodsmovements.
-          endloop.
+            APPEND ls_goodsmovements TO lt_goodsmovements.
+          ENDLOOP.
 
-        endif.
+        ENDIF.
 ***************************************************************
         "If supervisor is active, store batches in table
 *        if supervisor = 'X'.
@@ -4868,14 +5178,14 @@ method set_quantity_ord.
 
 
 *      Link to confirmation of good movement
-        if lt_link_conf_goodsmov_prop[] is not initial.
-          read table lt_link_conf_goodsmov_prop into data(ls_link_conf_goodsmov_prop) index 1.
-          loop at lt_goodsmovements into ls_goodsmovements.
-            data(lv_tabix_) = sy-tabix.
+        IF lt_link_conf_goodsmov_prop[] IS NOT INITIAL.
+          READ TABLE lt_link_conf_goodsmov_prop INTO DATA(ls_link_conf_goodsmov_prop) INDEX 1.
+          LOOP AT lt_goodsmovements INTO ls_goodsmovements.
+            DATA(lv_tabix_) = sy-tabix.
             ls_link_conf_goodsmov-index_confirm = ls_link_conf_goodsmov_prop-index_confirm.
             ls_link_conf_goodsmov-index_goodsmov = lv_tabix_.
-            append ls_link_conf_goodsmov to lt_link_conf_goodsmov.
-          endloop.
+            APPEND ls_link_conf_goodsmov TO lt_link_conf_goodsmov.
+          ENDLOOP.
 *          LOOP AT lt_link_conf_goodsmov_prop INTO DATA(ls_link_conf_goodsmov_prop).
 **          Move same fields to output table
 *            MOVE-CORRESPONDING ls_link_conf_goodsmov_prop TO ls_link_conf_goodsmov.
@@ -4883,87 +5193,89 @@ method set_quantity_ord.
 **          Append to output table
 *            APPEND ls_link_conf_goodsmov TO lt_link_conf_goodsmov.
 *          ENDLOOP.
-        endif.
+        ENDIF.
 
-        if lt_timetickets[] is not initial. "AND lt_goodsmovements[] IS NOT INITIAL.
-          refresh lt_create_batch.
-          clear ls_goodsmovements.
+        IF lt_timetickets[] IS NOT INITIAL. "AND lt_goodsmovements[] IS NOT INITIAL.
+          REFRESH lt_create_batch.
+          CLEAR ls_goodsmovements.
 
-          read table lt_goodsmovements assigning field-symbol(<fs_goodmovements>)
-            with key move_type = c_101.
-          if sy-subrc eq 0.
+          READ TABLE lt_goodsmovements ASSIGNING FIELD-SYMBOL(<fs_goodmovements>)
+            WITH KEY move_type = c_101.
+          IF sy-subrc EQ 0.
             "obter operadores logados na ordem
-            select *
-              from zabsf_pp014
-              into table @data(lt_pp_sf014)
-             where arbpl  eq @arbpl
-               and aufnr  eq @ls_confoper_str-aufnr
-               and vornr  eq @ls_confoper_str-vornr
-               and tipord eq @tipord
-               and status eq 'A'.
+            SELECT *
+              FROM zabsf_pp014
+              INTO TABLE @DATA(lt_pp_sf014)
+             WHERE arbpl  EQ @arbpl
+               AND aufnr  EQ @ls_confoper_str-aufnr
+               AND vornr  EQ @ls_confoper_str-vornr
+               AND tipord EQ @tipord
+               AND status EQ 'A'.
             "ordenar por operador
-            sort lt_pp_sf014 by oprid.
+            SORT lt_pp_sf014 BY oprid.
             "remover duplicados
-            delete adjacent duplicates from lt_pp_sf014 comparing oprid.
+            DELETE ADJACENT DUPLICATES FROM lt_pp_sf014 COMPARING oprid.
             "criar tabela com operadores logados na ordem
-            loop at lt_pp_sf014 into data(ls_sf14_str).
-              append value #( atnam = lv_operador_var
-                              atwrt = ls_sf14_str-oprid ) to lt_characts_tab.
-            endloop.
+            LOOP AT lt_pp_sf014 INTO DATA(ls_sf14_str).
+              APPEND VALUE #( atnam = lv_operador_var
+                              atwrt = ls_sf14_str-oprid ) TO lt_characts_tab.
+            ENDLOOP.
             "obter operadores da operação anterior
-            select *
-              from zabsf_pp065
-              into table @data(lt_previous_tab)
-               where conf_no eq @ls_confoper_str-rueck
-                 and conf_cnt eq @ls_confoper_str-rmzhl.
-            loop at lt_previous_tab into data(ls_pp065_str).
-              append value #( atnam = lv_aramador_var
-                              atwrt = ls_pp065_str-oprid ) to lt_characts_tab.
-            endloop.
+            SELECT *
+              FROM zabsf_pp065
+              INTO TABLE @DATA(lt_previous_tab)
+               WHERE conf_no EQ @ls_confoper_str-rueck
+                 AND conf_cnt EQ @ls_confoper_str-rmzhl.
+            LOOP AT lt_previous_tab INTO DATA(ls_pp065_str).
+              APPEND VALUE #( atnam = lv_aramador_var
+                              atwrt = ls_pp065_str-oprid ) TO lt_characts_tab.
+            ENDLOOP.
 
             "objecto configurador
-            select single cuobj
-              from afpo
-              into @data(lv_cuobj_var)
-               where aufnr eq @ls_confoper_str-aufnr.
+            SELECT SINGLE cuobj
+              FROM afpo
+              INTO @DATA(lv_cuobj_var)
+               WHERE aufnr EQ @ls_confoper_str-aufnr.
             "ler configuração da ordem de produção - material cabeçalho
-            call method zcl_mm_classification=>get_classification_config
-              exporting
+            CALL METHOD zcl_mm_classification=>get_classification_config
+              EXPORTING
                 im_instance_cuobj_var = lv_cuobj_var
-              importing
-                ex_classfication_tab  = data(lt_classifc_tab)
-              exceptions
+              IMPORTING
+                ex_classfication_tab  = DATA(lt_classifc_tab)
+              EXCEPTIONS
                 instance_not_found    = 1
-                others                = 2.
-            if sy-subrc <> 0.
+                OTHERS                = 2.
+            IF sy-subrc <> 0.
 *             Implement suitable error handling here
-            endif.
+            ENDIF.
             "copiar o valor das caracteristicas
-            loop at lt_classifc_tab into data(ls_classific_str)
-              where atnam in lr_zpp2_copy_rng.
+            LOOP AT lt_classifc_tab INTO DATA(ls_classific_str)
+              WHERE atnam IN lr_zpp2_copy_rng.
               "adicionar caracteristica a ser copiada
-              append value #( atnam = ls_classific_str-atnam
-                              atwrt = ls_classific_str-atwrt ) to lt_characts_tab.
-            endloop.
+              APPEND VALUE #( atnam = ls_classific_str-atnam
+                              atwrt = ls_classific_str-atwrt ) TO lt_characts_tab.
+            ENDLOOP.
 
             "criar lote de produção
-            call method zabsf_pp_cl_prdord=>create_production_batch
-              exporting
+            CALL METHOD zabsf_pp_cl_prdord=>create_production_batch
+              EXPORTING
                 im_refmatnr_var = <fs_goodmovements>-material
                 im_refwerks_var = werks
                 it_characts_tab = lt_characts_tab
-              importing
-                et_return_tab   = data(lt_ret_tab)
-                ex_newbatch_var = data(ex_newbatch_var)
-                ex_error_var    = data(lv_bacth_error_var).
+              IMPORTING
+                et_return_tab   = DATA(lt_ret_tab)
+                ex_newbatch_var = DATA(ex_newbatch_var)
+                ex_error_var    = DATA(lv_bacth_error_var).
 
-            if lv_bacth_error_var = abap_true.
-              append lines of lt_ret_tab to return_tab.
+            IF lv_bacth_error_var = abap_true.
+              APPEND LINES OF lt_ret_tab TO return_tab.
               "sair do processamento
-              return.
-            endif.
-            <fs_goodmovements>-batch = ex_newbatch_var.
-          endif.
+              RETURN.
+            ENDIF.
+            IF ex_newbatch_var IS NOT INITIAL.
+              <fs_goodmovements>-batch = ex_newbatch_var.
+            ENDIF.
+          ENDIF.
           "preecher linha com novo lote
 
 
@@ -4991,122 +5303,129 @@ method set_quantity_ord.
 *              lv_werks_chg = werks.
 *            endif.
 
-          clear l_error.
+          CLEAR l_error.
 
 *        Check if exist errors
-          loop at return_tab into data(ls_return_tab) where type ne 'S'
-                                                        and type ne 'I'
-                                                        and type ne 'W'.
-
+          LOOP AT return_tab INTO DATA(ls_return_tab) WHERE type NE 'S'
+                                                        AND type NE 'I'
+                                                        AND type NE 'W'.
             l_error = abap_true.
-            exit.
-          endloop.
+            EXIT.
+          ENDLOOP.
 
-          if l_error is not initial.
-            exit.
-          endif.
-
+          IF l_error IS NOT INITIAL.
+            EXIT.
+          ENDIF.
 
 ** Validate lines of goodsmovements table movement with type = '261' and
 *  if propose greater than stock create new line with the difference and
 *  change quantity in old line with stock quantity. The difference goes
 *  to COGI
-          refresh lt_goodsmovements_new.
-          loop at lt_goodsmovements assigning <fs_goodmovements>
-                                    where move_type eq c_261.
+          REFRESH lt_goodsmovements_new.
+          LOOP AT lt_goodsmovements ASSIGNING <fs_goodmovements>
+                                    WHERE move_type EQ c_261.
 
 *    Get material with Batch management requirement indicator
-            select single xchpf
-              from mara
-              into @data(l_xchpf)
-             where matnr eq @<fs_goodmovements>-material
-               and xchpf eq @abap_true.
-            check sy-subrc = 0 and not l_xchpf is initial.
+            SELECT SINGLE xchpf
+              FROM mara
+              INTO @DATA(l_xchpf)
+             WHERE matnr EQ @<fs_goodmovements>-material
+               AND xchpf EQ @abap_true.
+            CHECK sy-subrc = 0 AND NOT l_xchpf IS INITIAL.
 
 *            Check quantity confirmed
-            select single cinsm, clabs
-              from mchb
-              into (@data(l_cinsm),@data(l_clabs))
-             where matnr eq @<fs_goodmovements>-material
-               and werks eq @<fs_goodmovements>-plant
-               and lgort eq @<fs_goodmovements>-stge_loc
-               and charg eq @<fs_goodmovements>-batch.
-            if ( sy-subrc eq 0 ).
+            SELECT SINGLE cinsm, clabs
+              FROM mchb
+              INTO (@DATA(l_cinsm),@DATA(l_clabs))
+             WHERE matnr EQ @<fs_goodmovements>-material
+               AND werks EQ @<fs_goodmovements>-plant
+               AND lgort EQ @<fs_goodmovements>-stge_loc
+               AND charg EQ @<fs_goodmovements>-batch.
+            IF ( sy-subrc EQ 0 ).
 *        Stock quantity of Batch
-              clear l_stock.
+              CLEAR l_stock.
               l_stock = l_cinsm + l_clabs.
 
-              if ( l_stock < <fs_goodmovements>-entry_qnt ).
+              IF ( l_stock < <fs_goodmovements>-entry_qnt ).
 **             New Line with delta
-                clear ls_goodsmovements_new.
-                move-corresponding <fs_goodmovements> to
+                CLEAR ls_goodsmovements_new.
+                MOVE-CORRESPONDING <fs_goodmovements> TO
                                    ls_goodsmovements_new.
                 ls_goodsmovements_new-entry_qnt =
                         <fs_goodmovements>-entry_qnt - l_stock.
-                append ls_goodsmovements_new to lt_goodsmovements_new.
+                APPEND ls_goodsmovements_new TO lt_goodsmovements_new.
 
 **             Old line with stock available
-                move l_stock to <fs_goodmovements>-entry_qnt.
+                MOVE l_stock TO <fs_goodmovements>-entry_qnt.
 
-                clear ls_link_conf_goodsmov.
-                describe table lt_link_conf_goodsmov lines data(lv_cnt).
-                read table lt_link_conf_goodsmov
-                      into ls_link_conf_goodsmov index lv_cnt.
-                add 1 to ls_link_conf_goodsmov-index_goodsmov.
-                append ls_link_conf_goodsmov to lt_link_conf_goodsmov.
-              endif.
-            endif.
-          endloop.
-          if ( not lt_goodsmovements_new[] is initial ).
-            loop at lt_goodsmovements_new into ls_goodsmovements_new.
-              append ls_goodsmovements_new to lt_goodsmovements.
-            endloop.
-          endif.
+                CLEAR ls_link_conf_goodsmov.
+                DESCRIBE TABLE lt_link_conf_goodsmov LINES DATA(lv_cnt).
+                READ TABLE lt_link_conf_goodsmov
+                      INTO ls_link_conf_goodsmov INDEX lv_cnt.
+                ADD 1 TO ls_link_conf_goodsmov-index_goodsmov.
+                APPEND ls_link_conf_goodsmov TO lt_link_conf_goodsmov.
+              ENDIF.
+            ENDIF.
+          ENDLOOP.
+          IF ( NOT lt_goodsmovements_new[] IS INITIAL ).
+            LOOP AT lt_goodsmovements_new INTO ls_goodsmovements_new.
+              APPEND ls_goodsmovements_new TO lt_goodsmovements.
+            ENDLOOP.
+          ENDIF.
 
 
-          read table lt_goodsmovements into data(ls_goodsmovements_tmp2) with key move_type = '101'.
-          if sy-subrc eq 0.
-            if ls_goodsmovements_tmp2-batch is initial.
-              data(flag_erro) = ''.
-            endif.
-          endif.
+          READ TABLE lt_goodsmovements INTO DATA(ls_goodsmovements_tmp2) WITH KEY move_type = '101'.
+          IF sy-subrc EQ 0.
+            IF ls_goodsmovements_tmp2-batch IS INITIAL.
+              DATA(flag_erro) = ''.
+            ENDIF.
+          ENDIF.
 
-          if flag_erro = 'X'.
-            call method zabsf_pp_cl_log=>add_message
-              exporting
+          IF flag_erro = 'X'.
+            CALL METHOD zabsf_pp_cl_log=>add_message
+              EXPORTING
                 msgty      = 'E'
                 msgno      = '126'
-              changing
+              CHANGING
                 return_tab = return_tab.
-            check not ls_goodsmovements_tmp-batch is initial.
-          endif.
+            CHECK NOT ls_goodsmovements_tmp-batch IS INITIAL.
+          ENDIF.
 
 *        Create confirmation
-          data: wa_indx type indx.
-          data: flag_nao_imprime type c.
-          data: lv_matnr_ type matnr,
-                lv_charg_ type charg_d.
-          data: ls_imprime type zpp10_imprime.
-          data:   opcode_usr_attr(1)  type x value 5.
-          select single * from zabsf_pp066 into @data(ls_pp066)
-              where werks = @werks
-                and aufnr = @<fs_qty_conf>-aufnr
-                and vornr = @<fs_qty_conf>-vornr.
+          DATA: wa_indx TYPE indx.
+          DATA: flag_nao_imprime TYPE c.
+          DATA: lv_matnr_ TYPE matnr,
+                lv_charg_ TYPE charg_d.
+          DATA: ls_imprime TYPE zpp10_imprime.
+          DATA:   opcode_usr_attr(1)  TYPE x VALUE 5.
+          SELECT SINGLE * FROM zabsf_pp066 INTO @DATA(ls_pp066)
+              WHERE werks = @werks
+                AND aufnr = @<fs_qty_conf>-aufnr
+                AND vornr = @<fs_qty_conf>-vornr.
+
+*          DATA(lt_matserprof) =
+*            get_material_serial_profile( VALUE #(
+*              FOR m IN lt_goodsmovements (
+*                matnr = m-material
+*                werks = m-plant ) ) ).
+
+*          IF materialserial[] is initial OR line_exists( lt_goodsmovements[ move_type = c_101 ] ).
 
           "criar confirmação
-          call function 'BAPI_PRODORDCONF_CREATE_TT'
-            importing
+          CALL FUNCTION 'BAPI_PRODORDCONF_CREATE_TT'
+            IMPORTING
               return             = ls_return
-            tables
+            TABLES
               timetickets        = lt_timetickets
-              goodsmovements     = lt_goodsmovements
+*             goodsmovements     = lt_goodsmovements
               link_conf_goodsmov = lt_link_conf_goodsmov
               detail_return      = lt_detail_return.
 
-          if ls_return is initial.
-            call function 'BAPI_TRANSACTION_COMMIT'
-              exporting
+          IF ls_return IS INITIAL.
+            CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+              EXPORTING
                 wait = 'X'.
+
             ">> BMR INSERT 13.04.2020 - impressão de etiquetas
 *            if lv_printlabel_var eq abap_true.
 *              "dados da etiqueta
@@ -5207,16 +5526,16 @@ method set_quantity_ord.
 *              endif.
 *            endif.
             "<< BMR END INSERT
-          endif.
+          ENDIF.
 
 *        Delete duplicate error message
-          delete adjacent duplicates from lt_detail_return.
+          DELETE ADJACENT DUPLICATES FROM lt_detail_return.
 
-          clear ls_detail_return.
+          CLEAR ls_detail_return.
 
 *        Details of operation
-          loop at lt_detail_return into ls_detail_return.
-            clear ls_return_conf.
+          LOOP AT lt_detail_return INTO ls_detail_return.
+            CLEAR ls_return_conf.
 
             ls_return_conf-type = ls_detail_return-type.
             ls_return_conf-id = ls_detail_return-id.
@@ -5227,42 +5546,42 @@ method set_quantity_ord.
             ls_return_conf-message_v3 = ls_detail_return-message_v3.
             ls_return_conf-message_v4 = ls_detail_return-message_v4.
 
-            append ls_return_conf to return_tab.
+            APPEND ls_return_conf TO return_tab.
 
-            if ls_detail_return-type eq 'I' or ls_detail_return-type eq 'S'.
-              clear: ls_qty_conf,
+            IF ls_detail_return-type EQ 'I' OR ls_detail_return-type EQ 'S'.
+              CLEAR: ls_qty_conf,
                      ls_conf_tab.
 
 *            Confirmation number
               ls_conf_tab-conf_no = ls_detail_return-conf_no.
               ls_conf_tab-conf_cnt = ls_detail_return-conf_cnt.
 *            Confirmation counter
-              append ls_conf_tab to conf_tab.
+              APPEND ls_conf_tab TO conf_tab.
 
 *            Check if was inspection order
-              select single @abap_true
-                from aufk
-                into @data(l_exist)
-               where aufnr eq @ls_detail_return-message_v1
-                 and auart eq @c_inspection.
+              SELECT SINGLE @abap_true
+                FROM aufk
+                INTO @DATA(l_exist)
+               WHERE aufnr EQ @ls_detail_return-message_v1
+                 AND auart EQ @c_inspection.
 
-              if l_exist eq abap_true.
+              IF l_exist EQ abap_true.
 *              Get time wait
-                select single parva
-                  from zabsf_pp032
-                  into (@data(l_wait_param))
-                 where parid eq @c_wait_cancel.
+                SELECT SINGLE parva
+                  FROM zabsf_pp032
+                  INTO (@DATA(l_wait_param))
+                 WHERE parid EQ @c_wait_cancel.
 
-                if l_wait_param is not initial.
+                IF l_wait_param IS NOT INITIAL.
                   l_wait_cancel = l_wait_param.
-                endif.
+                ENDIF.
 
 *              Wait for backgroud update SAP Table - AFWI
-                if l_wait_cancel is not initial.
-                  wait up to l_wait_cancel seconds.
-                else.
-                  wait up to 5 seconds.
-                endif.
+                IF l_wait_cancel IS NOT INITIAL.
+                  WAIT UP TO l_wait_cancel SECONDS.
+                ELSE.
+                  WAIT UP TO 5 SECONDS.
+                ENDIF.
 
 *              Change status
 *                call function 'Z_PP10_CHANGE_STATUS'
@@ -5272,52 +5591,54 @@ method set_quantity_ord.
 *                    iv_oprid = inputobj-oprid
 *                  importing
 *                    ev_flag  = l_flag.
-              endif.
+              ENDIF.
 
 *            Get detail of Production Order confirmed
-              read table lt_qty_conf into ls_qty_conf with key aufnr = ls_detail_return-message_v1.
+              READ TABLE lt_qty_conf INTO ls_qty_conf WITH KEY aufnr = ls_detail_return-message_v1.
 
-              if sy-subrc eq 0.
+              IF sy-subrc EQ 0.
 *              Get quantity confirmed
-                select single *
-                  from afru
-                  into @data(ls_afru)
-                 where rueck eq @ls_detail_return-conf_no
-                   and rmzhl eq @ls_detail_return-conf_cnt
-                   and aufnr eq @ls_qty_conf-aufnr.
+                SELECT SINGLE *
+                  FROM afru
+                  INTO @DATA(ls_afru)
+                 WHERE rueck EQ @ls_detail_return-conf_no
+                   AND rmzhl EQ @ls_detail_return-conf_cnt
+                   AND aufnr EQ @ls_qty_conf-aufnr.
 
-                if sy-subrc eq 0.
-                  clear: l_source_value.
+                IF sy-subrc EQ 0.
+                  CLEAR: l_source_value.
 
 *                Get value values of quantities saved in Database
-                  select single *
-                    from zabsf_pp017
-                    into @data(ls_pp_sf017)
-                   where aufnr eq @ls_qty_conf-aufnr
-                     and matnr eq @ls_qty_conf-matnr
-                     and vornr eq @ls_qty_conf-vornr.
+                  SELECT SINGLE *
+                    FROM zabsf_pp017
+                    INTO @DATA(ls_pp_sf017)
+                   WHERE aufnr EQ @ls_qty_conf-aufnr
+                     AND matnr EQ @ls_qty_conf-matnr
+                     AND vornr EQ @ls_qty_conf-vornr.
 
-                  if sy-subrc eq 0.
+                  IF sy-subrc EQ 0.
+*                    CLEAR l_batch.
+
 *                  Reverse quantity
-                    select sum( lmnga )
-                      from afru
-                      into (@data(l_reverse))
-                     where rueck eq @ls_detail_return-conf_no
-                       and aufnr eq @ls_qty_conf-aufnr
-                       and stokz ne @space
-                       and stzhl ne @space.
+                    SELECT SUM( lmnga )
+                      FROM afru
+                      INTO (@DATA(l_reverse))
+                     WHERE rueck EQ @ls_detail_return-conf_no
+                       AND aufnr EQ @ls_qty_conf-aufnr
+                       AND stokz NE @space
+                       AND stzhl NE @space.
 
 *                  Confirmed quantity
-                    select sum( lmnga ), sum( rmnga ), sum( xmnga )
-                      from afru
-                      into (@data(l_lmnga), @data(l_rmnga), @data(l_xmnga))
-                     where rueck eq @ls_detail_return-conf_no
-                       and aufnr eq @ls_qty_conf-aufnr
-                       and stokz eq @space
-                       and stzhl eq @space.
+                    SELECT SUM( lmnga ), SUM( rmnga ), SUM( xmnga )
+                      FROM afru
+                      INTO (@DATA(l_lmnga), @DATA(l_rmnga), @DATA(l_xmnga))
+                     WHERE rueck EQ @ls_detail_return-conf_no
+                       AND aufnr EQ @ls_qty_conf-aufnr
+                       AND stokz EQ @space
+                       AND stzhl EQ @space.
 
 *                  Good quantity
-                    add ls_afru-lmnga to ls_pp_sf017-lmnga.
+                    ADD ls_afru-lmnga TO ls_pp_sf017-lmnga.
 *                  Missing quantity
                     ls_pp_sf017-missingqty = ls_pp_sf017-gamng - l_lmnga - l_rmnga - l_reverse.
 *                      ls_pp_sf017-missingqty = ls_pp_sf017-gamng - l_lmnga - l_rmnga - l_xmnga - l_reverse. "Commented code 28.09.2016
@@ -5333,39 +5654,41 @@ method set_quantity_ord.
 *                       and afvc~vornr eq @ls_qty_conf-vornr
 *                      into (@l_aufpl , @l_aplzl).
 
-*                  Get box quantity
-*                    call method me->get_qty_box
-*                      exporting
-*                        matnr        = ls_pp_sf017-matnr
-*                        source_value = l_source_value
-*                        lmnga        = ls_afru-lmnga
-*                        gmein        = ls_pp_sf017-gmein
-*                        aufpl        = l_aufpl
-*                        aplzl        = l_aplzl
-*                      changing
-*                        boxqty       = ls_pp_sf017-boxqty.
-
-                    clear l_batch.
+*BEGIN JOL - 17/11/2022 - Add the "prdqty_box" field to zabsf_pp017 table.
+*              Convert Unit
+                    CALL METHOD me->convert_unit
+                      EXPORTING
+                        matnr        = ls_pp_sf017-matnr
+                        source_value = l_source_value
+                        source_unit  = ls_pp_sf017-gmein
+                        lmnga        = ls_afru-lmnga
+                      CHANGING
+                        prdqty_box   = ls_pp_sf017-prdqty_box
+                        boxqty       = ls_pp_sf017-boxqty.
 
 *                  Get batch production
-                    select single batch
-                      from zabsf_pp066
-                      into @l_batch
-                     where werks eq @inputobj-werks
-                       and aufnr eq @ls_qty_conf-aufnr
-                       and vornr eq @ls_qty_conf-vornr.
+*                    SELECT SINGLE batch
+*                      FROM zabsf_pp066
+*                      INTO @l_batch
+*                     WHERE werks EQ @inputobj-werks
+*                       AND aufnr EQ @ls_qty_conf-aufnr
+*                       AND vornr EQ @ls_qty_conf-vornr.
 
-                    if l_batch is not initial.
+*                    IF l_batch IS NOT INITIAL.
+*END JOL.
 *                    Quantity Produced
-                      add ls_afru-lmnga to ls_pp_sf017-prdqty_box.
-                    endif.
+                    ADD ls_afru-lmnga TO ls_pp_sf017-prdqty_box.
+*                    ENDIF.
+*BEGIN ADR - 17/11/2022 - Add the "equipment" field to zabsf_pp017 table.
+                    ls_pp_sf017-equipment = iv_equipment.
+*END ADR.
 *                  Update database
-                    update zabsf_pp017 from @ls_pp_sf017.
-                  endif.
-                endif.
-              endif.
+                    UPDATE zabsf_pp017 FROM @ls_pp_sf017.
+                  ENDIF.
+                ENDIF.
+              ENDIF.
 
-              if ls_detail_return-conf_no is not initial and ls_detail_return-conf_cnt is not initial.
+              IF ls_detail_return-conf_no IS NOT INITIAL AND ls_detail_return-conf_cnt IS NOT INITIAL.
 *              Work center
                 ls_conf_data-arbpl = arbpl.
 *              Production order
@@ -5386,14 +5709,14 @@ method set_quantity_ord.
 *                   and aufnr eq @ls_qty_conf-aufnr
 *                   and vornr eq @ls_qty_conf-vornr.
 
-*              When confirm all box quantity
-                if ls_conf_data-charg is initial.
-                  if l_old_batch is not initial.
-                    ls_conf_data-charg = l_old_batch.
-                  else.
-                    ls_conf_data-charg = l_new_batch.
-                  endif.
-                endif.
+**              When confirm all box quantity
+*                IF ls_conf_data-charg IS INITIAL.
+*                  IF l_old_batch IS NOT INITIAL.
+*                    ls_conf_data-charg = l_old_batch.
+*                  ELSE.
+*                    ls_conf_data-charg = l_new_batch.
+*                  ENDIF.
+*                ENDIF.
 
 *              Shift ID
                 ls_conf_data-shiftid = l_shiftid.
@@ -5406,29 +5729,29 @@ method set_quantity_ord.
 *                   AND aufnr EQ ls_qty_conf-aufnr
 *                   AND vornr EQ ls_qty_conf-vornr.
                 "guardar os opoeradores da ordem
-                if lref_sf_prdord is not bound.
+                IF lref_sf_prdord IS NOT BOUND.
 *                Create object
-                  create object lref_sf_prdord
-                    exporting
+                  CREATE OBJECT lref_sf_prdord
+                    EXPORTING
                       initial_refdt = refdt
                       input_object  = inputobj.
-                endif.
+                ENDIF.
 
 *              Save aditional data of confirmation
-                call method lref_sf_prdord->save_data_confirmation
-                  exporting
+                CALL METHOD lref_sf_prdord->save_data_confirmation
+                  EXPORTING
                     is_conf_data = ls_conf_data
-                  changing
+                  CHANGING
                     return_tab   = return_tab.
-              endif.
+              ENDIF.
 
 *            Save Batch consumption
-              loop at ls_qty_conf-charg_t into data(ls_batch).
+              LOOP AT ls_qty_conf-charg_t INTO DATA(ls_batch).
 *>> BMR INSERT - add leading zeros to batch number
-                call function 'CONVERSION_EXIT_ALPHA_INPUT'
-                  exporting
+                CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+                  EXPORTING
                     input  = ls_batch-charg
-                  importing
+                  IMPORTING
                     output = ls_batch-charg.
 *<< BMR END INSERT.
 *                if ls_batch-maktx is not initial.
@@ -5456,24 +5779,24 @@ method set_quantity_ord.
 *                endif.
 
 *              CHeck if exist batch consumption saved
-                select single *
-                  from zabsf_pp069
-                  into @data(ls_pp_sf069)
-                 where werks eq @ls_batch-werks
-                   and aufnr eq @ls_qty_conf-aufnr
-                   and vornr eq @ls_qty_conf-vornr
-                   and matnr eq @ls_batch-matnr.
+                SELECT SINGLE *
+                  FROM zabsf_pp069
+                  INTO @DATA(ls_pp_sf069)
+                 WHERE werks EQ @ls_batch-werks
+                   AND aufnr EQ @ls_qty_conf-aufnr
+                   AND vornr EQ @ls_qty_conf-vornr
+                   AND matnr EQ @ls_batch-matnr.
 
-                if ls_pp_sf069 is not initial and ls_pp_sf069-batch ne ls_batch-charg.
+                IF ls_pp_sf069 IS NOT INITIAL AND ls_pp_sf069-batch NE ls_batch-charg.
 *                Update with new batch consumption
 *                  update zabsf_pp069 from @( value #( base ls_pp_sf069 batch = ls_batch-charg ) ).
 
                   ls_pp_sf069-batch = ls_batch-charg.
-                  update zabsf_pp069 from ls_pp_sf069.
+                  UPDATE zabsf_pp069 FROM ls_pp_sf069.
 
-                  commit work and wait.
-                else.
-                  if ls_pp_sf069 is initial.
+                  COMMIT WORK AND WAIT.
+                ELSE.
+                  IF ls_pp_sf069 IS INITIAL.
 *                  Add batch consumption for use in process
 *                    insert zabsf_pp069 from table @( value #( ( werks = ls_batch-werks
 *                                                                aufnr = ls_qty_conf-aufnr
@@ -5486,38 +5809,596 @@ method set_quantity_ord.
                     ls_pp_sf069-matnr = ls_batch-matnr.
                     ls_pp_sf069-batch = ls_batch-charg.
 
-                    insert into zabsf_pp069 values ls_pp_sf069.
+                    INSERT INTO zabsf_pp069 VALUES ls_pp_sf069.
 
-                    commit work and wait.
-                  endif.
-                endif.
-              endloop.
-            endif.
-          endloop.
-        endif.
+                    COMMIT WORK AND WAIT.
+                  ENDIF.
+                ENDIF.
+              ENDLOOP.
+            ENDIF.
+          ENDLOOP.
 
-        if ( not lt_return_tab2[] is initial ).
-**       Add Warnings/Errors
-          loop at  lt_return_tab2 into data(ls_return2).
-            insert ls_return2 into return_tab index 1.
-          endloop.
-        endif.
 
-      when prdty_repetitive. "Repetitive
+*            IF materialserial[] IS NOT INITIAL.
+*              SELECT SINGLE autyp, auart, rsord, werks
+*                FROM aufk
+*                INTO @DATA(ls_aufk)
+*                WHERE aufnr EQ @ls_qty_conf-aufnr.
+**
+*              LOOP AT lt_goodsmovements ASSIGNING FIELD-SYMBOL(<ls_goodsmvt>).
+*                DATA(lt_sernos) =
+*                  VALUE sernr_t(
+*                    FOR s IN materialserial
+*                    WHERE ( material EQ <ls_goodsmvt>-material )
+*                    ( sernr = s-serial ) ).
+*
+*                CALL FUNCTION 'SERNR_ADD_TO_PP'
+*                  EXPORTING
+*                    profile  = VALUE #( lt_matserprof[ matnr = <ls_goodsmvt>-material ]-sernp OPTIONAL )
+*                    material = <ls_goodsmvt>-material
+*                    quantity = <ls_goodsmvt>-quantity
+*                    ppaufnr  = ls_qty_conf-aufnr
+*                    ppposnr  = ls_qty_conf-vornr
+*                    ppautyp  = ls_aufk-autyp
+*                    ppaufart = ls_aufk-auart
+*                    pmrsord  = ls_aufk-rsord
+*                    ppwerk   = ls_aufk-werks
+*                  TABLES
+*                    sernos   = lt_sernos.
+*              ENDLOOP.
+*            ENDIF.
+*          ELSE.
+          IF lt_goodsmovements[] IS NOT INITIAL.
+            DATA lt_goodsmvt_serialnumber TYPE tab_bapi_goodsmvt_serialnumber.
+            CLEAR lt_goodsmvt_serialnumber[].
+            LOOP AT lt_goodsmovements ASSIGNING FIELD-SYMBOL(<ls_goodsmvt>).
+              DATA(lv_matdoc_item) = CONV mblpo( sy-tabix ).
+
+              CALL FUNCTION 'CONVERSION_EXIT_MATN1_OUTPUT'
+                EXPORTING
+                  input  = <ls_goodsmvt>-material
+                IMPORTING
+                  output = lv_material.
+
+              CHECK line_exists( materialserial[ material = lv_material ] ).
+              APPEND VALUE #(
+                  matdoc_itm = lv_matdoc_item
+                  serialno   =  materialserial[ material = lv_material ]-serial
+                ) TO lt_goodsmvt_serialnumber.
+            ENDLOOP.
+
+            DATA(ls_header) =
+              VALUE bapi2017_gm_head_01(
+                pstng_date    = sy-datum
+                doc_date      = sy-datum
+                gr_gi_slip_no = 3
+                ref_doc_no    = ls_qty_conf-aufnr ).
+
+            MODIFY lt_goodsmovements
+              FROM VALUE #( reserv_no = ''
+                            res_item = '' )
+              TRANSPORTING reserv_no res_item
+              WHERE reserv_no NE ''.
+
+            IF line_exists( lt_goodsmovements[ move_type = '101' ] ).
+              DATA(lv_goodsmvt_code) = CONV bapi2017_gm_code( '02' ).
+            ELSE.
+              lv_goodsmvt_code = '03'.
+            ENDIF.
+
+            CALL FUNCTION 'BAPI_GOODSMVT_CREATE'
+              EXPORTING
+                goodsmvt_header       = ls_header
+                goodsmvt_code         = lv_goodsmvt_code
+              TABLES
+                goodsmvt_item         = lt_goodsmovements
+                goodsmvt_serialnumber = lt_goodsmvt_serialnumber
+                return                = lt_return_tab3.
+
+            IF NOT line_exists( lt_return_tab3[ type = if_msg_output=>msgtype_error ] ).
+              CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+                EXPORTING
+                  wait = abap_true.
+            ELSE.
+              APPEND LINES OF lt_return_tab3 TO return_tab.
+            ENDIF.
+          ENDIF.
+
+
+*          ENDIF. "IF MATERIALSERIAL[] IS NOT INITIAL.
+        ENDIF.
+
+*        IF ( NOT lt_return_tab2[] IS INITIAL ).
+***       Add Warnings/Errors
+*          LOOP AT  lt_return_tab2 INTO DATA(ls_return2).
+*            INSERT ls_return2 INTO return_tab INDEX 1.
+*          ENDLOOP.
+*        ENDIF.
+
+      WHEN prdty_repetitive. "Repetitive
 *      Not relevant for project
-    endcase.
+    ENDCASE.
 
-  else.
+  ELSE.
 *  No data found in customizing table for Workcenter
-    call method zabsf_pp_cl_log=>add_message
-      exporting
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
         msgty      = 'E'
         msgno      = '022'
         msgv1      = arbpl
-      changing
+      CHANGING
         return_tab = return_tab.
-  endif.
-endmethod.
+  ENDIF.
+
+*  DATA: it_timetickets    TYPE TABLE OF bapi_pp_timeticket,
+*        it_timeticket_aux TYPE TABLE OF bapi_pp_timeticket,
+*        detail_return     TYPE TABLE OF bapi_coru_return,
+*        lt_mkal           TYPE TABLE OF mkal.
+*
+*  DATA: wa_timetickets    TYPE bapi_pp_timeticket,
+*        wa_timeticket_aux TYPE bapi_pp_timeticket,
+*        wa_detail_return  TYPE bapi_coru_return,
+*        return            TYPE bapiret2,
+*        ls_return         TYPE bapiret1,
+*        ls_prdty          TYPE zabsf_pp_e_prdty,
+*        wa_qty_conf       TYPE zabsf_pp_s_qty_conf,
+*        ls_zabsf_pp017    TYPE zabsf_pp017,
+*        ls_zabsf_pp035    TYPE zabsf_pp035,
+*        ls_zabsf_pp057    TYPE zabsf_pp057,
+*        ls_afru           TYPE afru,
+*        i_source_value    TYPE i,
+*        ls_conftype       TYPE zabsf_pp_e_conftype,
+*        propose           TYPE bapi_pp_conf_prop,
+*        ld_wareid         TYPE zabsf_pp_e_areaid,
+*        ld_lmnga          TYPE lmnga,
+*        ls_bflushflags    TYPE bapi_rm_flg,
+*        ls_bflushdatagen  TYPE bapi_rm_datgen,
+*        ls_bflushdatamts  TYPE bapi_rm_datstock,
+*        confirmation      TYPE bapi_rm_datkey-confirmation,
+*        ls_mkal           TYPE mkal,
+*        ld_shiftid        TYPE zabsf_pp_e_shiftid,
+*        lv_reverse        TYPE ru_lmnga,
+*        lv_lmnga          TYPE ru_lmnga,
+*        lv_rmnga          TYPE ru_rmnga,
+*        lv_xmnga          TYPE ru_xmnga.
+*
+*  CLEAR: ls_bflushflags,
+*         ls_bflushdatagen,
+*         ls_conftype,
+*         ls_prdty,
+*         wa_qty_conf.
+*
+**  IF NOT lenum IS INITIAL.
+**    DATA:  ls_imprime TYPE zpp10_imprime.
+**    ls_imprime-uname = sy-uname.
+**    ls_imprime-imprime = 'X'.
+**    MODIFY zpp10_imprime FROM ls_imprime.
+***    EXPORT flag_nao_imprime = flag_nao_imprime TO DATABASE indx(xy) FROM wa_indx CLIENT
+***      sy-mandt
+***      ID 'IMPRIME_PALETE'.
+**
+**  ENDIF.
+*
+*  TRANSLATE inputobj-oprid TO UPPER CASE. "CLS 16.06.2015
+**Get shift witch operator is associated
+*  SELECT SINGLE shiftid
+*    FROM zabsf_pp052
+*    INTO ld_shiftid
+*   WHERE areaid EQ inputobj-areaid
+*     AND oprid EQ inputobj-oprid.
+*
+*  IF sy-subrc NE 0.
+**  Operator is not associated with shift
+*    CALL METHOD zabsf_pp_cl_log=>add_message
+*      EXPORTING
+*        msgty      = 'E'
+*        msgno      = '061'
+*        msgv1      = inputobj-oprid
+*      CHANGING
+*        return_tab = return_tab.
+*
+*    EXIT.
+*  ENDIF.
+*
+**Get process type
+*  SELECT SINGLE prdty
+*    FROM zabsf_pp013
+*    INTO ls_prdty
+*   WHERE areaid EQ areaid
+*     AND werks  EQ werks
+*     AND arbpl  EQ arbpl.
+*
+*  IF sy-subrc EQ 0.
+*    CASE ls_prdty.
+*      WHEN prdty_discret. "Discret
+*        REFRESH: it_timeticket_aux,
+*                 it_timetickets,
+*                 detail_return.
+*
+*        CLEAR: wa_timeticket_aux,
+*               wa_timetickets,
+*               propose.
+*
+**      Check order type
+*        IF tipord EQ 'N'.
+**         Propose data for confirmation times and quantity
+*          propose-activity = 'X'.
+*        ELSE.
+**         Propose data for confirmation quantity
+*          propose-quantity = 'X'.
+*        ENDIF.
+*
+*        LOOP AT qty_conf_tab INTO wa_qty_conf.
+**        Insert data for confirmation
+*          wa_timetickets-orderid = wa_qty_conf-aufnr.
+*          wa_timetickets-operation = wa_qty_conf-vornr.
+*
+**        Check stock for material
+*          IF check_stock IS NOT INITIAL.
+*            CLEAR: ld_wareid,
+*                   ld_lmnga.
+*
+*            SELECT SINGLE wareid
+*              FROM zabsf_pp039
+*              INTO ld_wareid
+*             WHERE areaid EQ inputobj-areaid
+*               AND werks EQ inputobj-werks
+*               AND ware_next EQ space.
+*
+*            IF sy-subrc EQ 0.
+*              SELECT SINGLE lmnga
+*                FROM zabsf_pp035
+*                INTO ld_lmnga
+*               WHERE wareid EQ ld_wareid
+*                 AND matnr  EQ wa_qty_conf-matnr.
+*
+*              IF wa_qty_conf-lmnga GT ld_lmnga.
+*                CALL METHOD zabsf_pp_cl_log=>add_message
+*                  EXPORTING
+*                    msgty      = 'E'
+*                    msgno      = '042'
+*                    msgv1      = ld_wareid
+*                    msgv2      = ld_lmnga
+*                  CHANGING
+*                    return_tab = return_tab.
+*
+*                EXIT.
+*              ELSE.
+*                wa_timetickets-yield = wa_qty_conf-lmnga.
+*              ENDIF.
+*            ENDIF.
+*          ELSE.
+*            wa_timetickets-yield = wa_qty_conf-lmnga.
+*          ENDIF.
+*
+*          APPEND wa_timetickets TO it_timeticket_aux.
+*
+*          CALL FUNCTION 'BAPI_PRODORDCONF_GET_TT_PROP'
+*            EXPORTING
+*              propose       = propose
+*            IMPORTING
+*              return        = ls_return
+*            TABLES
+*              timetickets   = it_timeticket_aux
+*              detail_return = detail_return.
+*        ENDLOOP.
+*
+**      Create two lines in timeticket (one for quantity and another for times)
+*        CLEAR wa_timetickets.
+*
+*        LOOP AT it_timeticket_aux INTO wa_timeticket_aux.
+**        Line for quantity
+*          wa_timetickets-conf_no = wa_timeticket_aux-conf_no.
+*          wa_timetickets-orderid = wa_timeticket_aux-orderid.
+*          wa_timetickets-operation = wa_timeticket_aux-operation.
+*          wa_timetickets-sequence = wa_timeticket_aux-sequence.
+*          wa_timetickets-postg_date = wa_timeticket_aux-postg_date.
+*          wa_timetickets-plant = wa_timeticket_aux-plant.
+*          wa_timetickets-kaptprog = ld_shiftid.
+*
+*          READ TABLE qty_conf_tab INTO wa_qty_conf WITH KEY aufnr = wa_timeticket_aux-orderid
+*                                                            vornr = wa_timeticket_aux-operation.
+*
+*          IF sy-subrc EQ 0.
+*            wa_timetickets-yield = wa_qty_conf-lmnga.
+*          ENDIF.
+*
+*          wa_timetickets-conf_quan_unit = wa_timeticket_aux-conf_quan_unit.
+*          wa_timetickets-conf_quan_unit_iso = wa_timeticket_aux-conf_quan_unit_iso.
+*          wa_timetickets-ex_created_by = inputobj-oprid.
+*
+*          APPEND wa_timetickets TO it_timetickets.
+*
+*          IF tipord EQ 'N'.
+**          Line for times
+*            MOVE-CORRESPONDING wa_timeticket_aux TO wa_timetickets.
+*            wa_timetickets-ex_created_by = inputobj-oprid.
+*            wa_timetickets-kaptprog = ld_shiftid.
+*
+*            CLEAR: wa_timetickets-yield,
+*                   wa_timetickets-conf_quan_unit,
+*                   wa_timetickets-conf_quan_unit_iso.
+*
+*            APPEND wa_timetickets TO it_timetickets.
+*          ENDIF.
+*        ENDLOOP.
+*
+*        IF it_timetickets[] IS NOT INITIAL.
+**      Create confirmation
+*          CALL FUNCTION 'BAPI_PRODORDCONF_CREATE_TT'
+*            IMPORTING
+*              return        = ls_return
+*            TABLES
+*              timetickets   = it_timetickets
+*              detail_return = detail_return.
+*
+*          IF ls_return IS INITIAL.
+*            CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+*              EXPORTING
+*                wait = 'X'.
+*          ENDIF.
+*        ENDIF.
+*
+*        CLEAR: ls_afru,
+*               ls_zabsf_pp017,
+*               i_source_value.
+*
+*        DELETE ADJACENT DUPLICATES FROM detail_return.
+*
+**      Details of operation
+*        LOOP AT detail_return INTO wa_detail_return.
+*          CLEAR return.
+*
+*          return-type = wa_detail_return-type.
+*          return-id = wa_detail_return-id.
+*          return-number = wa_detail_return-number.
+*          return-message = wa_detail_return-message.
+*          return-message_v1 = wa_detail_return-message_v1.
+*          return-message_v2 = wa_detail_return-message_v2.
+*          return-message_v3 = wa_detail_return-message_v3.
+*          return-message_v4 = wa_detail_return-message_v4.
+*
+*          APPEND return TO return_tab.
+*
+*          IF wa_detail_return-type EQ 'I' OR wa_detail_return-type EQ 'S'.
+*            CLEAR wa_qty_conf.
+*
+*            READ TABLE qty_conf_tab INTO wa_qty_conf WITH KEY aufnr = wa_detail_return-message_v1.
+*
+**          Get value of confirmation
+*            SELECT SINGLE *
+*              FROM afru
+*              INTO CORRESPONDING FIELDS OF ls_afru
+*              WHERE rueck EQ wa_detail_return-conf_no
+*                AND rmzhl EQ wa_detail_return-conf_cnt
+*                AND aufnr EQ wa_qty_conf-aufnr.
+*
+*            IF sy-subrc EQ 0.
+**            Get value in Database
+*              SELECT SINGLE *
+*                FROM zabsf_pp017
+*                INTO CORRESPONDING FIELDS OF ls_zabsf_pp017
+*               WHERE aufnr EQ wa_qty_conf-aufnr
+*                 AND matnr EQ wa_qty_conf-matnr
+*                 AND vornr EQ wa_qty_conf-vornr.
+*
+*              IF sy-subrc EQ 0.
+*                CLEAR: lv_reverse,
+*                       lv_lmnga,
+*                       lv_rmnga,
+*                       lv_xmnga.
+*
+**              PAP - START - 01.04.2015 - Get sum of Reversed
+**              Reverse quantity
+*                SELECT SUM( lmnga )
+*                  FROM afru
+*                  INTO lv_reverse
+*                 WHERE rueck EQ wa_detail_return-conf_no
+*                   AND aufnr EQ wa_qty_conf-aufnr
+*                   AND stokz NE space
+*                   AND stzhl NE space.
+*
+**              Confirmed quantity
+*                SELECT SUM( lmnga ) SUM( rmnga ) SUM( xmnga )
+*                  FROM afru
+*                  INTO (lv_lmnga, lv_rmnga, lv_xmnga)
+*                 WHERE rueck EQ wa_detail_return-conf_no
+*                   AND aufnr EQ wa_qty_conf-aufnr
+*                   AND stokz EQ space
+*                   AND stzhl EQ space.
+**                PAP - START - 01.04.2015 - Get sum of Reversed
+*
+*                ADD ls_afru-lmnga TO ls_zabsf_pp017-lmnga.
+*
+**                ls_ZABSF_PP017-missingqty = ls_ZABSF_PP017-gamng - ls_ZABSF_PP017-lmnga.
+*                ls_zabsf_pp017-missingqty = ls_zabsf_pp017-gamng - lv_lmnga - lv_rmnga - lv_xmnga - lv_reverse.
+*                i_source_value = ls_zabsf_pp017-gamng.
+*
+**              Convert Unit
+*                CALL METHOD me->convert_unit
+*                  EXPORTING
+*                    matnr        = ls_zabsf_pp017-matnr
+*                    source_value = i_source_value
+*                    source_unit  = ls_zabsf_pp017-gmein
+*                    lmnga        = ls_afru-lmnga
+*                  CHANGING
+*                    prdqty_box   = ls_zabsf_pp017-prdqty_box
+*                    boxqty       = ls_zabsf_pp017-boxqty.
+*
+*                ADD ls_afru-lmnga TO ls_zabsf_pp017-prdqty_box.
+*
+**BEGIN ADR - 16/11/2022 - Add the "equipment" field to zabsf_pp017 table.
+*                ls_zabsf_pp017-equipment = iv_equipment.
+**END ADR.
+**              Update database
+*                UPDATE zabsf_pp017 FROM ls_zabsf_pp017.
+*              ENDIF.
+*
+*              IF check_stock IS NOT INITIAL.
+*                CLEAR ls_zabsf_pp035.
+*
+**              Get information of warehouse
+*                SELECT SINGLE *
+*                 FROM zabsf_pp035
+*                 INTO ls_zabsf_pp035
+*                WHERE wareid EQ ld_wareid
+*                  AND matnr  EQ wa_qty_conf-matnr.
+*
+*                SUBTRACT ls_afru-lmnga FROM ls_zabsf_pp035-lmnga.
+*
+*                UPDATE zabsf_pp035 FROM ls_zabsf_pp035.
+*              ENDIF.
+*            ENDIF.
+*
+**         Transfer quantity to warehouse virtual
+*            IF wa_qty_conf-wareid IS NOT INITIAL.
+*              CLEAR ls_zabsf_pp035.
+*
+**            Check if exist quantity saved
+*              SELECT SINGLE *
+*                FROM zabsf_pp035
+*                INTO CORRESPONDING FIELDS OF ls_zabsf_pp035
+*                WHERE areaid EQ inputobj-areaid
+*                  AND wareid EQ wa_qty_conf-wareid
+*                  AND matnr  EQ wa_qty_conf-matnr.
+*
+*              IF sy-subrc EQ 0.
+*                ADD ls_afru-lmnga TO ls_zabsf_pp035-stock.
+*                UPDATE zabsf_pp035 FROM ls_zabsf_pp035.
+*              ELSE.
+*                ls_zabsf_pp035-areaid = inputobj-areaid.
+*                ls_zabsf_pp035-wareid = wa_qty_conf-wareid.
+*                ls_zabsf_pp035-matnr = wa_qty_conf-matnr.
+*                ls_zabsf_pp035-stock = ls_afru-lmnga.
+*                ls_zabsf_pp035-gmein = ls_afru-gmein.
+*
+*                INSERT zabsf_pp035 FROM ls_zabsf_pp035.
+*              ENDIF.
+*
+*              IF ls_afru-lmnga NE 0.
+**            Saved regist of quantity good
+*                CLEAR ls_zabsf_pp057.
+*
+*                ls_zabsf_pp057-areaid = inputobj-areaid.
+*                ls_zabsf_pp057-wareid = wa_qty_conf-wareid.
+*                ls_zabsf_pp057-matnr = wa_qty_conf-matnr.
+*                ls_zabsf_pp057-data = refdt.
+*                ls_zabsf_pp057-time = sy-uzeit.
+*                ls_zabsf_pp057-oprid = inputobj-oprid.
+*                ls_zabsf_pp057-lmnga = ls_afru-lmnga.
+*                ls_zabsf_pp057-gmein = ls_afru-gmein.
+*
+*                INSERT zabsf_pp057 FROM ls_zabsf_pp057.
+*
+*                IF sy-subrc EQ 0.
+**              Operation completed successfully
+*                  CALL METHOD zabsf_pp_cl_log=>add_message
+*                    EXPORTING
+*                      msgty      = 'S'
+*                      msgno      = '013'
+*                    CHANGING
+*                      return_tab = return_tab.
+*                ELSE.
+**              Operation not completed successfully
+*                  CALL METHOD zabsf_pp_cl_log=>add_message
+*                    EXPORTING
+*                      msgty      = 'E'
+*                      msgno      = '012'
+*                    CHANGING
+*                      return_tab = return_tab.
+*
+*                  CALL FUNCTION 'BAPI_TRANSACTION_ROLLBACK'.
+*                ENDIF.
+*              ENDIF.
+*            ENDIF.
+*          ENDIF.
+*        ENDLOOP.
+*      WHEN prdty_repetitive. "Repetitive
+*
+***      Control parameter for confirmation
+***      Backflush type
+**        ls_bflushflags-bckfltype = '02'.
+***      Scope of activity backflush
+**        ls_bflushflags-activities_type = '1'.
+***      Scope of GI posting
+**        ls_bflushflags-components_type = '1'.
+**
+***      Production Versions of Material
+**        SELECT *
+**          FROM mkal
+**          INTO CORRESPONDING FIELDS OF TABLE lt_mkal
+**           FOR ALL ENTRIES IN qty_conf_tab
+**         WHERE matnr EQ qty_conf_tab-matnr
+**           AND werks EQ inputobj-werks.
+**
+***      Backflush Parameters Independent of Process
+**        LOOP AT qty_conf_tab INTO wa_qty_conf.
+**          CLEAR: ls_bflushdatagen,
+**                 ls_mkal,
+**                 confirmation,
+**                 return.
+**
+***        Material
+**          ls_bflushdatagen-materialnr = wa_qty_conf-matnr.
+***        Plant
+**          ls_bflushdatagen-prodplant = inputobj-werks.
+***        Planning plant
+**          ls_bflushdatagen-planplant = inputobj-werks.
+**
+**          READ TABLE lt_mkal INTO ls_mkal WITH KEY matnr = wa_qty_conf-matnr.
+**
+**          IF sy-subrc EQ 0.
+***          Storage Location
+**            ls_bflushdatagen-storageloc = ls_mkal-alort.
+***          Production Version
+**            ls_bflushdatagen-prodversion = ls_mkal-verid.
+***          Production line
+**            ls_bflushdatagen-prodline = ls_mkal-mdv01.
+**          ENDIF.
+**
+***        Posting date
+**          ls_bflushdatagen-postdate = sy-datum.
+***        Document date
+**          ls_bflushdatagen-docdate = sy-datum.
+***        Quantity in Unit of Entry
+**          ls_bflushdatagen-backflquant = wa_qty_conf-lmnga.
+***        Unit of measure
+**          ls_bflushdatagen-unitofmeasure = wa_qty_conf-gmein.
+**
+***        Report point
+**          ls_bflushdatamts-reppoint = wa_qty_conf-vornr.
+**
+**          CALL FUNCTION 'BAPI_REPMANCONF1_CREATE_MTS'
+**            EXPORTING
+**              bflushflags   = ls_bflushflags
+**              bflushdatagen = ls_bflushdatagen
+**              bflushdatamts = ls_bflushdatamts
+**            IMPORTING
+**              confirmation  = confirmation
+**              return        = return.
+**
+**          IF return IS INITIAL AND confirmation IS NOT INITIAL.
+**            CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+**              EXPORTING
+**                wait = 'X'.
+**          ELSE.
+**            APPEND return TO return_tab.
+**          ENDIF.
+**        ENDLOOP.
+**
+**        DELETE ADJACENT DUPLICATES FROM return_tab.
+*    ENDCASE.
+*  ELSE.
+**  No data found in customizing table for Workcenter
+*    CALL METHOD zabsf_pp_cl_log=>add_message
+*      EXPORTING
+*        msgty      = 'E'
+*        msgno      = '022'
+*        msgv1      = arbpl
+*      CHANGING
+*        return_tab = return_tab.
+*  ENDIF.
+ENDMETHOD.
 
 
 METHOD set_quantity_ord_rpack.
@@ -5576,7 +6457,7 @@ METHOD set_quantity_ord_rpack.
 
 
 *Set language local for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
   SET LOCALE LANGUAGE l_langu.
 
@@ -6435,7 +7316,7 @@ METHOD set_quantity_ord_rpack.
 ENDMETHOD.
 
 
-  method set_quantity_scrap_rpack.
+method set_quantity_scrap_rpack.
 *  Internal tables
     data: lt_timetickets_prop        type table of bapi_pp_timeticket,
           lt_goodsmovements_prop     type table of bapi2017_gm_item_create,
@@ -7182,7 +8063,7 @@ METHOD SET_REFDT.
   ENDMETHOD.
 
 
-  method update_resb_batch.
+method update_resb_batch.
     "variáveis locais
     data: lt_bdcdata_tab  type table of bdcdata,
           lt_messages_tab type table of bdcmsgcoll.

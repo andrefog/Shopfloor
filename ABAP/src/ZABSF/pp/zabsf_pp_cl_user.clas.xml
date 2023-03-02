@@ -48,6 +48,14 @@
      <DESCRIPT>Desassociar utilizador ao turno</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>UPD_USERWORKCENTERS</CMPNAME>
+     <SCONAME>IV_USERNAME</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Username</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>

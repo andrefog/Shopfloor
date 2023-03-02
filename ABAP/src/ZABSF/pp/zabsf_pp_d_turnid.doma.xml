@@ -4,12 +4,19 @@
   <asx:values>
    <DD01V>
     <DOMNAME>ZABSF_PP_D_TURNID</DOMNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DATATYPE>CHAR</DATATYPE>
     <LENG>000012</LENG>
     <OUTPUTLEN>000012</OUTPUTLEN>
-    <DDTEXT>Shopfloor - ID Volta</DDTEXT>
    </DD01V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - ID Volta</DDTEXT>
+    </item>
+   </DD01_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

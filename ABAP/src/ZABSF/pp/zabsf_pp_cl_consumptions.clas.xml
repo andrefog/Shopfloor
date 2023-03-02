@@ -13,9 +13,49 @@
    </VSEOCLASS>
    <DESCRIPTIONS>
     <SEOCOMPOTX>
+     <CMPNAME>CALCULATE_CHAR_VALUE_FROM_TEXT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Cálcular valor da caracteristica</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_CONSUMPTION</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Verificar se todos os componentes foram consumidos</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>CONSTRUCTOR</CMPNAME>
      <LANGU>P</LANGU>
      <DESCRIPT>Construtor</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CONVERT_CHAR_VALUE_TO_EXTERNAL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Converter valor da caracteristica no formato externo</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_CONSUM_ORDER_SUBPRODUCT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Criar consumo de subprodutos na ordem de produção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>CREATE_DEVOLUTION_BATCH</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Criar lote de devolução</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_HU_COMPONENTS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter lista de materiais da HU</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_MULITMATERIAL_COMPONENTS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter componentes ordens multimaterial</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_POSSIBLE_DEVOLUTIONS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Lista de materiais possiveis de devolução</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>INPUTOBJ</CMPNAME>
@@ -26,6 +66,16 @@
      <CMPNAME>REFDT</CMPNAME>
      <LANGU>P</LANGU>
      <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_DEVOLUTIONS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Realizar movimentos de devolução</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_DEVOLUTION_CHARACT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Processar característica a incluir na devolução</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>

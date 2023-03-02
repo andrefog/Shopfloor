@@ -1,4 +1,4 @@
-function zabsf_pp_conf_time .
+FUNCTION zabsf_pp_conf_time .
 *"----------------------------------------------------------------------
 *"*"Interface local:
 *"  IMPORTING
@@ -26,130 +26,132 @@ function zabsf_pp_conf_time .
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"     VALUE(CONF) TYPE  FLAG OPTIONAL
 *"     VALUE(KAPID) TYPE  KAPID OPTIONAL
+*"     VALUE(EQUIPMENT) TYPE  CHAR100 OPTIONAL
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
 *"----------------------------------------------------------------------
 *References
-  data lref_sf_event_act type ref to zif_absf_pp_event_act.
+  DATA lref_sf_event_act TYPE REF TO zif_absf_pp_event_act.
 
 *Variables
-  data: l_gname  type seqg3-gname,
-        l_garg   type seqg3-garg,
-        l_guname type seqg3-guname,
-        l_subrc  type sy-subrc,
-        l_wait   type i.
-  field-symbols: <ls_oper_str> type zabsf_pp014.
+  DATA: l_gname  TYPE seqg3-gname,
+        l_garg   TYPE seqg3-garg,
+        l_guname TYPE seqg3-guname,
+        l_subrc  TYPE sy-subrc,
+        l_wait   TYPE i.
+  FIELD-SYMBOLS: <ls_oper_str> TYPE zabsf_pp014.
 
 *Constants
-  constants: c_wait type zabsf_pp_e_parid value 'WAIT'.
+  CONSTANTS: c_wait TYPE zabsf_pp_e_parid VALUE 'WAIT'.
 
 *Get time wait
-  select single parva
-    from zabsf_pp032
-    into (@data(l_wait_param))
-   where parid eq @c_wait.
+  SELECT SINGLE parva
+    FROM zabsf_pp032
+    INTO (@DATA(l_wait_param))
+   WHERE parid EQ @c_wait.
 
-  if l_wait_param is not initial.
+  IF l_wait_param IS NOT INITIAL.
     l_wait = l_wait_param.
-  endif.
+  ENDIF.
 
-   time = time - l_wait_param.
+  time = time - l_wait_param.
 
 *Get class of interface
-  select single imp_clname, methodname
-      from zabsf_pp003
-      into (@data(l_class),@data(l_method) )
-     where werks    eq @inputobj-werks
-       and id_class eq '2'
-       and endda    ge @refdt
-       and begda    le @refdt.
+  SELECT SINGLE imp_clname, methodname
+      FROM zabsf_pp003
+      INTO (@DATA(l_class),@DATA(l_method) )
+     WHERE werks    EQ @inputobj-werks
+       AND id_class EQ '2'
+       AND endda    GE @refdt
+       AND begda    LE @refdt.
 
-  try .
-      create object lref_sf_event_act type (l_class)
-        exporting
+  TRY .
+      CREATE OBJECT lref_sf_event_act TYPE (l_class)
+        EXPORTING
           initial_refdt = refdt
           input_object  = inputobj.
 
-    catch cx_sy_create_object_error.
+    CATCH cx_sy_create_object_error.
 *
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '019'
           msgv1      = l_class
-        changing
+        CHANGING
           return_tab = return_tab.
-      exit.
-  endtry.
+      EXIT.
+  ENDTRY.
 
 
 *Check blocks
-  call method zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_res
-    exporting
+  CALL METHOD zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_res
+    EXPORTING
       i_aufnr    = aufnr
       i_max_time = l_wait
-    importing
+    IMPORTING
       e_gname    = l_gname
       e_garg     = l_garg
       e_guname   = l_guname
       e_return   = l_subrc.
 
-  if l_subrc ne 0.
-    call method zabsf_pp_cl_log=>add_message
-      exporting
+  IF l_subrc NE 0.
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
         msgty      = 'E'
         msgno      = '093'
         msgv1      = l_guname
         msgv2      = l_gname
         msgv3      = l_guname
-      changing
+      CHANGING
         return_tab = return_tab.
-    exit.
-  endif.
+    EXIT.
+  ENDIF.
 
 *Save confirmation time
-  call method lref_sf_event_act->(l_method)
-    exporting
-      arbpl       = arbpl
-      werks       = inputobj-werks
-      aufnr       = aufnr
-      vornr       = vornr
-      date        = date
-      time        = time
-      oprid       = oprid
-      rueck       = rueck
-      aufpl       = aufpl
-      aplzl       = aplzl
-      actv_id     = actv_id
-      stprsnid    = stprsnid
-      schedule_id = schedule_id
-      regime_id   = regime_id
-      count_ini   = count_ini
-      count_fin   = count_fin
-      backoffice  = backoffice
-      shiftid     = shiftid
-      kapid       = kapid
-    changing
-      actionid    = actionid
-      return_tab  = return_tab.
+  CALL METHOD lref_sf_event_act->(l_method)
+    EXPORTING
+      arbpl        = arbpl
+      werks        = inputobj-werks
+      aufnr        = aufnr
+      vornr        = vornr
+      date         = date
+      time         = time
+      oprid        = oprid
+      rueck        = rueck
+      aufpl        = aufpl
+      aplzl        = aplzl
+      actv_id      = actv_id
+      stprsnid     = stprsnid
+      schedule_id  = schedule_id
+      regime_id    = regime_id
+      count_ini    = count_ini
+      count_fin    = count_fin
+      backoffice   = backoffice
+      shiftid      = shiftid
+      kapid        = kapid
+     iv_equipment = CONV char100( equipment )
+    CHANGING
+      actionid     = actionid
+      return_tab   = return_tab.
 
-  delete adjacent duplicates from return_tab.
+  DELETE ADJACENT DUPLICATES FROM return_tab.
 
-  loop at return_tab transporting no fields
-    where type ca 'AEX'.
+  LOOP AT return_tab TRANSPORTING NO FIELDS
+    WHERE type CA 'AEX'.
     "sair do processamento
-    return.
-  endloop.
+    RETURN.
+  ENDLOOP.
 
   "actualizar tabela de utilizadores com postos de trabalho
-  if kapid is not initial.
-    select *
-      from zabsf_pp014
-      into table @data(lt_operas_tab)
-        where aufnr eq @aufnr
-          and vornr eq @vornr
-          and arbpl eq @arbpl.
-    if sy-subrc eq 0.
+  IF kapid IS NOT INITIAL.
+    SELECT *
+      FROM zabsf_pp014
+      INTO TABLE @DATA(lt_operas_tab)
+        WHERE aufnr EQ @aufnr
+          AND vornr EQ @vornr
+          AND arbpl EQ @arbpl.
+    IF sy-subrc EQ 0.
 
 *      update zabsf_pp014 from table @( VALUE #(
 *     for <ls_oper_str> in lt_operas_tab
@@ -157,63 +159,63 @@ function zabsf_pp_conf_time .
 *               base <ls_oper_str>
 *               kapid =  kapid ) ) ) ).
 
-      loop at lt_operas_tab assigning <ls_oper_str>.
+      LOOP AT lt_operas_tab ASSIGNING <ls_oper_str>.
         <ls_oper_str>-kapid = kapid.
-      endloop.
-    endif.
-    update zabsf_pp014 from table @lt_operas_tab.
-  endif.
+      ENDLOOP.
+    ENDIF.
+    UPDATE zabsf_pp014 FROM TABLE @lt_operas_tab.
+  ENDIF.
 
-  if actv_id eq 'END_PROD'
-    and actionid eq 'CONC'.
+  IF actv_id EQ 'END_PROD'
+    AND actionid EQ 'CONC'.
     "verificar se é para fazer TECO - última operção
-    select max( aplzl )
-      into @data(lv_finalste_var)
-      from afvc
-        where aufpl eq @aufpl
-          and loekz eq @abap_false.
+    SELECT MAX( aplzl )
+      INTO @DATA(lv_finalste_var)
+      FROM afvc
+        WHERE aufpl EQ @aufpl
+          AND loekz EQ @abap_false.
 
     "contador da operação actual
-    select single aplzl
-      from afvc
-      into @data(lv_operatio_var)
-      where aufpl eq @aufpl
-        and vornr eq @vornr
-        and loekz eq @abap_false.
-    if lv_finalste_var eq lv_operatio_var
-      and conf eq abap_true.
+    SELECT SINGLE aplzl
+      FROM afvc
+      INTO @DATA(lv_operatio_var)
+      WHERE aufpl EQ @aufpl
+        AND vornr EQ @vornr
+        AND loekz EQ @abap_false.
+    IF lv_finalste_var EQ lv_operatio_var
+      AND conf EQ abap_true.
       "activar flag de confirmação final
-      data(lv_teco_var) = abap_true.
-    endif.
+      DATA(lv_teco_var) = abap_true.
+    ENDIF.
     "alterar status da operação/ordem
-    call function 'ZABSF_PP_ORDER_STATUS'
-      exporting
+    CALL FUNCTION 'ZABSF_PP_ORDER_STATUS'
+      EXPORTING
         aufnr      = aufnr
         inputobj   = inputobj
         aufpl      = aufpl
         vornr      = vornr
-        conf       = cond #( when conf eq abap_true
-                             then abap_true
-                             else abap_false )
-        no_conf    = cond #( when conf eq abap_false
-                            then abap_true
-                            else abap_false )
-        teco       = cond #( when lv_teco_var eq abap_true
-                             then abap_true
-                             else abap_false )
-      importing
+        conf       = COND #( WHEN conf EQ abap_true
+                             THEN abap_true
+                             ELSE abap_false )
+        no_conf    = COND #( WHEN conf EQ abap_false
+                            THEN abap_true
+                            ELSE abap_false )
+        teco       = COND #( WHEN lv_teco_var EQ abap_true
+                             THEN abap_true
+                             ELSE abap_false )
+      IMPORTING
         return_tab = return_tab.
-  endif.
+  ENDIF.
 
-  check actv_id = 'END_PARC'.
-  delete from zabsf_pp069 where werks = inputobj-werks
-                             and aufnr = aufnr
-                             and vornr = vornr
-                             and flag_shift = abap_true.
-  if sy-subrc = 0.
-    commit work and wait.
-  endif.
+  CHECK actv_id = 'END_PARC'.
+  DELETE FROM zabsf_pp069 WHERE werks = inputobj-werks
+                             AND aufnr = aufnr
+                             AND vornr = vornr
+                             AND flag_shift = abap_true.
+  IF sy-subrc = 0.
+    COMMIT WORK AND WAIT.
+  ENDIF.
 
-  wait up to l_wait_param seconds.
+*  wait up to l_wait_param seconds.
 
-endfunction.
+ENDFUNCTION.

@@ -1,7 +1,7 @@
 *******************************************************************
 *   System-defined Include-files.                                 *
 *******************************************************************
-  INCLUDE LZABSF_PP_V_SF021TOP.              " Global Data
+  INCLUDE LZABSF_PP_V_SF021TOP.              " Global Declarations
   INCLUDE LZABSF_PP_V_SF021UXX.              " Function Modules
 
 *******************************************************************

@@ -58,7 +58,7 @@ FUNCTION zabsf_pp_orders_time.
                                              IMPORTING
                                                ex_prmvalue_var = DATA(lv_co10_ot_var) ).
 
-    CATCH zcx_bc_exceptions INTO DATA(lo_bcexceptions_obj).
+    CATCH zcx_pp_exceptions INTO DATA(lo_bcexceptions_obj).
       " falta configuração
       zabsf_pp_cl_log=>add_message( EXPORTING
                                       msgty      = lo_bcexceptions_obj->msgty

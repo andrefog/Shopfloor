@@ -7,9 +7,6 @@ public section.
 
   interfaces ZIF_ABSF_PP_PRINT .
 
-  aliases PRINT_PP_LABEL
-    for ZIF_ABSF_PP_PRINT~PRINT_PP_LABEL .
-
   methods CONSTRUCTOR
     importing
       !INITIAL_REFDT type VVDATUM
@@ -46,7 +43,7 @@ public section.
     exporting
       !EX_TBLABELS_TAB type ZPP_PROD_LABEL_TT
     raising
-      ZCX_BC_EXCEPTIONS .
+      ZCX_PP_EXCEPTIONS .
   class-methods VENDOR_PP_LABEL_PROCESS
     importing
       !IM_NEWLABEL_STR type ZPP_LABELS_T
@@ -75,7 +72,7 @@ METHOD CONSTRUCTOR.
 ENDMETHOD.
 
 
-  method dst_print_pp_label.
+method dst_print_pp_label.
     "variáveis locais
     data: lv_job_name        type btcjob,
           lv_job_nr          type btcjobcnt,
@@ -207,7 +204,7 @@ ENDMETHOD.
   endmethod.
 
 
-  METHOD get_production_labels_data.
+METHOD get_production_labels_data.
     "constantes locais
     CONSTANTS: lc_multimat_cst TYPE aufart VALUE 'ZPP3'.
     "variáveis locais
@@ -300,9 +297,9 @@ ENDMETHOD.
                                                         im_modulesp_var = zcl_bc_fixed_values=>gc_material_cst
                                                       IMPORTING
                                                         ex_valrange_tab = lr_charpeso_rng ).
-      CATCH zcx_bc_exceptions INTO DATA(lo_excprtion_obj).
+      CATCH zcx_pp_exceptions INTO DATA(lo_excprtion_obj).
         "lançar excepção
-        RAISE EXCEPTION TYPE zcx_bc_exceptions
+        RAISE EXCEPTION TYPE zcx_pp_exceptions
           EXPORTING
             msgty = lo_excprtion_obj->msgty
             msgid = lo_excprtion_obj->msgid
@@ -397,7 +394,7 @@ ENDMETHOD.
         "validar material
         IF lv_matdescr_var NE im_matndesc_var.
           "Material &1 não associado à ordem de produção &2
-          RAISE EXCEPTION TYPE zcx_bc_exceptions
+          RAISE EXCEPTION TYPE zcx_pp_exceptions
             EXPORTING
               msgty = sy-abcde+4(1)
               msgid = 'ZABSF_PP'
@@ -535,7 +532,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  method print_short_label.
+method print_short_label.
 
     "constantes locais
     constants: lc_formname_cst type tdsfname value 'ZPP_PROD_LABEL_SHORT'.
@@ -567,7 +564,7 @@ ENDMETHOD.
                                                importing
                                                  ex_prmvalue_var = data(lv_valuechr_var) ).
         lv_charplan_var = lv_valuechr_var.
-      catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
+      catch zcx_pp_exceptions into data(lo_bcexceptions_obj).
         "falta configuração
         call method zabsf_pp_cl_log=>add_message
           exporting
@@ -749,7 +746,7 @@ ENDMETHOD.
   endmethod.
 
 
-  method vendor_pp_label_process.
+method vendor_pp_label_process.
     "constantes locais
     constants: lc_finshgod_cst type tdsfname value 'ZPP_PROD_LABEL',
                lc_semifinh_cst type tdsfname value 'ZPP_PROD_LABEL_SA',
@@ -790,7 +787,7 @@ ENDMETHOD.
                                                        importing
                                                          ex_tblabels_tab = data(lt_labels_tab) ).
 
-      catch zcx_bc_exceptions into data(lo_bcexceptions_obj) .
+      catch zcx_pp_exceptions into data(lo_bcexceptions_obj) .
         "falta configuração
         call method zabsf_pp_cl_log=>add_message
           exporting
@@ -1811,7 +1808,7 @@ METHOD zif_absf_pp_print~print.
 ENDMETHOD.
 
 
-  METHOD zif_absf_pp_print~print_first_cycle.
+METHOD zif_absf_pp_print~print_first_cycle.
 **  Structures
 *    DATA: ls_r_areaid TYPE /iwbep/s_sel_opt.
 *
@@ -1837,7 +1834,7 @@ ENDMETHOD.
 *    TRANSLATE  inputobj-oprid TO UPPER CASE.
 *
 **  Set local language for user
-*    l_langu = inputobj-language.
+*    l_langu = sy-langu.
 *
 *    SET LOCALE LANGUAGE l_langu.
 *
@@ -2114,7 +2111,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  method zif_absf_pp_print~print_pp_label.
+method zif_absf_pp_print~print_pp_label.
 
 
   endmethod.

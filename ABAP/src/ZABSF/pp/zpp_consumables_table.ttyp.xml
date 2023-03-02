@@ -4,14 +4,12 @@
   <asx:values>
    <DD40V>
     <TYPENAME>ZPP_CONSUMABLES_TABLE</TYPENAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <ROWTYPE>ZPP_CONSUMABLES_STRUCTURE</ROWTYPE>
     <ROWKIND>S</ROWKIND>
     <DATATYPE>STRU</DATATYPE>
     <ACCESSMODE>T</ACCESSMODE>
     <KEYDEF>D</KEYDEF>
     <KEYKIND>N</KEYKIND>
-    <DDTEXT>Rastreabilidade para os consumíveis (tabela)</DDTEXT>
    </DD40V>
   </asx:values>
  </asx:abap>

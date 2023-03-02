@@ -7,8 +7,18 @@ public section.
 
   interfaces ZIF_ABSF_PP_CONSUMPTIONS .
 
+  aliases CREATE_CONSUM_MATNR
+    for ZIF_ABSF_PP_CONSUMPTIONS~CREATE_CONSUM_MATNR .
+  aliases CREATE_CONSUM_ORDER
+    for ZIF_ABSF_PP_CONSUMPTIONS~CREATE_CONSUM_ORDER .
+  aliases GET_BATCH_CONSUMED
+    for ZIF_ABSF_PP_CONSUMPTIONS~GET_BATCH_CONSUMED .
+  aliases GET_COMPONENTS_MATNR
+    for ZIF_ABSF_PP_CONSUMPTIONS~GET_COMPONENTS_MATNR .
   aliases GET_COMPONENTS_ORDER
     for ZIF_ABSF_PP_CONSUMPTIONS~GET_COMPONENTS_ORDER .
+  aliases REM_COMPONENTS_ORDER
+    for ZIF_ABSF_PP_CONSUMPTIONS~REM_COMPONENTS_ORDER .
 
   methods CONSTRUCTOR
     importing
@@ -106,7 +116,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_CONSUMPTIONS IMPLEMENTATION.
 
 
-  method calculate_char_value_from_text.
+method calculate_char_value_from_text.
     "constantes
     constants: lc_compriment_cst type atnam value 'MET_COMPRIMENTO',
                lc_largura_cst    type atnam value 'MET_LARGURA',
@@ -271,188 +281,189 @@ CLASS ZABSF_PP_CL_CONSUMPTIONS IMPLEMENTATION.
   endmethod.
 
 
-  method check_consumption.
-    "constantes
-    constants: lc_consumptions_cst type bwart value '261',
-               lc_devolutions_cst  type bwaer value '262'.
-    "variávies locais
-    data: lr_atnam_rng    type range of atnam,
-          lv_error_var    type boole_d,
-          lv_matchfnd_var type boole_d,
-          lv_batchmgm_var type boole_d,
-          lv_parent_var   type boole_d.
-    "limpar variávies de exportação
-    refresh et_return_tab.
+METHOD check_consumption.
+  "constantes
+  CONSTANTS: lc_consumptions_cst TYPE bwart VALUE '261',
+             lc_devolutions_cst  TYPE bwaer VALUE '262'.
+  "variávies locais
+  DATA: lr_atnam_rng    TYPE RANGE OF atnam,
+        lv_error_var    TYPE boole_d,
+        lv_matchfnd_var TYPE boole_d,
+        lv_batchmgm_var TYPE boole_d,
+        lv_parent_var   TYPE boole_d.
+  "limpar variávies de exportação
+  REFRESH et_return_tab.
 
-    try.
-        "caracteristicas nome
-        call method zcl_bc_fixed_values=>get_ranges_value
-          exporting
-            im_paramter_var = zcl_bc_fixed_values=>gc_charname_cst
-            im_modulesp_var = zcl_bc_fixed_values=>gc_material_cst
-          importing
-            ex_valrange_tab = lr_atnam_rng.
+  TRY.
+      "caracteristicas nome
+      CALL METHOD zcl_bc_fixed_values=>get_ranges_value
+        EXPORTING
+          im_paramter_var = zcl_bc_fixed_values=>gc_charname_cst
+          im_modulesp_var = zcl_bc_fixed_values=>gc_material_cst
+        IMPORTING
+          ex_valrange_tab = lr_atnam_rng.
 
-      catch zcx_bc_exceptions into data(lo_excpetions_obj).
-        "enviar mensagem de erro
-        call method zabsf_pp_cl_log=>add_message
-          exporting
-            msgty      = lo_excpetions_obj->msgty
-            msgid      = lo_excpetions_obj->msgid
-            msgno      = lo_excpetions_obj->msgno
-            msgv1      = lo_excpetions_obj->msgv1
-            msgv2      = lo_excpetions_obj->msgv2
-            msgv3      = lo_excpetions_obj->msgv3
-            msgv4      = lo_excpetions_obj->msgv4
-          changing
-            return_tab = et_return_tab.
-        return.
-    endtry.
-
-    "obter componentes
-    select *
-      from resb
-      into table @data(lt_resb_tab)
-        where aufnr eq @im_aufnr_var
-          and xloek eq @abap_false.
-    "remover os items 'pais' dos splits de lote
-    loop at lt_resb_tab assigning field-symbol(<fs_resb_str>)
-      where charg is initial.
-      "verificar se existem filhos
-      loop at lt_resb_tab into data(ls_resb2_str)
-        where posnr eq <fs_resb_str>-posnr
-         and charg is not initial.
-        "item pai contem filhos com lote. não considerar item pai.
-        lv_parent_var = abap_true.
-      endloop.
-      if lv_parent_var eq abap_true.
-        "maraca para eliminar - remover item pai
-        <fs_resb_str>-xloek = abap_true.
-      endif.
-      clear: lv_parent_var.
-    endloop.
-    "eliminar items pais
-    delete lt_resb_tab
-      where xloek eq abap_true.
-
-    "obter os consumos
-    select *
-      from mseg
-      into table @data(lt_consumptions_tab)
-        where aufnr eq @im_aufnr_var
-          and bwart eq @lc_consumptions_cst.
-    if lt_consumptions_tab is not initial.
-      "obter documentos estornados
-      select *
-        from mseg into table @data(lt_devolutions_tab)
-        for all entries in @lt_consumptions_tab
-        where aufnr eq @im_aufnr_var
-          and bwart eq @lc_devolutions_cst
-          and smbln eq @lt_consumptions_tab-mblnr
-          and smblp eq @lt_consumptions_tab-zeile.
-      if sy-subrc eq 0.
-        "remover os estornados
-        loop at lt_consumptions_tab into data(ls_consumo_str).
-          if line_exists( lt_devolutions_tab[ smbln = ls_consumo_str-mblnr
-                                              smblp = ls_consumo_str-zeile ] ).
-            delete lt_consumptions_tab.
-          endif.
-        endloop.
-      endif.
-    endif.
-
-    if lt_consumptions_tab is initial.
-      "Ordem sem consumos! Não é possível lançar produção
-      call method zabsf_pp_cl_log=>add_message
-        exporting
-          msgty      = 'E'
-          msgno      = 161
-        changing
+    CATCH zcx_pp_exceptions INTO DATA(lo_excpetions_obj).
+      "enviar mensagem de erro
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = lo_excpetions_obj->msgty
+          msgid      = lo_excpetions_obj->msgid
+          msgno      = lo_excpetions_obj->msgno
+          msgv1      = lo_excpetions_obj->msgv1
+          msgv2      = lo_excpetions_obj->msgv2
+          msgv3      = lo_excpetions_obj->msgv3
+          msgv4      = lo_excpetions_obj->msgv4
+        CHANGING
           return_tab = et_return_tab.
-      return.
-    endif.
+      RETURN.
+  ENDTRY.
 
-    "obter materiais geridos a lote
-    select *
-      from mara
-      into table @data(lt_mara_tab)
-      for all entries in @lt_resb_tab
-        where matnr eq @lt_resb_tab-matnr
-          and xchpf eq @abap_true.
-    "percorrer todos os componentes
-    loop at lt_resb_tab assigning <fs_resb_str>.
-      "limpar variável de erro
-      clear: lv_error_var, lv_matchfnd_var.
-      "verificar se material é gerido a lote
-      read table lt_mara_tab transporting no fields with key matnr = <fs_resb_str>-matnr.
-      if sy-subrc eq 0.
-        "material gerido a lote
-        lv_batchmgm_var = abap_true.
-        "obter nome
-        zcl_mm_classification=>get_desc_as_co02( exporting
-                                                   im_resb_str        = <fs_resb_str>
-                                                 importing
-                                                   ex_description_var = data(lv_description_var) ).
-        "percorrer todos os consumos
-        loop at lt_consumptions_tab assigning field-symbol(<fs_comsumptions_str>)
-            where matnr eq <fs_resb_str>-matnr
-              and charg is not initial.
-          "obter material do lote
-          zcl_mm_classification=>get_material_desc_by_batch( exporting
-                                                               im_material_var    = <fs_comsumptions_str>-matnr
-                                                               im_batch_var       = <fs_comsumptions_str>-charg
-                                                             importing
-                                                               ex_description_var = data(lv_batchdesc_var) ).
-          if lv_batchdesc_var eq lv_description_var.
-            "match encontrado
-            lv_matchfnd_var = abap_true.
-            "sair do loop
-            exit.
-          endif.
-          clear: lv_batchdesc_var.
-        endloop.
-        "verificar se encontrou match
-        if lv_matchfnd_var ne abap_true.
-          "activar flag de erro
-          lv_error_var = abap_true.
-        endif.
-      else.
-        read table lt_consumptions_tab transporting no fields with key matnr = <fs_resb_str>-matnr.
-        if sy-subrc ne 0.
-          "activar flag de erro
-          lv_error_var = abap_true.
-        endif.
-      endif.
+  "obter componentes
+  SELECT *
+    FROM resb
+    INTO TABLE @DATA(lt_resb_tab)
+      WHERE aufnr EQ @im_aufnr_var
+        AND xloek EQ @abap_false
+    %_HINTS ORACLE 'index(resb"Z01")'..
+  "remover os items 'pais' dos splits de lote
+  LOOP AT lt_resb_tab ASSIGNING FIELD-SYMBOL(<fs_resb_str>)
+    WHERE charg IS INITIAL.
+    "verificar se existem filhos
+    LOOP AT lt_resb_tab INTO DATA(ls_resb2_str)
+      WHERE posnr EQ <fs_resb_str>-posnr
+       AND charg IS NOT INITIAL.
+      "item pai contem filhos com lote. não considerar item pai.
+      lv_parent_var = abap_true.
+    ENDLOOP.
+    IF lv_parent_var EQ abap_true.
+      "maraca para eliminar - remover item pai
+      <fs_resb_str>-xloek = abap_true.
+    ENDIF.
+    CLEAR: lv_parent_var.
+  ENDLOOP.
+  "eliminar items pais
+  DELETE lt_resb_tab
+    WHERE xloek EQ abap_true.
 
-      if lv_error_var eq abap_true.
-        "sair do loop
-        exit.
-      endif.
-      if lv_batchmgm_var eq abap_true.
-        "verificar se lote não está preenchido
-        if <fs_resb_str>-charg is initial.
-          "lote consumido
-          <fs_resb_str>-charg = <fs_comsumptions_str>-charg.
-          "adicionar linha para alterar
-          append <fs_resb_str> to et_resb_tab.
-        endif.
-      endif.
-      "limpar variáveis
-      clear: lv_description_var, lv_batchmgm_var.
-    endloop.
-    if lv_error_var eq abap_true.
-      "Material &1 &2 não foi consumido
-      call method zabsf_pp_cl_log=>add_message
-        exporting
-          msgty      = 'E'
-          msgno      = 160
-          msgv1      = <fs_resb_str>-matnr
-          msgv2      = lv_description_var
-        changing
-          return_tab = et_return_tab.
-      return.
-    endif.
-  endmethod.
+  "obter os consumos
+  SELECT *
+    FROM mseg
+    INTO TABLE @DATA(lt_consumptions_tab)
+      WHERE aufnr EQ @im_aufnr_var
+        AND bwart EQ @lc_consumptions_cst.
+  IF lt_consumptions_tab IS NOT INITIAL.
+    "obter documentos estornados
+    SELECT *
+      FROM mseg INTO TABLE @DATA(lt_devolutions_tab)
+      FOR ALL ENTRIES IN @lt_consumptions_tab
+      WHERE aufnr EQ @im_aufnr_var
+        AND bwart EQ @lc_devolutions_cst
+        AND smbln EQ @lt_consumptions_tab-mblnr
+        AND smblp EQ @lt_consumptions_tab-zeile.
+    IF sy-subrc EQ 0.
+      "remover os estornados
+      LOOP AT lt_consumptions_tab INTO DATA(ls_consumo_str).
+        IF line_exists( lt_devolutions_tab[ smbln = ls_consumo_str-mblnr
+                                            smblp = ls_consumo_str-zeile ] ).
+          DELETE lt_consumptions_tab.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
+  ENDIF.
+
+  IF lt_consumptions_tab IS INITIAL.
+    "Ordem sem consumos! Não é possível lançar produção
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
+        msgty      = 'E'
+        msgno      = 161
+      CHANGING
+        return_tab = et_return_tab.
+    RETURN.
+  ENDIF.
+
+  "obter materiais geridos a lote
+  SELECT *
+    FROM mara
+    INTO TABLE @DATA(lt_mara_tab)
+    FOR ALL ENTRIES IN @lt_resb_tab
+      WHERE matnr EQ @lt_resb_tab-matnr
+        AND xchpf EQ @abap_true.
+  "percorrer todos os componentes
+  LOOP AT lt_resb_tab ASSIGNING <fs_resb_str>.
+    "limpar variável de erro
+    CLEAR: lv_error_var, lv_matchfnd_var.
+    "verificar se material é gerido a lote
+    READ TABLE lt_mara_tab TRANSPORTING NO FIELDS WITH KEY matnr = <fs_resb_str>-matnr.
+    IF sy-subrc EQ 0.
+      "material gerido a lote
+      lv_batchmgm_var = abap_true.
+      "obter nome
+      zcl_mm_classification=>get_desc_as_co02( EXPORTING
+                                                 im_resb_str        = <fs_resb_str>
+                                               IMPORTING
+                                                 ex_description_var = DATA(lv_description_var) ).
+      "percorrer todos os consumos
+      LOOP AT lt_consumptions_tab ASSIGNING FIELD-SYMBOL(<fs_comsumptions_str>)
+          WHERE matnr EQ <fs_resb_str>-matnr
+            AND charg IS NOT INITIAL.
+        "obter material do lote
+        zcl_mm_classification=>get_material_desc_by_batch( EXPORTING
+                                                             im_material_var    = <fs_comsumptions_str>-matnr
+                                                             im_batch_var       = <fs_comsumptions_str>-charg
+                                                           IMPORTING
+                                                             ex_description_var = DATA(lv_batchdesc_var) ).
+        IF lv_batchdesc_var EQ lv_description_var.
+          "match encontrado
+          lv_matchfnd_var = abap_true.
+          "sair do loop
+          EXIT.
+        ENDIF.
+        CLEAR: lv_batchdesc_var.
+      ENDLOOP.
+      "verificar se encontrou match
+      IF lv_matchfnd_var NE abap_true.
+        "activar flag de erro
+        lv_error_var = abap_true.
+      ENDIF.
+    ELSE.
+      READ TABLE lt_consumptions_tab TRANSPORTING NO FIELDS WITH KEY matnr = <fs_resb_str>-matnr.
+      IF sy-subrc NE 0.
+        "activar flag de erro
+        lv_error_var = abap_true.
+      ENDIF.
+    ENDIF.
+
+    IF lv_error_var EQ abap_true.
+      "sair do loop
+      EXIT.
+    ENDIF.
+    IF lv_batchmgm_var EQ abap_true.
+      "verificar se lote não está preenchido
+      IF <fs_resb_str>-charg IS INITIAL.
+        "lote consumido
+        <fs_resb_str>-charg = <fs_comsumptions_str>-charg.
+        "adicionar linha para alterar
+        APPEND <fs_resb_str> TO et_resb_tab.
+      ENDIF.
+    ENDIF.
+    "limpar variáveis
+    CLEAR: lv_description_var, lv_batchmgm_var.
+  ENDLOOP.
+  IF lv_error_var EQ abap_true.
+    "Material &1 &2 não foi consumido
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
+        msgty      = 'E'
+        msgno      = 160
+        msgv1      = <fs_resb_str>-matnr
+        msgv2      = lv_description_var
+      CHANGING
+        return_tab = et_return_tab.
+    RETURN.
+  ENDIF.
+ENDMETHOD.
 
 
 METHOD CONSTRUCTOR.
@@ -464,7 +475,7 @@ METHOD CONSTRUCTOR.
 ENDMETHOD.
 
 
-  method convert_char_value_to_external.
+method convert_char_value_to_external.
     "limpar variáveis de exportação
     clear ex_atwrt_var.
 
@@ -523,7 +534,7 @@ ENDMETHOD.
   endmethod.
 
 
-  method create_consum_order_subproduct.
+method create_consum_order_subproduct.
     "constantes locais
     constants: lc_coproduct_var type bwart value '531',
                lc_revesercp_var type bwart value '532',
@@ -621,7 +632,7 @@ ENDMETHOD.
                                importing
                                  ex_prmvalue_var = lv_valuechr_var ).
         lv_531lgort_var = lv_valuechr_var.
-      catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
+      catch zcx_pp_exceptions into data(lo_bcexceptions_obj).
         "falta configuração
         call method zabsf_pp_cl_log=>add_message
           exporting
@@ -1071,7 +1082,7 @@ ENDMETHOD.
   endmethod.
 
 
-  method create_devolution_batch.
+method create_devolution_batch.
     "constantes
     constants: c_kzcla type t156-kzcla value '1', "Option to classify batches
                c_xkcfc type t156-xkcfc value 'X'. "Extended classification via CFC
@@ -1169,7 +1180,7 @@ ENDMETHOD.
   endmethod.
 
 
-  method get_hu_components.
+method get_hu_components.
 * Funcionamento:
 * Leitura de dados da Palete na LQUA. A Storage Unit que
 * é lida no shopfloor, identifica de forma univoca a palete no sistema.
@@ -1297,7 +1308,7 @@ ENDMETHOD.
         return_tab      = return_tab.
 
 *Descrição do material
-    move inputobj-language to lv_langu.
+    move sy-langu to lv_langu.
 
     select * from makt into table @data(lt_makt)
       for all entries in @lt_lqua
@@ -1404,426 +1415,426 @@ ENDMETHOD.
   endmethod.
 
 
-  method get_mulitmaterial_components.
-    "constantes locais
-    constants: lc_coproduct_var type bwart value '531',
-               lc_revesercp_var type bwart value '532'.
+METHOD get_mulitmaterial_components.
+  "constantes locais
+  CONSTANTS: lc_coproduct_var TYPE bwart VALUE '531',
+             lc_revesercp_var TYPE bwart VALUE '532'.
 *Structures
-    data: ls_components type zabsf_pp_s_components,
-          lr_text_rng   type range of sgtxt.
+  DATA: ls_components TYPE zabsf_pp_s_components,
+        lr_text_rng   TYPE RANGE OF sgtxt.
 
 *Variables
-    data: l_aufnr         type aufnr,
-          l_vornr         type vornr,
-          lv_531matnr_var type matnr,
-          lv_531lgort_var type lgort_d.
+  DATA: l_aufnr         TYPE aufnr,
+        l_vornr         TYPE vornr,
+        lv_531matnr_var TYPE matnr,
+        lv_531lgort_var TYPE lgort_d.
 
-    data: lr_zpp3_101_rng type range of steus,
-          lr_zpp3_531_rng type range of steus.
+  DATA: lr_zpp3_101_rng TYPE RANGE OF steus,
+        lr_zpp3_531_rng TYPE RANGE OF steus.
 
 
 
-    try.
-        "obter chaves de controlo geram movimento 101
-        zcl_bc_fixed_values=>get_ranges_value( exporting
-                                                 im_paramter_var = zcl_bc_fixed_values=>gc_zpp3_101_cst
-                                                 im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
-                                                 im_werksval_var = inputobj-werks
-                                               importing
-                                                 ex_valrange_tab = lr_zpp3_101_rng  ).
-        "obter chaves de controlo geram movimento 531
-        zcl_bc_fixed_values=>get_ranges_value( exporting
-                                                 im_paramter_var = zcl_bc_fixed_values=>gc_zpp3_531_cst
-                                                 im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
-                                                 im_werksval_var = inputobj-werks
-                                               importing
-                                                 ex_valrange_tab = lr_zpp3_531_rng  ).
-        "material 531
-        zcl_bc_fixed_values=>get_single_value( exporting
-                                         im_paramter_var = zcl_bc_fixed_values=>gc_zpp3lmatnr_cst
-                                         im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
-                                         im_werksval_var = inputobj-werks
-                                       importing
-                                         ex_prmvalue_var = data(lv_valuechr_var) ).
-        lv_531matnr_var = lv_valuechr_var.
-        "depósito 531
-        zcl_bc_fixed_values=>get_single_value( exporting
-                                 im_paramter_var = zcl_bc_fixed_values=>gc_zpp3lgort_cst
-                                 im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
-                                 im_werksval_var = inputobj-werks
-                               importing
-                                 ex_prmvalue_var = lv_valuechr_var ).
-        lv_531lgort_var = lv_valuechr_var.
+  TRY.
+      "obter chaves de controlo geram movimento 101
+      zcl_bc_fixed_values=>get_ranges_value( EXPORTING
+                                               im_paramter_var = zcl_bc_fixed_values=>gc_zpp3_101_cst
+                                               im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
+                                               im_werksval_var = inputobj-werks
+                                             IMPORTING
+                                               ex_valrange_tab = lr_zpp3_101_rng  ).
+      "obter chaves de controlo geram movimento 531
+      zcl_bc_fixed_values=>get_ranges_value( EXPORTING
+                                               im_paramter_var = zcl_bc_fixed_values=>gc_zpp3_531_cst
+                                               im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
+                                               im_werksval_var = inputobj-werks
+                                             IMPORTING
+                                               ex_valrange_tab = lr_zpp3_531_rng  ).
+      "material 531
+      zcl_bc_fixed_values=>get_single_value( EXPORTING
+                                       im_paramter_var = zcl_bc_fixed_values=>gc_zpp3lmatnr_cst
+                                       im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
+                                       im_werksval_var = inputobj-werks
+                                     IMPORTING
+                                       ex_prmvalue_var = DATA(lv_valuechr_var) ).
+      lv_531matnr_var = lv_valuechr_var.
+      "depósito 531
+      zcl_bc_fixed_values=>get_single_value( EXPORTING
+                               im_paramter_var = zcl_bc_fixed_values=>gc_zpp3lgort_cst
+                               im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
+                               im_werksval_var = inputobj-werks
+                             IMPORTING
+                               ex_prmvalue_var = lv_valuechr_var ).
+      lv_531lgort_var = lv_valuechr_var.
 
-      catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
-        "falta configuração
-        call method zabsf_pp_cl_log=>add_message
-          exporting
-            msgty      = lo_bcexceptions_obj->msgty
-            msgno      = lo_bcexceptions_obj->msgno
-            msgid      = lo_bcexceptions_obj->msgid
-            msgv1      = lo_bcexceptions_obj->msgv1
-            msgv2      = lo_bcexceptions_obj->msgv2
-            msgv3      = lo_bcexceptions_obj->msgv3
-            msgv4      = lo_bcexceptions_obj->msgv4
-          changing
-            return_tab = return_tab.
-        return.
-    endtry.
-    "conversão de formatos
-    call function 'CONVERSION_EXIT_MATN1_INPUT'
-      exporting
-        input        = lv_531matnr_var
-      importing
-        output       = lv_531matnr_var
-      exceptions
-        length_error = 1
-        others       = 2.
-    if sy-subrc <> 0.
+    CATCH zcx_pp_exceptions INTO DATA(lo_bcexceptions_obj).
+      "falta configuração
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = lo_bcexceptions_obj->msgty
+          msgno      = lo_bcexceptions_obj->msgno
+          msgid      = lo_bcexceptions_obj->msgid
+          msgv1      = lo_bcexceptions_obj->msgv1
+          msgv2      = lo_bcexceptions_obj->msgv2
+          msgv3      = lo_bcexceptions_obj->msgv3
+          msgv4      = lo_bcexceptions_obj->msgv4
+        CHANGING
+          return_tab = return_tab.
+      RETURN.
+  ENDTRY.
+  "conversão de formatos
+  CALL FUNCTION 'CONVERSION_EXIT_MATN1_INPUT'
+    EXPORTING
+      input        = lv_531matnr_var
+    IMPORTING
+      output       = lv_531matnr_var
+    EXCEPTIONS
+      length_error = 1
+      OTHERS       = 2.
+  IF sy-subrc <> 0.
 * Implement suitable error handling here
-    endif.
+  ENDIF.
 
 *Convert to input format
-    call function 'CONVERSION_EXIT_ALPHA_INPUT'
-      exporting
-        input  = aufnr
-      importing
-        output = l_aufnr.
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+    EXPORTING
+      input  = aufnr
+    IMPORTING
+      output = l_aufnr.
 
 *Convert to INPUT FORMAT
-    call function 'CONVERSION_EXIT_ALPHA_INPUT'
-      exporting
-        input  = vornr
-      importing
-        output = l_vornr.
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+    EXPORTING
+      input  = vornr
+    IMPORTING
+      output = l_vornr.
 
 *  Get work center
-    select single crhd~arbpl
-      from afko as afko
-     inner join afvc as afvc
-        on afvc~aufpl eq afko~aufpl
-     inner join crhd as crhd
-        on crhd~objty eq 'A'
-       and crhd~objid eq afvc~arbid
-     where afko~aufnr eq @l_aufnr
-       and afvc~vornr eq @l_vornr
-       and afvc~werks eq @inputobj-werks
-      into (@data(lv_arbpl)).
+  SELECT SINGLE crhd~arbpl
+    FROM afko AS afko
+   INNER JOIN afvc AS afvc
+      ON afvc~aufpl EQ afko~aufpl
+   INNER JOIN crhd AS crhd
+      ON crhd~objty EQ 'A'
+     AND crhd~objid EQ afvc~arbid
+   WHERE afko~aufnr EQ @l_aufnr
+     AND afvc~vornr EQ @l_vornr
+     AND afvc~werks EQ @inputobj-werks
+    INTO (@DATA(lv_arbpl)).
 
 * Get data from Order
-    select single *
-      from aufk
-      into @data(ls_aufk)
-      where aufnr eq @l_aufnr.
+  SELECT SINGLE *
+    FROM aufk
+    INTO @DATA(ls_aufk)
+    WHERE aufnr EQ @l_aufnr.
 
 * Get Work center type
-    select single arbpl_type
-      from zabsf_pp013
-      into (@data(l_arbplty))
-     where areaid eq 'PRD'
-       and werks  eq @ls_aufk-werks
-       and arbpl  eq @lv_arbpl.
+  SELECT SINGLE arbpl_type
+    FROM zabsf_pp013
+    INTO (@DATA(l_arbplty))
+   WHERE areaid EQ @inputobj-areaid
+     AND werks  EQ @ls_aufk-werks
+     AND arbpl  EQ @lv_arbpl.
 
 * Not Repacking
-    if ( l_arbplty <> 'R' ).
+  IF ( l_arbplty <> 'R' ).
 
 *Get reserv number
-      select single rsnum, PLNBEZ
-        from afko
-        into ( @data(l_rsnum), @data(lv_mathead_var) )
-       where aufnr eq @l_aufnr.
+    SELECT SINGLE rsnum, plnbez
+      FROM afko
+      INTO ( @DATA(l_rsnum), @DATA(lv_mathead_var) )
+     WHERE aufnr EQ @l_aufnr.
 
-      if l_vornr is initial.
+    IF l_vornr IS INITIAL.
 *  Get Reservation/dependent requirements
-        select *
-          from resb
-          into table @data(lt_resb)
-         where rsnum eq @l_rsnum
-           and aufnr eq @l_aufnr
-           and werks eq @inputobj-werks
-           and xloek eq @space
-           and shkzg eq 'S' "sinal negativo
-           and matnr ne @lv_mathead_var.
+      SELECT *
+        FROM resb
+        INTO TABLE @DATA(lt_resb)
+       WHERE rsnum EQ @l_rsnum
+         AND aufnr EQ @l_aufnr
+         AND werks EQ @inputobj-werks
+         AND xloek EQ @space
+         AND shkzg EQ 'S' "sinal negativo
+         AND matnr NE @lv_mathead_var.
 *       AND rgekz NE @space.
-      else.
-        refresh lt_resb.
+    ELSE.
+      REFRESH lt_resb.
 
 *  Get Reservation/dependent requirements
-        select *
-          from resb
-          into table @lt_resb
-         where rsnum eq @l_rsnum
-           and aufnr eq @l_aufnr
-           and vornr eq @l_vornr
-           and werks eq @inputobj-werks
-           and xloek eq @space
-           and shkzg eq 'S' "sinal negativo
-           and matnr ne @lv_mathead_var.
-        "      AND rgekz NE @space "BMR COMMENT 07.04.2020
-      endif.
+      SELECT *
+        FROM resb
+        INTO TABLE @lt_resb
+       WHERE rsnum EQ @l_rsnum
+         AND aufnr EQ @l_aufnr
+         AND vornr EQ @l_vornr
+         AND werks EQ @inputobj-werks
+         AND xloek EQ @space
+         AND shkzg EQ 'S' "sinal negativo
+         AND matnr NE @lv_mathead_var.
+      "      AND rgekz NE @space "BMR COMMENT 07.04.2020
+    ENDIF.
 
-      "verificar se não existem items n reserva
-      if lt_resb is initial.
-        "obter a operação de entrada de mercadoria
-        select single afko~aufnr, afvc~vornr, afvc~steus
-          from afko as afko
-          inner join afvc as afvc
-          on afvc~aufpl eq afko~aufpl
-              into @data(ls_operation_str)
-          where afko~aufnr eq @aufnr
-            and afvc~loekz eq @space
-            and afvc~steus in @lr_zpp3_101_rng .
-        if sy-subrc eq 0.
-          "obter os items reservados para a operação de entrada de mercadoria
-          select *
-            from resb
-            into table @lt_resb
-           where rsnum eq @l_rsnum
-             and aufnr eq @l_aufnr
-             and vornr eq @ls_operation_str-vornr
-             and werks eq @inputobj-werks
-             and xloek eq @space
-             and shkzg eq 'S'. "sinal negativo
-        endif.
-      endif.
+    "verificar se não existem items n reserva
+    IF lt_resb IS INITIAL.
+      "obter a operação de entrada de mercadoria
+      SELECT SINGLE afko~aufnr, afvc~vornr, afvc~steus
+        FROM afko AS afko
+        INNER JOIN afvc AS afvc
+        ON afvc~aufpl EQ afko~aufpl
+            INTO @DATA(ls_operation_str)
+        WHERE afko~aufnr EQ @aufnr
+          AND afvc~loekz EQ @space
+          AND afvc~steus IN @lr_zpp3_101_rng .
+      IF sy-subrc EQ 0.
+        "obter os items reservados para a operação de entrada de mercadoria
+        SELECT *
+          FROM resb
+          INTO TABLE @lt_resb
+         WHERE rsnum EQ @l_rsnum
+           AND aufnr EQ @l_aufnr
+           AND vornr EQ @ls_operation_str-vornr
+           AND werks EQ @inputobj-werks
+           AND xloek EQ @space
+           AND shkzg EQ 'S'. "sinal negativo
+      ENDIF.
+    ENDIF.
 
-      if lt_resb is not initial.
-        "dados da operação
-        select single afko~aufnr, afvc~vornr, afvc~steus
-          from afko as afko
-          inner join afvc as afvc
-          on afvc~aufpl eq afko~aufpl
-              into @ls_operation_str
-          where afko~aufnr eq @aufnr
-            and afvc~vornr eq @vornr
-            and afvc~loekz eq @space.
-        "verificar chave de operação
-        if ls_operation_str-steus in lr_zpp3_531_rng.
-          "activar flag quantidade dos 531
-          data(lv_sum531_var) = abap_true.
-          "obter material do configurador
-          loop at lt_resb assigning field-symbol(<fs_resb>).
-            "material
-            zcl_mm_classification=>get_desc_as_co02( exporting
-                                                       im_resb_str        = <fs_resb>
-                                                     importing
-                                                       ex_description_var = data(lv_material_var) ).
-            "adicionar material ao range
-            if lv_material_var is not initial.
-              append value #( sign   = 'I'
-                              option = 'EQ'
-                              low    = lv_material_var
-                              high   = space )  to lr_text_rng.
-            endif.
-            "limpar variáveis
-            clear lv_material_var.
-          endloop.
+    IF lt_resb IS NOT INITIAL.
+      "dados da operação
+      SELECT SINGLE afko~aufnr, afvc~vornr, afvc~steus
+        FROM afko AS afko
+        INNER JOIN afvc AS afvc
+        ON afvc~aufpl EQ afko~aufpl
+            INTO @ls_operation_str
+        WHERE afko~aufnr EQ @aufnr
+          AND afvc~vornr EQ @vornr
+          AND afvc~loekz EQ @space.
+      "verificar chave de operação
+      IF ls_operation_str-steus IN lr_zpp3_531_rng.
+        "activar flag quantidade dos 531
+        DATA(lv_sum531_var) = abap_true.
+        "obter material do configurador
+        LOOP AT lt_resb ASSIGNING FIELD-SYMBOL(<fs_resb>).
+          "material
+          zcl_mm_classification=>get_desc_as_co02( EXPORTING
+                                                     im_resb_str        = <fs_resb>
+                                                   IMPORTING
+                                                     ex_description_var = DATA(lv_material_var) ).
+          "adicionar material ao range
+          IF lv_material_var IS NOT INITIAL.
+            APPEND VALUE #( sign   = 'I'
+                            option = 'EQ'
+                            low    = lv_material_var
+                            high   = space )  TO lr_text_rng.
+          ENDIF.
+          "limpar variáveis
+          CLEAR lv_material_var.
+        ENDLOOP.
 
-          "obter os movimentos 531
-          select aufm~mblnr, aufm~mjahr, aufm~zeile, aufm~matnr,
-                 mseg~erfmg, mseg~sgtxt
-            from aufm as aufm
-            inner join mseg as mseg
-              on mseg~mblnr eq aufm~mblnr
-             and mseg~mjahr eq aufm~mjahr
-             and mseg~zeile eq aufm~zeile
-            into table @data(lt_mov531_tab)
-              where aufm~aufnr eq @l_aufnr
-                and aufm~matnr eq @lv_531matnr_var
-                and aufm~lgort eq @lv_531lgort_var
-                and aufm~bwart eq @lc_coproduct_var
-                and mseg~sgtxt in @lr_text_rng.
+        "obter os movimentos 531
+        SELECT aufm~mblnr, aufm~mjahr, aufm~zeile, aufm~matnr,
+               mseg~erfmg, mseg~sgtxt
+          FROM aufm AS aufm
+          INNER JOIN mseg AS mseg
+            ON mseg~mblnr EQ aufm~mblnr
+           AND mseg~mjahr EQ aufm~mjahr
+           AND mseg~zeile EQ aufm~zeile
+          INTO TABLE @DATA(lt_mov531_tab)
+            WHERE aufm~aufnr EQ @l_aufnr
+              AND aufm~matnr EQ @lv_531matnr_var
+              AND aufm~lgort EQ @lv_531lgort_var
+              AND aufm~bwart EQ @lc_coproduct_var
+              AND mseg~sgtxt IN @lr_text_rng.
 
-          "obter documentos estornados
-          if lt_mov531_tab is not initial.
-            select *
-              from mseg into table @data(lt_mov532_tab)
-              for all entries in @lt_mov531_tab
-              where aufnr eq @l_aufnr
-                and werks eq @inputobj-werks
-                and bwart eq @lc_revesercp_var
-                and sjahr eq @lt_mov531_tab-mjahr
-                and smbln eq @lt_mov531_tab-mblnr
-                and smblp eq @lt_mov531_tab-zeile.
-            if sy-subrc eq 0.
-              "remover os estornados
-              loop at lt_mov532_tab into data(ls_mov531_str).
-                if line_exists( lt_mov532_tab[ smbln = ls_mov531_str-mblnr
-                                               smblp = ls_mov531_str-zeile
-                                               sjahr = ls_mov531_str-mjahr ] ).
-                  "remover documento
-                  delete lt_mov531_tab.
-                endif.
-              endloop.
-            endif.
-          endif.
-        endif.
+        "obter documentos estornados
+        IF lt_mov531_tab IS NOT INITIAL.
+          SELECT *
+            FROM mseg INTO TABLE @DATA(lt_mov532_tab)
+            FOR ALL ENTRIES IN @lt_mov531_tab
+            WHERE aufnr EQ @l_aufnr
+              AND werks EQ @inputobj-werks
+              AND bwart EQ @lc_revesercp_var
+              AND sjahr EQ @lt_mov531_tab-mjahr
+              AND smbln EQ @lt_mov531_tab-mblnr
+              AND smblp EQ @lt_mov531_tab-zeile.
+          IF sy-subrc EQ 0.
+            "remover os estornados
+            LOOP AT lt_mov532_tab INTO DATA(ls_mov531_str).
+              IF line_exists( lt_mov532_tab[ smbln = ls_mov531_str-mblnr
+                                             smblp = ls_mov531_str-zeile
+                                             sjahr = ls_mov531_str-mjahr ] ).
+                "remover documento
+                DELETE lt_mov531_tab.
+              ENDIF.
+            ENDLOOP.
+          ENDIF.
+        ENDIF.
+      ENDIF.
 
 *  Get material with Batch management requirement indicator
-        select matnr, xchpf
-          from mara
-          into table @data(lt_mara)
-           for all entries in @lt_resb
-         where matnr eq @lt_resb-matnr.
+      SELECT matnr, xchpf
+        FROM mara
+        INTO TABLE @DATA(lt_mara)
+         FOR ALL ENTRIES IN @lt_resb
+       WHERE matnr EQ @lt_resb-matnr.
 *       AND xchpf EQ @abap_true.
 
 *  Get material description for all components
-        select *
-          from makt
-          into table @data(lt_makt)
-           for all entries in @lt_resb
-         where matnr eq @lt_resb-matnr
-           and spras eq @sy-langu.
+      SELECT *
+        FROM makt
+        INTO TABLE @DATA(lt_makt)
+         FOR ALL ENTRIES IN @lt_resb
+       WHERE matnr EQ @lt_resb-matnr
+         AND spras EQ @sy-langu.
 
 *  Fill data to shopfloor
-        loop at lt_resb assigning <fs_resb>.
-          "material
-          zcl_mm_classification=>get_desc_as_co02( exporting
-                                                     im_resb_str        = <fs_resb>
-                                                   importing
-                                                     ex_description_var = lv_material_var ).
-          clear ls_components.
+      LOOP AT lt_resb ASSIGNING <fs_resb>.
+        "material
+        zcl_mm_classification=>get_desc_as_co02( EXPORTING
+                                                   im_resb_str        = <fs_resb>
+                                                 IMPORTING
+                                                   ex_description_var = lv_material_var ).
+        CLEAR ls_components.
 *  Reservation number
-          ls_components-rsnum = <fs_resb>-rsnum.
+        ls_components-rsnum = <fs_resb>-rsnum.
 *  Reservation item
-          ls_components-rspos = <fs_resb>-rspos.
+        ls_components-rspos = <fs_resb>-rspos.
 *  Special stock type
-          ls_components-sobkz = <fs_resb>-sobkz.
+        ls_components-sobkz = <fs_resb>-sobkz.
 * object id
-          ls_components-cuobj = <fs_resb>-cuobj.
+        ls_components-cuobj = <fs_resb>-cuobj.
 *    Check Batch management requirement indicator
-          read table lt_mara into data(ls_mara) with key matnr = <fs_resb>-matnr.
+        READ TABLE lt_mara INTO DATA(ls_mara) WITH KEY matnr = <fs_resb>-matnr.
 
-          if sy-subrc eq 0.
+        IF sy-subrc EQ 0.
 *      Material
-            ls_components-matnr = <fs_resb>-matnr.
+          ls_components-matnr = <fs_resb>-matnr.
 *      Material description
-            read table lt_makt into data(ls_makt) with key matnr = <fs_resb>-matnr.
+          READ TABLE lt_makt INTO DATA(ls_makt) WITH KEY matnr = <fs_resb>-matnr.
 
-            if sy-subrc eq 0.
-              ls_components-maktx = ls_makt-maktx.
-            endif.
-            if lv_sum531_var eq abap_true.
-              "quantidade a produzir
-              ls_components-bdmng = <fs_resb>-bdmng.
-              "quantidade produzida
-              ls_components-enmng = reduce #( init x type bdmng
-                                              for ls in lt_mov531_tab
-                                              where ( sgtxt = lv_material_var )
-                                              next x = x + ls-erfmg ).
-              if <fs_resb>-shkzg eq 'S'.
-                ls_components-bdmng = ls_components-bdmng * -1.
-              endif.
+          IF sy-subrc EQ 0.
+            ls_components-maktx = ls_makt-maktx.
+          ENDIF.
+          IF lv_sum531_var EQ abap_true.
+            "quantidade a produzir
+            ls_components-bdmng = <fs_resb>-bdmng.
+            "quantidade produzida
+            ls_components-enmng = REDUCE #( INIT x TYPE bdmng
+                                            FOR ls IN lt_mov531_tab
+                                            WHERE ( sgtxt = lv_material_var )
+                                            NEXT x = x + ls-erfmg ).
+            IF <fs_resb>-shkzg EQ 'S'.
+              ls_components-bdmng = ls_components-bdmng * -1.
+            ENDIF.
 
-              "quantidade em falta
-              ls_components-consqty = <fs_resb>-bdmng - ls_components-enmng.
-            else.
+            "quantidade em falta
+            ls_components-consqty = <fs_resb>-bdmng - ls_components-enmng.
+          ELSE.
 
 *    Quantity produced
-              ls_components-bdmng = <fs_resb>-erfmg.
+            ls_components-bdmng = <fs_resb>-erfmg.
 *    Negative quantity
-              if <fs_resb>-shkzg eq 'S'.
-                ls_components-bdmng = ls_components-bdmng * -1.
-              endif.
+            IF <fs_resb>-shkzg EQ 'S'.
+              ls_components-bdmng = ls_components-bdmng * -1.
+            ENDIF.
 
 *      Quantity missing
-              ls_components-consqty = <fs_resb>-erfmg - <fs_resb>-enmng.
+            ls_components-consqty = <fs_resb>-erfmg - <fs_resb>-enmng.
 *      Unit
-            endif.
+          ENDIF.
 
 *          ls_components-meins = ls_resb-meins.
-            ls_components-meins = <fs_resb>-erfme.
+          ls_components-meins = <fs_resb>-erfme.
 *      Storage Location
-            ls_components-lgort = <fs_resb>-lgort.
+          ls_components-lgort = <fs_resb>-lgort.
 
 *      Operation number
-            ls_components-vornr = <fs_resb>-vornr.
+          ls_components-vornr = <fs_resb>-vornr.
 
 
-            if l_vornr is not initial and ls_mara-xchpf eq abap_true.
-              append ls_components to components_tab.
-            endif.
+          IF l_vornr IS NOT INITIAL AND ls_mara-xchpf EQ abap_true.
+            APPEND ls_components TO components_tab.
+          ENDIF.
 
-            if l_vornr is initial.
+          IF l_vornr IS INITIAL.
 *        Batch management requirement indicator
-              ls_components-xchpf = ls_mara-xchpf.
+            ls_components-xchpf = ls_mara-xchpf.
 
-              append ls_components to components_tab.
-            endif.
-          endif.
-          "limpar variáveis
-          clear lv_material_var.
-        endloop.
+            APPEND ls_components TO components_tab.
+          ENDIF.
+        ENDIF.
+        "limpar variáveis
+        CLEAR lv_material_var.
+      ENDLOOP.
 
 *  Get work center
-        select single crhd~arbpl
-          from afko as afko
-         inner join afvc as afvc
-            on afvc~aufpl eq afko~aufpl
-         inner join crhd as crhd
-            on crhd~objty eq 'A'
-           and crhd~objid eq afvc~arbid
-         where afko~aufnr eq @l_aufnr
-           and afvc~vornr eq @l_vornr
-           and afvc~werks eq @inputobj-werks
-          into (@data(l_arbpl)).
+      SELECT SINGLE crhd~arbpl
+        FROM afko AS afko
+       INNER JOIN afvc AS afvc
+          ON afvc~aufpl EQ afko~aufpl
+       INNER JOIN crhd AS crhd
+          ON crhd~objty EQ 'A'
+         AND crhd~objid EQ afvc~arbid
+       WHERE afko~aufnr EQ @l_aufnr
+         AND afvc~vornr EQ @l_vornr
+         AND afvc~werks EQ @inputobj-werks
+        INTO (@DATA(l_arbpl)).
 
-      else.
-        call method zabsf_pp_cl_log=>add_message
-          exporting
-            msgty      = 'I'
-            msgno      = '018'
-          changing
-            return_tab = return_tab.
+    ELSE.
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = 'I'
+          msgno      = '018'
+        CHANGING
+          return_tab = return_tab.
 
-      endif.
-    endif.
-    clear ch_orderqtt_var.
+    ENDIF.
+  ENDIF.
+  CLEAR ch_orderqtt_var.
 
-    "obter items da ordem
-    if components_tab is not initial.
-      select *
-        from afpo
-        into table @data(lt_afpo_tab)
-        for all entries in @components_tab
-        where krsnr eq @components_tab-rsnum
-          and krsps eq @components_tab-rspos
-          and aufnr eq @aufnr.
-    endif.
-    loop at components_tab assigning field-symbol(<fs_components>).
-      "obter descrição do componente
-      zcl_mm_classification=>get_material_desc_by_object( exporting
-                                                            im_cuobj_var       = <fs_components>-cuobj
-                                                          importing
-                                                            ex_description_var = data(lv_descript_var) ).
-      "descrição
-      if lv_descript_var is not initial.
-        <fs_components>-maktx = lv_descript_var.
-      endif.
-      "obter item da ordem
-      read table lt_afpo_tab into data(ls_afpo_str) with key krsnr = <fs_components>-rsnum
-                                                             krsps = <fs_components>-rspos.
-      if sy-subrc eq 0 and lv_sum531_var eq abap_false.
-        <fs_components>-consqty = abs( ls_afpo_str-psmng - ls_afpo_str-wemng ).
-        "a produzir
-        ch_orderqtt_var = ch_orderqtt_var + abs( ls_afpo_str-psmng ).
-        "produzida
-        ch_produced_var = ch_produced_var + abs( ls_afpo_str-wemng ).
-      else.
-        "a produzir
-        ch_orderqtt_var = ch_orderqtt_var + abs( ls_afpo_str-psmng ).
-        "produzida
-        ch_produced_var = ch_produced_var + abs( <fs_components>-enmng ).
-        "limpar variável
-        clear <fs_components>-enmng.
-      endif.
-    endloop.
-    "qtd em falta
-    ch_missing_var = ch_orderqtt_var - ch_produced_var.
-  endmethod.
+  "obter items da ordem
+  IF components_tab IS NOT INITIAL.
+    SELECT *
+      FROM afpo
+      INTO TABLE @DATA(lt_afpo_tab)
+      FOR ALL ENTRIES IN @components_tab
+      WHERE krsnr EQ @components_tab-rsnum
+        AND krsps EQ @components_tab-rspos
+        AND aufnr EQ @aufnr.
+  ENDIF.
+  LOOP AT components_tab ASSIGNING FIELD-SYMBOL(<fs_components>).
+    "obter descrição do componente
+    zcl_mm_classification=>get_material_desc_by_object( EXPORTING
+                                                          im_cuobj_var       = <fs_components>-cuobj
+                                                        IMPORTING
+                                                          ex_description_var = DATA(lv_descript_var) ).
+    "descrição
+    IF lv_descript_var IS NOT INITIAL.
+      <fs_components>-maktx = lv_descript_var.
+    ENDIF.
+    "obter item da ordem
+    READ TABLE lt_afpo_tab INTO DATA(ls_afpo_str) WITH KEY krsnr = <fs_components>-rsnum
+                                                           krsps = <fs_components>-rspos.
+    IF sy-subrc EQ 0 AND lv_sum531_var EQ abap_false.
+      <fs_components>-consqty = abs( ls_afpo_str-psmng - ls_afpo_str-wemng ).
+      "a produzir
+      ch_orderqtt_var = ch_orderqtt_var + abs( ls_afpo_str-psmng ).
+      "produzida
+      ch_produced_var = ch_produced_var + abs( ls_afpo_str-wemng ).
+    ELSE.
+      "a produzir
+      ch_orderqtt_var = ch_orderqtt_var + abs( ls_afpo_str-psmng ).
+      "produzida
+      ch_produced_var = ch_produced_var + abs( <fs_components>-enmng ).
+      "limpar variável
+      CLEAR <fs_components>-enmng.
+    ENDIF.
+  ENDLOOP.
+  "qtd em falta
+  ch_missing_var = ch_orderqtt_var - ch_produced_var.
+ENDMETHOD.
 
 
-    method get_possible_devolutions.
+method get_possible_devolutions.
       types: begin of ty_dev,
                matnr        type  matnr,
                maktx        type  maktx,
@@ -1874,7 +1885,7 @@ ENDMETHOD.
 
       data: lr_matnr_rng type range of matnr.
 
-      move inputobj-language to lv_spras.
+      move sy-langu to lv_spras.
       set locale language lv_spras.
 *Convert to input format
       call function 'CONVERSION_EXIT_ALPHA_INPUT'
@@ -2042,7 +2053,7 @@ ENDMETHOD.
               ex_prmvalue_var = data(lv_charname_var).
 
           lv_classchapa_var = lv_charname_var.
-        catch zcx_bc_exceptions .
+        catch zcx_pp_exceptions .
       endtry.
 
       loop at components_tab assigning field-symbol(<fs_tab>).
@@ -2125,7 +2136,7 @@ ENDMETHOD.
     endmethod.
 
 
-  method set_devolutions.
+method set_devolutions.
 *Internal tables
     data: lt_goodsmvt_item     type table of bapi2017_gm_item_create,
           lt_goodsmvt_item_cwm type table of /cwm/bapi2017_gm_item_create.
@@ -2150,7 +2161,7 @@ ENDMETHOD.
           lr_lbacthes_rng    type range of charg_d,
           lv_round1dec_var   type p length 15 decimals 1,
           lr_atnam_rng       type range of atnam,
-          lt_newbatchs_tab   type table of  zabsf_mob_s_new_batch.
+          lt_newbatchs_tab   type table of  zabsf_pp_s_new_batch.
 
 *se for cwm
     data: val_erfmg type erfmg,
@@ -2193,7 +2204,7 @@ ENDMETHOD.
           importing
             ex_valrange_tab = lr_sequencopy_rng.
 
-      catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
+      catch zcx_pp_exceptions into data(lo_bcexceptions_obj).
         "falta configuração
         call method zabsf_pp_cl_log=>add_message
           exporting
@@ -2382,7 +2393,7 @@ ENDMETHOD.
                   ex_prmvalue_var = data(lv_devware_var).
               "depósito de devoluções
               ls_goodsmvt_item-stge_loc = lv_devware_var.
-            catch zcx_bc_exceptions .
+            catch zcx_pp_exceptions .
           endtry.
         endif.
         "depósito da produção
@@ -2398,7 +2409,7 @@ ENDMETHOD.
                   ex_prmvalue_var = data(lv_devprod_var).
               "depósito devolução da produção
               ls_goodsmvt_item-stge_loc = lv_devprod_var.
-            catch zcx_bc_exceptions .
+            catch zcx_pp_exceptions .
           endtry.
         endif.
 
@@ -2580,21 +2591,21 @@ ENDMETHOD.
                         option = 'EQ'
                         low    = lv_new_batch ) to lr_lbacthes_rng.
 
-        "imprimir etiqueta do 311
-        zcl_absf_mob=>print_movements_label( exporting
-                                                im_devolucao_var = abap_true
-                                                im_docnumber_var = l_materialdocument
-                                                im_docyear_var   = l_matdocumentyear
-                                                im_batch_rng     = lr_lbacthes_rng[]
-                                                im_printer_var   = lv_printer_var
-                                              changing
-                                                ch_return_tab    = return_tab ).
+*        "imprimir etiqueta do 311
+*        zcl_absf_mob=>print_movements_label( exporting
+*                                                im_devolucao_var = abap_true
+*                                                im_docnumber_var = l_materialdocument
+*                                                im_docyear_var   = l_matdocumentyear
+*                                                im_batch_rng     = lr_lbacthes_rng[]
+*                                                im_printer_var   = lv_printer_var
+*                                              changing
+*                                                ch_return_tab    = return_tab ).
       endif.
     endif.
   endmethod.
 
 
-  method set_devolution_charact.
+method set_devolution_charact.
     "constantes
     constants: lc_compriment_cst    type atnam   value 'MET_COMPRIMENTO',
                lc_largura_cst       type atnam   value 'MET_LARGURA',
@@ -2953,7 +2964,7 @@ ENDMETHOD.
             importing
               ex_valrange_tab = lr_cenario3_rng.
 
-        catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
+        catch zcx_pp_exceptions into data(lo_bcexceptions_obj).
           "falta configuração
           call method zabsf_pp_cl_log=>add_message
             exporting
@@ -3298,7 +3309,7 @@ ENDMETHOD.
 
 
 METHOD zif_absf_pp_consumptions~create_consum_matnr.
-  DATA: it_goodsmovements TYPE TABLE OF bapi2017_gm_item_create.
+  DATA: lt_goodsmovements TYPE TABLE OF bapi2017_gm_item_create.
 
   DATA: ls_bflushflags    TYPE bapi_rm_flg,
         ls_bflushdatagen  TYPE bapi_rm_datgen,
@@ -3311,11 +3322,19 @@ METHOD zif_absf_pp_consumptions~create_consum_matnr.
         ls_plaf           TYPE plaf,
         ld_plnum          TYPE plnum,
         return            TYPE bapiret2,
-        ld_shiftid        TYPE zabsf_pp_e_shiftid.
+        ld_shiftid        TYPE zabsf_pp_e_shiftid,
+        lv_qty_av         TYPE bapicm61v-wkbst,
+        lv_stock_fail(1),
+        lt_wmdvs          TYPE TABLE OF bapiwmdvs,
+        lt_wmdve          TYPE TABLE OF bapiwmdve,
+        lv_material       TYPE string,
+        lt_serialnr       TYPE STANDARD TABLE OF bapi_rm_datserial.
 
-  CONSTANTS: c_bwart TYPE bwart VALUE '261'.
+  CONSTANTS:
+    c_bwart_261 TYPE bwart VALUE '261',
+    c_bwart_131 TYPE bwart VALUE '131'.
 
-  REFRESH it_goodsmovements.
+  REFRESH lt_goodsmovements.
 
   CLEAR: ls_bflushflags,
          ls_bflushdatagen,
@@ -3338,6 +3357,7 @@ METHOD zif_absf_pp_consumptions~create_consum_matnr.
      AND oprid EQ inputobj-oprid.
 
   IF sy-subrc NE 0.
+    IF 1 = 2. MESSAGE e061(zabsf_pp) . ENDIF.
 *  Operator is not associated with shift
     CALL METHOD zabsf_pp_cl_log=>add_message
       EXPORTING
@@ -3365,6 +3385,22 @@ METHOD zif_absf_pp_consumptions~create_consum_matnr.
   ls_bflushdatagen-prodplant = inputobj-werks.
 *Planning plant
   ls_bflushdatagen-planplant = inputobj-werks.
+
+  CALL FUNCTION 'CONVERSION_EXIT_MATN1_OUTPUT'
+    EXPORTING
+      input  = matnr
+    IMPORTING
+      output = lv_material.
+
+  IF line_exists( materialbatch[ material = lv_material ] ).
+    ls_bflushdatagen-batch = materialbatch[ material = lv_material ]-batch.
+  ENDIF.
+
+  IF line_exists( materialserial[ material = lv_material ] ).
+    APPEND VALUE #(
+        serialnr =  materialserial[ material = lv_material ]-serial
+      ) TO lt_serialnr.
+  ENDIF.
 
 *Production Versions of Material
   SELECT SINGLE *
@@ -3425,7 +3461,6 @@ METHOD zif_absf_pp_consumptions~create_consum_matnr.
     ENDIF.
   ENDIF.
 
-
 *Report point
   ls_bflushdatamts-reppoint = vorne.
 
@@ -3439,63 +3474,128 @@ METHOD zif_absf_pp_consumptions~create_consum_matnr.
       wa_goodsmovements-entry_qnt = ls_components-consqty.
 *    Unit
       wa_goodsmovements-entry_uom = ls_components-meins.
-
 *    Storage Location
       wa_goodsmovements-stge_loc = ls_components-lgort.
-
 *    Plant
       wa_goodsmovements-plant = inputobj-werks.
-
 *    Movement Type
-      wa_goodsmovements-move_type = c_bwart.
-
+      wa_goodsmovements-move_type = c_bwart_261.
 *    Reservation
       wa_goodsmovements-reserv_no = ls_components-rsnum.
       wa_goodsmovements-res_item = ls_components-rspos.
 
-      APPEND wa_goodsmovements TO it_goodsmovements.
+      APPEND wa_goodsmovements TO lt_goodsmovements.
+
+*Check material availability
+      CALL FUNCTION 'BAPI_MATERIAL_AVAILABILITY'
+        EXPORTING
+          plant      = inputobj-werks
+          material   = ls_components-matnr
+          unit       = ls_components-meins
+          stge_loc   = ls_components-lgort
+        IMPORTING
+          av_qty_plt = lv_qty_av
+        TABLES
+          wmdvsx     = lt_wmdvs
+          wmdvex     = lt_wmdve.
+
+      IF lv_qty_av <  ls_components-consqty.
+        lv_stock_fail = 'X'.
+        EXIT.
+      ENDIF.
     ENDLOOP.
   ENDIF.
 
+  IF lv_stock_fail IS INITIAL.
+    LOOP AT lt_goodsmovements ASSIGNING FIELD-SYMBOL(<ls_goodsmvt>).
+      CALL FUNCTION 'CONVERSION_EXIT_MATN1_OUTPUT'
+        EXPORTING
+          input  = <ls_goodsmvt>-material
+        IMPORTING
+          output = lv_material.
 
-*Create consumption
-  CALL FUNCTION 'BAPI_REPMANCONF1_CREATE_MTS'
-    EXPORTING
-      bflushflags    = ls_bflushflags
-      bflushdatagen  = ls_bflushdatagen
-      bflushdatamts  = ls_bflushdatamts
-    IMPORTING
-      confirmation   = confirmation
-      return         = return
-    TABLES
-      goodsmovements = it_goodsmovements.
+      IF line_exists( materialbatch[ material = lv_material ] ).
+        <ls_goodsmvt>-batch = materialbatch[ material = lv_material ]-batch.
+      ENDIF.
 
-  IF return IS INITIAL AND confirmation IS NOT INITIAL.
-    CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+      IF line_exists( materialserial[ material = lv_material ] ).
+        APPEND VALUE #(
+            serialnr =  materialserial[ material = lv_material ]-serial
+          ) TO lt_serialnr.
+      ENDIF.
+    ENDLOOP.
+
+    CALL FUNCTION 'CONVERSION_EXIT_MATN1_OUTPUT'
       EXPORTING
-        wait = 'X'.
+        input  = matnr
+      IMPORTING
+        output = lv_material.
 
-*  Get number od document created
-    SELECT SINGLE belnr
-      FROM blpp
-      INTO ld_belnr
-      WHERE prtnr EQ confirmation
-        AND belnr NE space.
-
-    CALL METHOD zabsf_pp_cl_log=>add_message
-      EXPORTING
-        msgty      = 'S'
-        msgno      = '034'
-        msgv1      = ld_belnr
-      CHANGING
-        return_tab = return_tab.
-
-  ELSE.
-    IF return-type = 'A'.
-      return-type = 'E'.
+    IF line_exists( materialserial[ material = lv_material ] ).
+      APPEND VALUE #(
+          serialnr =  materialserial[ material = lv_material ]-serial
+        ) TO lt_serialnr.
     ENDIF.
 
-    APPEND return TO return_tab.
+    DO 50 TIMES.
+      CALL FUNCTION 'BAPI_REPMANCONF1_CREATE_MTS'
+        EXPORTING
+          bflushflags    = ls_bflushflags
+          bflushdatagen  = ls_bflushdatagen
+          bflushdatamts  = ls_bflushdatamts
+        IMPORTING
+          confirmation   = confirmation
+          return         = return
+        TABLES
+          serialnr       = lt_serialnr
+          goodsmovements = lt_goodsmovements.
+
+      IF return-type = 'E' AND return-id = 'M3'.
+        WAIT UP TO 1 SECONDS.
+      ELSE.
+        EXIT.
+      ENDIF.
+    ENDDO.
+
+*    IF return IS INITIAL AND lv_materialdocument IS NOT INITIAL.
+    IF return IS INITIAL AND confirmation IS NOT INITIAL.
+      CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+        EXPORTING
+          wait = 'X'.
+
+*  Get number od document created
+      SELECT SINGLE belnr
+        FROM blpp
+        INTO ld_belnr
+        WHERE prtnr EQ confirmation
+          AND belnr NE space.
+
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = 'S'
+          msgno      = '034'
+          msgv1      = ld_belnr
+        CHANGING
+          return_tab = return_tab.
+
+    ELSE.
+      IF return-type = 'A'.
+        return-type = 'E'.
+      ENDIF.
+
+      APPEND return TO return_tab.
+    ENDIF.
+  ELSE.
+    CALL METHOD zcl_lp_pp_sf_log=>add_message
+      EXPORTING
+        msgty      = 'E'
+        msgno      = '064'
+        msgv1      = ls_components-matnr
+        msgv2      = inputobj-werks
+        msgv3      = ls_components-lgort
+        msgv4      = lv_qty_av
+      CHANGING
+        return_tab = return_tab.
   ENDIF.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
@@ -3597,7 +3697,7 @@ method zif_absf_pp_consumptions~create_consum_order.
         importing
           ex_prmvalue_var = data(lv_cons_add_var).
 
-    catch zcx_bc_exceptions into data(lo_excpetions_obj).
+    catch zcx_pp_exceptions into data(lo_excpetions_obj).
       "enviar mensagem de erro
       call method zabsf_pp_cl_log=>add_message
         exporting
@@ -3864,7 +3964,62 @@ ls_goodsmvt_item-stge_loc = lv_conslgort_var.
 endmethod.
 
 
-  method zif_absf_pp_consumptions~get_batch_consumed.
+  METHOD zif_absf_pp_consumptions~create_transf_post.
+    DATA:
+      lv_materialdocument TYPE bapi2017_gm_head_ret-mat_doc.
+
+*Movement type
+    CONSTANTS:
+      lc_goodsmvt_code TYPE bapi2017_gm_code VALUE '04'. "MB1B – Transfer Posting
+
+    TRANSLATE inputobj-oprid TO UPPER CASE.
+
+*Header of material document
+    DATA(ls_header) =
+      VALUE bapi2017_gm_head_01(
+        pstng_date = sy-datum
+        doc_date   = sy-datum
+        pr_uname   = inputobj-oprid ).
+
+*Data to create movement
+    DATA(lt_items) =
+      VALUE bapi2017_gm_item_create_t( (
+        plant = inputobj-werks "Plant
+        move_type  = '311' "Movement Type
+        material   = iv_matnr
+        entry_qnt  = iv_lmnga
+        entry_uom  = iv_meins
+        stge_loc   = iv_slgort
+        move_stloc = iv_dlgort ) ).
+
+*Create consumption of the Production Order
+    CALL FUNCTION 'BAPI_GOODSMVT_CREATE'
+      EXPORTING
+        goodsmvt_header  = ls_header
+        goodsmvt_code    = lc_goodsmvt_code
+      IMPORTING
+        materialdocument = lv_materialdocument
+      TABLES
+        goodsmvt_item    = lt_items
+        return           = ct_return.
+
+    IF ct_return[] IS INITIAL.
+      CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+        EXPORTING
+          wait = 'X'.
+
+      CALL METHOD zcl_lp_pp_sf_log=>add_message
+        EXPORTING
+          msgty      = 'S'
+          msgno      = '034'
+          msgv1      = lv_materialdocument
+        CHANGING
+          return_tab = ct_return.
+    ENDIF.
+  ENDMETHOD.
+
+
+method zif_absf_pp_consumptions~get_batch_consumed.
     "variáveis locais
     data: ls_batch_consumed type zabsf_pp_s_batch_consumed,
           l_matnr           type matnr,
@@ -4300,7 +4455,7 @@ METHOD zif_absf_pp_consumptions~get_components_matnr.
           return_tab = return_tab.
     ENDIF.
 
-    READ TABLE it_pzpsx INTO wa_pzpsx WITH KEY vorne = vorne.
+    READ TABLE it_pzpsx INTO wa_pzpsx WITH KEY vorne = vornr.
 
     REFRESH it_rplmz_new.
 
@@ -4364,7 +4519,9 @@ METHOD zif_absf_pp_consumptions~get_components_matnr.
 *      Quantity withdrawn
         wa_components-enmng = wa_mdpmx-enmng.
 *      Quantity to consume
-        wa_components-consqty = wa_mdpmx-erfmg - wa_mdpmx-enmng.
+** BEGIN JOL: 16/12/2022 - integer consqty value
+        wa_components-consqty = CONV i( wa_mdpmx-erfmg - wa_mdpmx-enmng ).
+** END JOL: 16/12/2022
 *      Unit
         wa_components-meins = wa_mdpmx-lagme.
 *      Storage Location
@@ -4389,38 +4546,38 @@ METHOD zif_absf_pp_consumptions~get_components_matnr.
 ENDMETHOD.
 
 
-method zif_absf_pp_consumptions~get_components_order.
+METHOD zif_absf_pp_consumptions~get_components_order.
 *Internal tables
-  data: lt_mov_261 type table of aufm,
-        lt_mov_262 type table of aufm.
+  DATA: lt_mov_261 TYPE TABLE OF aufm,
+        lt_mov_262 TYPE TABLE OF aufm.
 
 *Structures
-  data: ls_components       type zabsf_pp_s_components,
-        ls_mov_261          type aufm,
-        ls_mov_262          type aufm,
-        lr_charseq_rng      type range of atnam,
-        lv_sequenciador_var type zabsf_pp_e_seq.
+  DATA: ls_components       TYPE zabsf_pp_s_components,
+        ls_mov_261          TYPE aufm,
+        ls_mov_262          TYPE aufm,
+        lr_charseq_rng      TYPE RANGE OF atnam,
+        lv_sequenciador_var TYPE zabsf_pp_e_seq.
 
 *Variables
-  data: l_aufnr type aufnr,
-        l_vornr type vornr.
+  DATA: l_aufnr TYPE aufnr,
+        l_vornr TYPE vornr.
 
-  data: lr_largura_rng     type range of atnam,
-        lr_comprimento_rng type range of atnam,
-        lr_referencia_rng  type range of atnam.
+  DATA: lr_largura_rng     TYPE RANGE OF atnam,
+        lr_comprimento_rng TYPE RANGE OF atnam,
+        lr_referencia_rng  TYPE RANGE OF atnam.
 
 *Convert to input format
-  call function 'CONVERSION_EXIT_ALPHA_INPUT'
-    exporting
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+    EXPORTING
       input  = aufnr
-    importing
+    IMPORTING
       output = l_aufnr.
 
 *Convert to INPUT FORMAT
-  call function 'CONVERSION_EXIT_ALPHA_INPUT'
-    exporting
+  CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+    EXPORTING
       input  = vornr
-    importing
+    IMPORTING
       output = l_vornr.
 
 
@@ -4460,161 +4617,161 @@ method zif_absf_pp_consumptions~get_components_order.
 *  endtry.
 
   "order type
-  select single auart, werks
-    from aufk
-    into ( @data(lv_ordettyp_var), @data(lv_plant_var) )
-      where aufnr eq @aufnr.
+  SELECT SINGLE auart, werks
+    FROM aufk
+    INTO ( @DATA(lv_ordettyp_var), @DATA(lv_plant_var) )
+      WHERE aufnr EQ @aufnr.
 
 ********** REPACKING 10.05.2017
 *  Get work center
-  select single crhd~arbpl
-    from afko as afko
-   inner join afvc as afvc
-      on afvc~aufpl eq afko~aufpl
-   inner join crhd as crhd
-      on crhd~objty eq 'A'
-     and crhd~objid eq afvc~arbid
-   where afko~aufnr eq @l_aufnr
-     and afvc~vornr eq @l_vornr
-     and afvc~werks eq @inputobj-werks
-    into (@data(lv_arbpl)).
+  SELECT SINGLE crhd~arbpl
+    FROM afko AS afko
+   INNER JOIN afvc AS afvc
+      ON afvc~aufpl EQ afko~aufpl
+   INNER JOIN crhd AS crhd
+      ON crhd~objty EQ 'A'
+     AND crhd~objid EQ afvc~arbid
+   WHERE afko~aufnr EQ @l_aufnr
+     AND afvc~vornr EQ @l_vornr
+     AND afvc~werks EQ @inputobj-werks
+    INTO (@DATA(lv_arbpl)).
 
 * Get data from Order
-  select single *
-    from aufk
-    into @data(ls_aufk)
-    where aufnr eq @l_aufnr.
+  SELECT SINGLE *
+    FROM aufk
+    INTO @DATA(ls_aufk)
+    WHERE aufnr EQ @l_aufnr.
 
 * Get Work center type
-  select single arbpl_type
-    from zabsf_pp013
-    into (@data(l_arbplty))
-   where areaid eq 'PRD'
-     and werks  eq @ls_aufk-werks
-     and arbpl  eq @lv_arbpl.
+  SELECT SINGLE arbpl_type
+    FROM zabsf_pp013
+    INTO (@DATA(l_arbplty))
+   WHERE areaid EQ @areaid
+     AND werks  EQ @ls_aufk-werks
+     AND arbpl  EQ @lv_arbpl.
 
 * Not Repacking
-  if ( l_arbplty <> 'R' ).
+  IF ( l_arbplty <> 'R' ).
 ********** REPACKING 10.05.2017
 
 *Get reserv number
-    select single rsnum
-      from afko
-      into (@data(l_rsnum))
-     where aufnr eq @l_aufnr.
+    SELECT SINGLE rsnum
+      FROM afko
+      INTO (@DATA(l_rsnum))
+     WHERE aufnr EQ @l_aufnr.
 
-    select *
-      from resb
-      into table @data(lt_resb)
-     where rsnum eq @l_rsnum
-       and aufnr eq @l_aufnr
+    SELECT *
+      FROM resb
+      INTO TABLE @DATA(lt_resb)
+     WHERE rsnum EQ @l_rsnum
+       AND aufnr EQ @l_aufnr
     "   and vornr eq @l_vornr
-       and werks eq @inputobj-werks
-       and xloek eq @space.
+       AND werks EQ @inputobj-werks
+       AND xloek EQ @space.
 
 
-    if sy-subrc eq 0.
+    IF sy-subrc EQ 0.
 *  Get material with Batch management requirement indicator
-      select matnr, xchpf
-        from mara
-        into table @data(lt_mara)
-         for all entries in @lt_resb
-       where matnr eq @lt_resb-matnr.
+      SELECT matnr, xchpf
+        FROM mara
+        INTO TABLE @DATA(lt_mara)
+         FOR ALL ENTRIES IN @lt_resb
+       WHERE matnr EQ @lt_resb-matnr.
 *       AND xchpf EQ @abap_true.
 
-      refresh: lt_mov_261,
+      REFRESH: lt_mov_261,
                lt_mov_262.
 
       "todos os consumos com referência à reserva
-      select *
-        from aufm
-        into table @data(lt_resb261_tab)
-        for all entries in @lt_resb
-          where aufnr eq @aufnr
-            and bwart eq '261'
-            and werks eq @inputobj-werks
-            and rsnum eq @lt_resb-rsnum
-            and rspos eq @lt_resb-rspos.
+      SELECT *
+        FROM aufm
+        INTO TABLE @DATA(lt_resb261_tab)
+        FOR ALL ENTRIES IN @lt_resb
+          WHERE aufnr EQ @aufnr
+            AND bwart EQ '261'
+            AND werks EQ @inputobj-werks
+            AND rsnum EQ @lt_resb-rsnum
+            AND rspos EQ @lt_resb-rspos.
 
       "consumos sem referencia à reserva
-      data ls_resb type resb.
-      select *
-        from aufm
-        into table @data(lt_adhoc261_tab)
-          where aufnr eq @aufnr
-            and bwart eq '261'
-            and werks eq @inputobj-werks
-            and rsnum eq @ls_resb-rsnum
-            and rspos eq @ls_resb-rspos.
+      DATA ls_resb TYPE resb.
+      SELECT *
+        FROM aufm
+        INTO TABLE @DATA(lt_adhoc261_tab)
+          WHERE aufnr EQ @aufnr
+            AND bwart EQ '261'
+            AND werks EQ @inputobj-werks
+            AND rsnum EQ @ls_resb-rsnum
+            AND rspos EQ @ls_resb-rspos.
 
 *  Get material description for all components
-      select *
-        from makt
-        into table @data(lt_makt)
-         for all entries in @lt_resb
-       where matnr eq @lt_resb-matnr
-         and spras eq @sy-langu.
+      SELECT *
+        FROM makt
+        INTO TABLE @DATA(lt_makt)
+         FOR ALL ENTRIES IN @lt_resb
+       WHERE matnr EQ @lt_resb-matnr
+         AND spras EQ @sy-langu.
 
 *  Get material description for all components
-      select *
-        from makt
-        appending table @lt_makt
-         for all entries in @lt_adhoc261_tab
-       where matnr eq @lt_adhoc261_tab-matnr
-         and spras eq @sy-langu.
+      IF lt_adhoc261_tab[] IS NOT INITIAL.
+        SELECT *
+          FROM makt
+          APPENDING TABLE @lt_makt
+           FOR ALL ENTRIES IN @lt_adhoc261_tab
+         WHERE matnr EQ @lt_adhoc261_tab-matnr
+           AND spras EQ @sy-langu.
 
-      "---consumos adicionais
-      "obter documento estornados
-      if lt_adhoc261_tab is not initial.
-        data: lt_devolutions type table of mseg.
-        select *
-          from mseg into table lt_devolutions
-          for all entries in lt_adhoc261_tab
-          where aufnr eq l_aufnr
-          and werks eq inputobj-werks
-          and bwart eq '262'
-          and smbln eq lt_adhoc261_tab-mblnr
-          and smblp eq lt_adhoc261_tab-zeile.
-        if sy-subrc eq 0.
+        "---consumos adicionais
+        "obter documento estornados
+        DATA: lt_devolutions TYPE TABLE OF mseg.
+        SELECT *
+          FROM mseg INTO TABLE lt_devolutions
+          FOR ALL ENTRIES IN lt_adhoc261_tab
+          WHERE aufnr EQ l_aufnr
+          AND werks EQ inputobj-werks
+          AND bwart EQ '262'
+          AND smbln EQ lt_adhoc261_tab-mblnr
+          AND smblp EQ lt_adhoc261_tab-zeile.
+        IF sy-subrc EQ 0.
           "remover os estornados
-          loop at lt_adhoc261_tab into data(ls_consumo_str).
-            if line_exists( lt_devolutions[ smbln = ls_consumo_str-mblnr
+          LOOP AT lt_adhoc261_tab INTO DATA(ls_consumo_str).
+            IF line_exists( lt_devolutions[ smbln = ls_consumo_str-mblnr
                                             smblp = ls_consumo_str-zeile ] ).
               "remover documento da lista
-              delete lt_adhoc261_tab.
-            endif.
-          endloop.
-        endif.
-      endif.
+              DELETE lt_adhoc261_tab.
+            ENDIF.
+          ENDLOOP.
+        ENDIF.
+      ENDIF.
 
       "obter documento estornados
-      if lt_resb261_tab is not initial.
-        refresh lt_devolutions.
-        select *
-          from mseg into table lt_devolutions
-          for all entries in lt_resb261_tab
-          where aufnr eq l_aufnr
-          and werks eq inputobj-werks
-          and bwart eq '262'
-          and smbln eq lt_resb261_tab-mblnr
-          and smblp eq lt_resb261_tab-zeile.
-        if sy-subrc eq 0.
+      IF lt_resb261_tab IS NOT INITIAL.
+        REFRESH lt_devolutions.
+        SELECT *
+          FROM mseg INTO TABLE lt_devolutions
+          FOR ALL ENTRIES IN lt_resb261_tab
+          WHERE aufnr EQ l_aufnr
+          AND werks EQ inputobj-werks
+          AND bwart EQ '262'
+          AND smbln EQ lt_resb261_tab-mblnr
+          AND smblp EQ lt_resb261_tab-zeile.
+        IF sy-subrc EQ 0.
           "remover os estornados
-          loop at lt_resb261_tab into ls_consumo_str.
-            if line_exists( lt_devolutions[ smbln = ls_consumo_str-mblnr
+          LOOP AT lt_resb261_tab INTO ls_consumo_str.
+            IF line_exists( lt_devolutions[ smbln = ls_consumo_str-mblnr
                                             smblp = ls_consumo_str-zeile ] ).
               "remover documento da lista
-              delete lt_resb261_tab.
-            endif.
-          endloop.
-        endif.
-      endif.
+              DELETE lt_resb261_tab.
+            ENDIF.
+          ENDLOOP.
+        ENDIF.
+      ENDIF.
 
       "------
 
       "materiais da reserva
-      loop at lt_resb into ls_resb.
-        clear ls_components.
+      LOOP AT lt_resb INTO ls_resb.
+        CLEAR ls_components.
 
         ls_components-rsnum = ls_resb-rsnum.
         ls_components-rspos = ls_resb-rspos.
@@ -4622,34 +4779,34 @@ method zif_absf_pp_consumptions~get_components_order.
 * object id
         ls_components-cuobj = ls_resb-cuobj.
 *    Check Batch management requirement indicator
-        read table lt_mara into data(ls_mara) with key matnr = ls_resb-matnr.
+        READ TABLE lt_mara INTO DATA(ls_mara) WITH KEY matnr = ls_resb-matnr.
 
-        if sy-subrc eq 0.
+        IF sy-subrc EQ 0.
 *      Material
           ls_components-matnr = ls_resb-matnr.
 *      Material description
-          read table lt_makt into data(ls_makt) with key matnr = ls_resb-matnr.
+          READ TABLE lt_makt INTO DATA(ls_makt) WITH KEY matnr = ls_resb-matnr.
 
-          if sy-subrc eq 0.
+          IF sy-subrc EQ 0.
             ls_components-maktx = ls_makt-maktx.
-          endif.
+          ENDIF.
 
           "quantidade necessária
           ls_components-bdmng = ls_resb-erfmg.
 *    Negative quantity
-          if ls_resb-shkzg eq 'S'.
+          IF ls_resb-shkzg EQ 'S'.
             ls_components-bdmng = ls_components-bdmng * -1.
-          endif.
+          ENDIF.
 
           "quantidade consumida
-          if ls_resb-meins ne ls_resb-erfme.
-            if ls_resb-bdmng is not initial.
+          IF ls_resb-meins NE ls_resb-erfme.
+            IF ls_resb-bdmng IS NOT INITIAL.
               ls_components-consqty = ls_resb-enmng / ls_resb-bdmng.
-            endif.
-          else.
+            ENDIF.
+          ELSE.
             "quantidade retirada
             ls_components-consqty = ls_resb-enmng.
-          endif.
+          ENDIF.
 
 *      Unit
 *          ls_components-meins = ls_resb-meins.
@@ -4660,181 +4817,181 @@ method zif_absf_pp_consumptions~get_components_order.
 *      Operation number
           ls_components-vornr = ls_resb-vornr.
 
-          if lv_ordettyp_var eq 'ZPP2'.
-            read table lt_resb into ls_resb with key rspos = ls_components-rspos
+          IF lv_ordettyp_var EQ 'ZPP2'.
+            READ TABLE lt_resb INTO ls_resb WITH KEY rspos = ls_components-rspos
                                                      rsnum = ls_components-rsnum.
             "get description as CO02
-            zcl_mm_classification=>get_desc_as_co02( exporting
+            zcl_mm_classification=>get_desc_as_co02( EXPORTING
                                                        im_resb_str = ls_resb
-                                                     importing
-                                                       ex_description_var = data(lv_desctpt2_var) ).
+                                                     IMPORTING
+                                                       ex_description_var = DATA(lv_desctpt2_var) ).
             "decrição
-            if lv_desctpt2_var is not initial.
+            IF lv_desctpt2_var IS NOT INITIAL.
               ls_components-maktx = lv_desctpt2_var.
-            endif.
-          else.
+            ENDIF.
+          ELSE.
             "obter descrição do componente
-            zcl_mm_classification=>get_material_desc_by_object( exporting
+            zcl_mm_classification=>get_material_desc_by_object( EXPORTING
                                                                   im_cuobj_var       = ls_components-cuobj
-                                                                importing
-                                                                  ex_description_var = data(lv_descript_var) ).
+                                                                IMPORTING
+                                                                  ex_description_var = DATA(lv_descript_var) ).
             "descrição
-            if lv_descript_var is not initial.
+            IF lv_descript_var IS NOT INITIAL.
               ls_components-maktx = lv_descript_var.
-            endif.
-          endif.
+            ENDIF.
+          ENDIF.
 
-          data(lv_matname_var) =  cond #( when lv_desctpt2_var is not initial
-                                          then lv_desctpt2_var
-                                          else lv_descript_var ).
+          DATA(lv_matname_var) =  COND #( WHEN lv_desctpt2_var IS NOT INITIAL
+                                          THEN lv_desctpt2_var
+                                          ELSE lv_descript_var ).
           "verificar se material é gerido a unidades
-          select single *
-            from marm
-            into @data(ls_marm_str)
-              where matnr eq @ls_components-matnr
-                and meinh eq 'UN'.
-          if sy-subrc eq 0.
+          SELECT SINGLE *
+            FROM marm
+            INTO @DATA(ls_marm_str)
+              WHERE matnr EQ @ls_components-matnr
+                AND meinh EQ 'UN'.
+          IF sy-subrc EQ 0.
             ls_components-meins_unit = 'UN'.
-          endif.
+          ENDIF.
 
-          if ls_components-meins eq 'UN'.
+          IF ls_components-meins EQ 'UN'.
             ls_components-menge_unit = ls_components-bdmng.
-          else.
+          ELSE.
             "quantidade em unidades
-            if ls_components-meins_unit eq 'UN'.
-              zabsf_pp_cl_tracking=>convert_to_units( exporting
+            IF ls_components-meins_unit EQ 'UN'.
+              zabsf_pp_cl_tracking=>convert_to_units( EXPORTING
                                          im_quantity_var = abs( ls_components-bdmng )
                                          im_qttyunit_var = ls_components-meins
                                          im_material_var = ls_components-matnr
                                          im_batchnum_var = ls_components-batch
-                                       importing
+                                       IMPORTING
                                          ex_units_var    = ls_components-menge_unit ).
-            endif.
-          endif.
+            ENDIF.
+          ENDIF.
 
-          if ls_components-batch is initial.
+          IF ls_components-batch IS INITIAL.
             ls_components-batch = ls_resb-charg.
-          endif.
+          ENDIF.
 
-          if l_vornr is not initial and ls_mara-xchpf eq abap_true.
-            append ls_components to components_tab.
-          endif.
+          IF l_vornr IS NOT INITIAL AND ls_mara-xchpf EQ abap_true.
+            APPEND ls_components TO components_tab.
+          ENDIF.
 
 *          if l_vornr is initial.
 *        Batch management requirement indicator
-            ls_components-xchpf = ls_mara-xchpf.
+          ls_components-xchpf = ls_mara-xchpf.
 
-            append ls_components to components_tab.
-          endif.
+          APPEND ls_components TO components_tab.
+        ENDIF.
 *       endif.
-        clear: lv_desctpt2_var, lv_descript_var, ls_components.
-      endloop.
+        CLEAR: lv_desctpt2_var, lv_descript_var, ls_components.
+      ENDLOOP.
 
 *>>PAP 21.03.2017 17:32:01 - Available stock
 *  Get work center
-      select single crhd~arbpl
-        from afko as afko
-       inner join afvc as afvc
-          on afvc~aufpl eq afko~aufpl
-       inner join crhd as crhd
-          on crhd~objty eq 'A'
-         and crhd~objid eq afvc~arbid
-       where afko~aufnr eq @l_aufnr
-         and afvc~vornr eq @l_vornr
-         and afvc~werks eq @inputobj-werks
-        into (@data(l_arbpl)).
+      SELECT SINGLE crhd~arbpl
+        FROM afko AS afko
+       INNER JOIN afvc AS afvc
+          ON afvc~aufpl EQ afko~aufpl
+       INNER JOIN crhd AS crhd
+          ON crhd~objty EQ 'A'
+         AND crhd~objid EQ afvc~arbid
+       WHERE afko~aufnr EQ @l_aufnr
+         AND afvc~vornr EQ @l_vornr
+         AND afvc~werks EQ @inputobj-werks
+        INTO (@DATA(l_arbpl)).
 *<<PAP 21.03.2017 17:32:01 - Available stock
-    else.
-      if l_vornr is initial.
+    ELSE.
+      IF l_vornr IS INITIAL.
 *    No data found
-        call method zabsf_pp_cl_log=>add_message
-          exporting
+        CALL METHOD zabsf_pp_cl_log=>add_message
+          EXPORTING
             msgty      = 'E'
             msgno      = '018'
-          changing
+          CHANGING
             return_tab = return_tab.
-      else.
+      ELSE.
 *    No data found
-        call method zabsf_pp_cl_log=>add_message
-          exporting
+        CALL METHOD zabsf_pp_cl_log=>add_message
+          EXPORTING
             msgty      = 'I'
             msgno      = '018'
-          changing
+          CHANGING
             return_tab = return_tab.
-      endif.
-    endif.
-  endif.
+      ENDIF.
+    ENDIF.
+  ENDIF.
 
 *>>BMR 16.04.2018 - remover os subprodutos da listagem = linhas com qtd a negativo.
-  if for_subproducts eq abap_true.
-    delete components_tab
-      where bdmng ge 0.
+  IF for_subproducts EQ abap_true.
+    DELETE components_tab
+      WHERE bdmng GE 0.
     "trocar o sinal das quantidades
-    loop at components_tab assigning field-symbol(<fs_components>).
+    LOOP AT components_tab ASSIGNING FIELD-SYMBOL(<fs_components>).
       <fs_components>-bdmng = <fs_components>-bdmng * -1.
-    endloop.
-  else.
+    ENDLOOP.
+  ELSE.
     "remover
-    delete components_tab
-      where bdmng le 0
-        and rsnum is not initial
-        and rspos is not initial.
-  endif.
+    DELETE components_tab
+      WHERE bdmng LE 0
+        AND rsnum IS NOT INITIAL
+        AND rspos IS NOT INITIAL.
+  ENDIF.
 
-  if components_tab is not initial.
-    select *
-      from marc
-      into table @data(lt_marc_tab)
-      for all entries in @components_tab
-      where matnr eq @components_tab-matnr
-        and werks eq @lv_plant_var
-        and xchpf eq @abap_true.
-  endif.
+  IF components_tab IS NOT INITIAL.
+    SELECT *
+      FROM marc
+      INTO TABLE @DATA(lt_marc_tab)
+      FOR ALL ENTRIES IN @components_tab
+      WHERE matnr EQ @components_tab-matnr
+        AND werks EQ @lv_plant_var
+        AND xchpf EQ @abap_true.
+  ENDIF.
 
   "agrupar linhas por material lote
-  clear ls_resb.
-  data(lt_comm_tab) = components_tab.
+  CLEAR ls_resb.
+  DATA(lt_comm_tab) = components_tab.
 
   "linhas da reserva para consumir
-  loop at lt_comm_tab into data(ls_com_str)
-    where rsnum ne ls_resb-rsnum.
+  LOOP AT lt_comm_tab INTO DATA(ls_com_str)
+    WHERE rsnum NE ls_resb-rsnum.
     "verificar se material é gerido a lotes
-    if line_exists( lt_marc_tab[ matnr = ls_com_str-matnr
-                                 werks = lv_plant_var ] ) and ls_com_str-batch is initial.
+    IF line_exists( lt_marc_tab[ matnr = ls_com_str-matnr
+                                 werks = lv_plant_var ] ) AND ls_com_str-batch IS INITIAL.
       "se for gerido a lote e não tive lote preenchido, não deve passar para o SF
-      continue.
-    endif.
+      CONTINUE.
+    ENDIF.
     "qtt consumida
     ls_com_str-enmng = ls_com_str-consqty.
     "limpar nº da reserva
-    clear: ls_com_str-rsnum, ls_com_str-rspos, ls_com_str-consqty.
+    CLEAR: ls_com_str-rsnum, ls_com_str-rspos, ls_com_str-consqty.
     "adicionar linha
-    append ls_com_str to components_tab.
-  endloop.
+    APPEND ls_com_str TO components_tab.
+  ENDLOOP.
 
 
-  data(lt_auxadhoc_tab) = lt_adhoc261_tab.
-  sort lt_auxadhoc_tab by matnr charg erfme.
-  delete adjacent duplicates from lt_auxadhoc_tab comparing matnr charg erfme.
+  DATA(lt_auxadhoc_tab) = lt_adhoc261_tab.
+  SORT lt_auxadhoc_tab BY matnr charg erfme.
+  DELETE ADJACENT DUPLICATES FROM lt_auxadhoc_tab COMPARING matnr charg erfme.
 
   "percorrer todos os consumos ad-hoc
-  loop at lt_auxadhoc_tab assigning field-symbol(<fs_adhoc_st>).
+  LOOP AT lt_auxadhoc_tab ASSIGNING FIELD-SYMBOL(<fs_adhoc_st>).
 *      Material
     ls_components-matnr = <fs_adhoc_st>-matnr.
 *      Material description
-    read table lt_makt into data(ls_makt2) with key matnr = <fs_adhoc_st>-matnr.
+    READ TABLE lt_makt INTO DATA(ls_makt2) WITH KEY matnr = <fs_adhoc_st>-matnr.
 
-    if sy-subrc eq 0.
+    IF sy-subrc EQ 0.
       ls_components-maktx = ls_makt2-maktx.
-    endif.
+    ENDIF.
 
-    loop at lt_adhoc261_tab assigning field-symbol(<fs_adhoc261>)
-      where matnr eq <fs_adhoc_st>-matnr
-        and charg eq <fs_adhoc_st>-charg
-        and erfme eq <fs_adhoc_st>-erfme.
+    LOOP AT lt_adhoc261_tab ASSIGNING FIELD-SYMBOL(<fs_adhoc261>)
+      WHERE matnr EQ <fs_adhoc_st>-matnr
+        AND charg EQ <fs_adhoc_st>-charg
+        AND erfme EQ <fs_adhoc_st>-erfme.
       "quantidade consumida
       ls_components-enmng = ls_components-enmng + <fs_adhoc261>-erfmg.
-    endloop.
+    ENDLOOP.
 
 
     ls_components-meins = <fs_adhoc_st>-erfme.
@@ -4842,121 +4999,121 @@ method zif_absf_pp_consumptions~get_components_order.
     ls_components-lgort = <fs_adhoc_st>-lgort.
 
     "decrição do lote
-    zcl_mm_classification=>get_material_desc_by_batch( exporting
+    zcl_mm_classification=>get_material_desc_by_batch( EXPORTING
                                                          im_material_var    = <fs_adhoc_st>-matnr
                                                          im_batch_var       = <fs_adhoc_st>-charg
-                                                       importing
-                                                         ex_description_var = data(lv_matdesc_var) ).
+                                                       IMPORTING
+                                                         ex_description_var = DATA(lv_matdesc_var) ).
 
     "descrição
-    if lv_matdesc_var is not initial.
+    IF lv_matdesc_var IS NOT INITIAL.
       ls_components-maktx = lv_matdesc_var.
-    endif.
+    ENDIF.
     "lotes
     ls_components-batch = <fs_adhoc_st>-charg.
     "verificar se já foi considerado este lote na reserva
-    loop at components_tab into data(ls_comp)
-      where matnr = ls_components-matnr
-        and maktx = ls_components-maktx
-        and batch = ls_components-batch
-        and rsnum <> ls_resb-rsnum.
-      exit.
-    endloop.
+    LOOP AT components_tab INTO DATA(ls_comp)
+      WHERE matnr = ls_components-matnr
+        AND maktx = ls_components-maktx
+        AND batch = ls_components-batch
+        AND rsnum <> ls_resb-rsnum.
+      EXIT.
+    ENDLOOP.
 
-    if ls_comp is not initial.
+    IF ls_comp IS NOT INITIAL.
       "verificar se lote já foi adicionado previamente à tabela
-      read table components_tab assigning field-symbol(<fs_comp>) with key matnr = <fs_adhoc_st>-matnr
+      READ TABLE components_tab ASSIGNING FIELD-SYMBOL(<fs_comp>) WITH KEY matnr = <fs_adhoc_st>-matnr
                                                                            maktx = lv_matdesc_var
                                                                            batch = <fs_adhoc_st>-charg
                                                                            rsnum = ls_resb-rsnum.
-      if <fs_comp> is assigned.
+      IF <fs_comp> IS ASSIGNED.
         <fs_comp>-enmng = <fs_comp>-enmng +  ls_components-enmng.
-      else.
+      ELSE.
         "adicionar linha de consumos fora da reserva
-        append ls_components to components_tab.
-      endif.
-    else.
+        APPEND ls_components TO components_tab.
+      ENDIF.
+    ELSE.
       "adicionar linha de consumos fora da reserva
-      append ls_components to components_tab.
-    endif.
+      APPEND ls_components TO components_tab.
+    ENDIF.
 
 
     "limpar variáveis
-    clear: lv_matdesc_var, ls_makt2, ls_components, ls_comp.
-  endloop.
+    CLEAR: lv_matdesc_var, ls_makt2, ls_components, ls_comp.
+  ENDLOOP.
 
 
 ***  "sequenciador
-  try.
-      zcl_bc_fixed_values=>get_ranges_value( exporting
+  TRY.
+      zcl_bc_fixed_values=>get_ranges_value( EXPORTING
                                                im_paramter_var = zcl_bc_fixed_values=>gc_charseq_cst
                                                im_modulesp_var = zcl_bc_fixed_values=>gc_material_cst
-                                             importing
+                                             IMPORTING
                                                ex_valrange_tab = lr_charseq_rng ).
-    catch zcx_bc_exceptions.
-  endtry.
+    CATCH zcx_pp_exceptions.
+  ENDTRY.
 
   "sequenciador lantek
-  if lr_charseq_rng is initial.
+  IF lr_charseq_rng IS INITIAL.
     "sair do processamento
-    return.
-  endif.
+    RETURN.
+  ENDIF.
 
 
   "obter o sequenciador lantek de cada lote consumido
-  loop at components_tab assigning field-symbol(<fs_component_str>)
-    where batch is not initial.
+  LOOP AT components_tab ASSIGNING FIELD-SYMBOL(<fs_component_str>)
+    WHERE batch IS NOT INITIAL.
     "obter nº do sequenciador
-    zcl_mm_classification=>get_classification_by_batch( exporting
+    zcl_mm_classification=>get_classification_by_batch( EXPORTING
                                                           im_material_var       = <fs_component_str>-matnr
                                                           im_lote_var           = <fs_component_str>-batch
-                                                        importing
-                                                          ex_classification_tab = data(lt_classific_tab) ).
-    loop at lt_classific_tab into data(ls_classific_str)
-      where atnam in lr_charseq_rng.
+                                                        IMPORTING
+                                                          ex_classification_tab = DATA(lt_classific_tab) ).
+    LOOP AT lt_classific_tab INTO DATA(ls_classific_str)
+      WHERE atnam IN lr_charseq_rng.
       "valor do sequenciador
       lv_sequenciador_var = ls_classific_str-ausp1.
       "sair do loop
-      exit.
-    endloop.
+      EXIT.
+    ENDLOOP.
 
 
     "comprimento
-    loop at lt_classific_tab into ls_classific_str
-      where atnam in lr_comprimento_rng.
+    LOOP AT lt_classific_tab INTO ls_classific_str
+      WHERE atnam IN lr_comprimento_rng.
       <fs_component_str>-length = ls_classific_str-ausp1.
       "sair do loop
-      exit.
-    endloop.
+      EXIT.
+    ENDLOOP.
     "largura
-    loop at lt_classific_tab into ls_classific_str
-      where atnam in lr_largura_rng.
+    LOOP AT lt_classific_tab INTO ls_classific_str
+      WHERE atnam IN lr_largura_rng.
       <fs_component_str>-width = ls_classific_str-ausp1.
       "sair do loop
-      exit.
-    endloop.
+      EXIT.
+    ENDLOOP.
 
     "referência
-    loop at lt_classific_tab into ls_classific_str
-      where atnam in lr_referencia_rng.
+    LOOP AT lt_classific_tab INTO ls_classific_str
+      WHERE atnam IN lr_referencia_rng.
       <fs_component_str>-reference = ls_classific_str-ausp1.
       "sair do loop
-      exit.
-    endloop.
+      EXIT.
+    ENDLOOP.
 
     "ler sequenciador da tabela
-    select single seq_lantek
-      from zabsf_sequence_t
-      into <fs_component_str>-seq_lantek
-        where charg eq  <fs_component_str>-batch
-         and sequenciador eq lv_sequenciador_var.
+    SELECT SINGLE seq_lantek
+      FROM zabsf_sequence_t
+      INTO <fs_component_str>-seq_lantek
+        WHERE charg EQ  <fs_component_str>-batch
+         AND sequenciador EQ lv_sequenciador_var.
     "limpar variáveis
-    clear: lv_sequenciador_var, ls_classific_str.
-  endloop.
-endmethod.
+    CLEAR: lv_sequenciador_var, ls_classific_str.
+  ENDLOOP.
+ENDMETHOD.
 
 
-  METHOD zif_absf_pp_consumptions~rem_components_order.
+METHOD zif_absf_pp_consumptions~rem_components_order.
 
 *Internal tables
     DATA: lt_mov_261 TYPE TABLE OF aufm,

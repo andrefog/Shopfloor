@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_setoperators_rpoint.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SETOPERATORS_RPOINT.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(RPOINT) TYPE  ZABSF_PP_E_RPOINT
 *"     VALUE(TIME) TYPE  ATIME
@@ -9,8 +9,8 @@ FUNCTION zabsf_pp_setoperators_rpoint.
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_operator TYPE REF TO zif_absf_pp_operator.
+*"--------------------------------------------------------------------
+DATA lref_sf_operator TYPE REF TO zif_absf_pp_operator.
 
   DATA: ld_class  TYPE recaimplclname,
         ld_method TYPE seocmpname.
@@ -52,4 +52,9 @@ FUNCTION zabsf_pp_setoperators_rpoint.
       return_tab   = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_STPTY</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_STPTY</DOMNAME>
     <HEADLEN>20</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Tipo Causa</DDTEXT>
-    <REPTEXT>Causa</REPTEXT>
-    <SCRTEXT_S>Causa</SCRTEXT_S>
-    <SCRTEXT_M>Causa</SCRTEXT_M>
-    <SCRTEXT_L>Causa</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Tipo Causa</DDTEXT>
+     <REPTEXT>Causa</REPTEXT>
+     <SCRTEXT_S>Causa</SCRTEXT_S>
+     <SCRTEXT_M>Causa</SCRTEXT_M>
+     <SCRTEXT_L>Causa</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

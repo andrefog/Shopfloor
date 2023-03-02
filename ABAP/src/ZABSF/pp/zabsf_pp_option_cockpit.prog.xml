@@ -65,9 +65,7 @@
       <RPY_DYFLOW>
        <LINE>  MODULE init_alv.</LINE>
       </RPY_DYFLOW>
-      <RPY_DYFLOW>
-       <LINE>*</LINE>
-      </RPY_DYFLOW>
+      <RPY_DYFLOW/>
       <RPY_DYFLOW>
        <LINE>PROCESS AFTER INPUT.</LINE>
       </RPY_DYFLOW>
@@ -134,9 +132,7 @@
       <RPY_DYFLOW>
        <LINE>  MODULE init_alv.</LINE>
       </RPY_DYFLOW>
-      <RPY_DYFLOW>
-       <LINE>*</LINE>
-      </RPY_DYFLOW>
+      <RPY_DYFLOW/>
       <RPY_DYFLOW>
        <LINE>PROCESS AFTER INPUT.</LINE>
       </RPY_DYFLOW>
@@ -203,9 +199,7 @@
       <RPY_DYFLOW>
        <LINE>  MODULE init_alv.</LINE>
       </RPY_DYFLOW>
-      <RPY_DYFLOW>
-       <LINE>*</LINE>
-      </RPY_DYFLOW>
+      <RPY_DYFLOW/>
       <RPY_DYFLOW>
        <LINE>PROCESS AFTER INPUT.</LINE>
       </RPY_DYFLOW>
@@ -451,11 +445,153 @@
    </CUA>
    <TPOOL>
     <item>
+     <ID>I</ID>
+     <KEY>000</KEY>
+     <ENTRY>Selection Parameters</ENTRY>
+     <LENGTH>40</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>001</KEY>
+     <ENTRY>Options</ENTRY>
+     <LENGTH>23</LENGTH>
+    </item>
+    <item>
      <ID>R</ID>
-     <ENTRY>Shopfloor - Outras opções</ENTRY>
-     <LENGTH>25</LENGTH>
+     <ENTRY>Shopfloor - Another Options</ENTRY>
+     <LENGTH>70</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>PA_ALRT</KEY>
+     <ENTRY>Alerts</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>PA_CRON</KEY>
+     <ENTRY>Timing</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>PA_MED</KEY>
+     <ENTRY>Measurements</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>PA_AREA</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>PA_WERKS</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>SO_ARBPL</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>SO_DATE</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>SO_MATNR</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
+   <I18N_TPOOL>
+    <item>
+     <LANGUAGE>P</LANGUAGE>
+     <TEXTPOOL>
+      <item>
+       <ID>I</ID>
+       <KEY>000</KEY>
+       <ENTRY>Critério de selecção</ENTRY>
+       <LENGTH>40</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>001</KEY>
+       <ENTRY>Outras opções</ENTRY>
+       <LENGTH>23</LENGTH>
+      </item>
+      <item>
+       <ID>R</ID>
+       <ENTRY>Shopfloor - Outras opções</ENTRY>
+       <LENGTH>25</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>PA_ALRT</KEY>
+       <ENTRY>Alertas</ENTRY>
+       <LENGTH>15</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>PA_AREA</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>9</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>PA_CRON</KEY>
+       <ENTRY>Cronometragem</ENTRY>
+       <LENGTH>21</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>PA_MED</KEY>
+       <ENTRY>Medições</ENTRY>
+       <LENGTH>16</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>PA_WERKS</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>9</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>SO_ARBPL</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>9</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>SO_DATE</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>9</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>SO_MATNR</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>9</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+     </TEXTPOOL>
+    </item>
+   </I18N_TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -4,9 +4,7 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP_S_WORKCENTER_DASHBOAR</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
-    <DDTEXT>Shopfloor - Workcenter Dashboard</DDTEXT>
     <EXCLASS>4</EXCLASS>
    </DD02V>
    <DD03P_TABLE>
@@ -83,7 +81,6 @@
      <LENG>000007</LENG>
      <DECIMALS>000002</DECIMALS>
      <MASK>  DEC</MASK>
-     <DDTEXT>Horas desde a última mudança de status</DDTEXT>
     </DD03P>
     <DD03P>
      <FIELDNAME>FIRST_USER</FIELDNAME>
@@ -130,7 +127,6 @@
      <LENG>000006</LENG>
      <DECIMALS>000003</DECIMALS>
      <MASK>  DEC</MASK>
-     <DDTEXT>Pecentagem de sucata</DDTEXT>
     </DD03P>
     <DD03P>
      <FIELDNAME>MISSING_QTY_WITH_SCRAP</FIELDNAME>
@@ -149,7 +145,6 @@
      <LENG>000013</LENG>
      <DECIMALS>000002</DECIMALS>
      <MASK>  DEC</MASK>
-     <DDTEXT>Turnos restantes com sucata</DDTEXT>
     </DD03P>
     <DD03P>
      <FIELDNAME>MISSING_QTY_WITHOUT_SCRAP</FIELDNAME>
@@ -168,7 +163,6 @@
      <LENG>000013</LENG>
      <DECIMALS>000002</DECIMALS>
      <MASK>  DEC</MASK>
-     <DDTEXT>Turnos restantes sem sucata</DDTEXT>
     </DD03P>
     <DD03P>
      <FIELDNAME>PRD_SHEET_DEFECTS</FIELDNAME>
@@ -221,6 +215,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Workcenter Dashboard</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_TOBJ" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <OBJH>
+    <OBJECTNAME>ZSF_HIERARCHIES</OBJECTNAME>
+    <OBJECTTYPE>S</OBJECTTYPE>
+    <CLIDEP>X</CLIDEP>
+    <OBJCATEG>APPL</OBJCATEG>
+   </OBJH>
+   <OBJT>
+    <LANGUAGE>E</LANGUAGE>
+    <OBJECTNAME>ZSF_HIERARCHIES</OBJECTNAME>
+    <OBJECTTYPE>S</OBJECTTYPE>
+    <DDTEXT>Leica Shopfloor - HierarchyStatus</DDTEXT>
+   </OBJT>
+   <OBJS>
+    <OBJS>
+     <OBJECTNAME>ZSF_HIERARCHIES</OBJECTNAME>
+     <OBJECTTYPE>S</OBJECTTYPE>
+     <TABNAME>ZSF_HIERARCHIES</TABNAME>
+     <DDIC>X</DDIC>
+     <PRIM_TABLE>X</PRIM_TABLE>
+    </OBJS>
+   </OBJS>
+   <TOBJ>
+    <TDDAT>
+     <TABNAME>ZSF_HIERARCHIES</TABNAME>
+     <CCLASS>&amp;NC&amp;</CCLASS>
+    </TDDAT>
+    <TVDIR>
+     <TABNAME>ZSF_HIERARCHIES</TABNAME>
+     <AREA>ZSF_FG</AREA>
+     <TYPE>2</TYPE>
+     <LISTE>0031</LISTE>
+     <DETAIL>0032</DETAIL>
+     <BASTAB>X</BASTAB>
+     <FLAG>X</FLAG>
+    </TVDIR>
+   </TOBJ>
+  </asx:values>
+ </asx:abap>
+</abapGit>

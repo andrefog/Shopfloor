@@ -4,14 +4,12 @@
   <asx:values>
    <DD40V>
     <TYPENAME>ZABSF_PP_T_GOODMOVEMENTS</TYPENAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <ROWTYPE>ZABSF_PP_S_GOODMOVEMENTS</ROWTYPE>
     <ROWKIND>S</ROWKIND>
     <DATATYPE>STRU</DATATYPE>
     <ACCESSMODE>T</ACCESSMODE>
     <KEYDEF>D</KEYDEF>
     <KEYKIND>N</KEYKIND>
-    <DDTEXT>Shopfloor - Ddos dos mov. de mercadoria para criação de lote</DDTEXT>
    </DD40V>
   </asx:values>
  </asx:abap>

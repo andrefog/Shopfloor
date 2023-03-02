@@ -8,13 +8,6 @@
     <RLOAD>P</RLOAD>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <TPOOL>
-    <item>
-     <ID>R</ID>
-     <ENTRY>Include ZPP_PRINT_LABELS_D01</ENTRY>
-     <LENGTH>28</LENGTH>
-    </item>
-   </TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

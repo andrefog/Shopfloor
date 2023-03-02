@@ -48,7 +48,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_MAINTENANCE IMPLEMENTATION.
 
 
-  method CONSTRUCTOR.
+method CONSTRUCTOR.
 
 *Ref. Date
   refdt    = initial_refdt.
@@ -59,7 +59,7 @@ CLASS ZABSF_PP_CL_MAINTENANCE IMPLEMENTATION.
   endmethod.
 
 
-  METHOD create_maintenance_notif.
+METHOD create_maintenance_notif.
 
     CONSTANTS: gc_param_id TYPE zabsf_pp_e_parid VALUE 'NOTIFY_TYPE'.
 
@@ -216,7 +216,7 @@ CLASS ZABSF_PP_CL_MAINTENANCE IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_equipments_list.
+METHOD get_equipments_list.
 *  Structures
     DATA: ls_equipments TYPE zabsf_pp_s_equipment.
 
@@ -224,7 +224,7 @@ CLASS ZABSF_PP_CL_MAINTENANCE IMPLEMENTATION.
     DATA: l_langu TYPE spras.
 
 *  Set local language for user
-    l_langu = inputobj-language.
+    l_langu = sy-langu.
 
     SET LOCALE LANGUAGE l_langu.
 
@@ -313,7 +313,7 @@ CLASS ZABSF_PP_CL_MAINTENANCE IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD look_for_checklist.
+METHOD look_for_checklist.
 
     CONSTANTS: lc_flm_shifts TYPE zabsf_pp_e_parid VALUE 'FLM_VS'.
 

@@ -4,10 +4,10 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP061</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Shopfloor - Linguas</DDTEXT>
+    <DDTEXT>Shopfloor - Languages</DDTEXT>
     <MAINFLAG>X</MAINFLAG>
     <CONTFLAG>C</CONTFLAG>
     <EXCLASS>4</EXCLASS>
@@ -57,6 +57,25 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>F</LANGU>
+    <LANGU>P</LANGU>
+    <LANGU>S</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>F</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Languages</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Linguas</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>S</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Languages</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

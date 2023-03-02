@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_PRODTIME</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>MENGV13</DOMNAME>
     <HEADLEN>18</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>17</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Tempo de produção</DDTEXT>
-    <REPTEXT>Tempo de produção</REPTEXT>
-    <SCRTEXT_S>Temp.Prod</SCRTEXT_S>
-    <SCRTEXT_M>Tempo de produção</SCRTEXT_M>
-    <SCRTEXT_L>Tempo de produção</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Tempo de produção</DDTEXT>
+     <REPTEXT>Tempo de produção</REPTEXT>
+     <SCRTEXT_S>Temp.Prod</SCRTEXT_S>
+     <SCRTEXT_M>Tempo de produção</SCRTEXT_M>
+     <SCRTEXT_L>Tempo de produção</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

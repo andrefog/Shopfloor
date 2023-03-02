@@ -1,14 +1,14 @@
-FUNCTION z_pp10_get_batch_characteristc.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION Z_PP10_GET_BATCH_CHARACTERISTC.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     REFERENCE(I_WERKS) TYPE  WERKS_D
 *"     REFERENCE(I_BATCH) TYPE  CHARG_D
 *"     REFERENCE(I_MATNR) TYPE  MATNR
 *"  EXPORTING
 *"     REFERENCE(E_BATCH_VULC) TYPE  CHARG_D
-*"----------------------------------------------------------------------
-  DATA: lt_object        TYPE TABLE OF bapi1003_object_keys,
+*"--------------------------------------------------------------------
+DATA: lt_object        TYPE TABLE OF bapi1003_object_keys,
         lt_numtab        TYPE TABLE OF bapi1003_alloc_values_num,
         lt_chatab        TYPE TABLE OF bapi1003_alloc_values_char,
         lt_curtab        TYPE TABLE OF bapi1003_alloc_values_curr,
@@ -109,4 +109,9 @@ FUNCTION z_pp10_get_batch_characteristc.
   IF sy-subrc = 0.
     e_batch_vulc = ls_char_of_batch-atwtb.
   ENDIF.
+
+
+
+
+
 ENDFUNCTION.

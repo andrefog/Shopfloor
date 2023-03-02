@@ -4,9 +4,7 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZDSMM_ETIQUETA_PED_MNC_S</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
-    <DDTEXT>Estrutura etiqueta de receção de mercadorias</DDTEXT>
    </DD02V>
    <DD03P_TABLE>
     <DD03P>
@@ -169,6 +167,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Estrutura etiqueta de receção de mercadorias</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

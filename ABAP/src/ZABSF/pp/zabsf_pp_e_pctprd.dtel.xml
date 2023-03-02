@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_PCTPRD</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_VALUE</DOMNAME>
     <HEADLEN>24</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>24</SCRLEN3>
-    <DDTEXT>Shopfloor - Percentagem de quantidades produzidas</DDTEXT>
-    <REPTEXT>% Quantidades produzidas</REPTEXT>
-    <SCRTEXT_S>% Qtd.Prod</SCRTEXT_S>
-    <SCRTEXT_M>% Qtd.Prod.</SCRTEXT_M>
-    <SCRTEXT_L>% Quantidades produzidas</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Percentagem de quantidades produzidas</DDTEXT>
+     <REPTEXT>% Quantidades produzidas</REPTEXT>
+     <SCRTEXT_S>% Qtd.Prod</SCRTEXT_S>
+     <SCRTEXT_M>% Qtd.Prod.</SCRTEXT_M>
+     <SCRTEXT_L>% Quantidades produzidas</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

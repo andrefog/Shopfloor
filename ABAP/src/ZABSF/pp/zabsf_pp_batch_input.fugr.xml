@@ -11,6 +11,7 @@
     <item>
      <FUNCNAME>ZABSF_PP_WRKCTR_MOD</FUNCNAME>
      <REMOTE_CALL>R</REMOTE_CALL>
+     <SHORT_TEXT>Shopfloor - Modificar Centro de Trabalho</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>CTU</PARAMETER>

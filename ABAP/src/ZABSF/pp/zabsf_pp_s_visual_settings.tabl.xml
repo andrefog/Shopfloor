@@ -4,9 +4,9 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP_S_VISUAL_SETTINGS</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
-    <DDTEXT>Shopfloor - Configuraçãoes de visualização</DDTEXT>
+    <DDTEXT>Shopfloor - Display Settings</DDTEXT>
     <EXCLASS>4</EXCLASS>
    </DD02V>
    <DD03P_TABLE>
@@ -99,6 +99,25 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>F</LANGU>
+    <LANGU>P</LANGU>
+    <LANGU>S</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>F</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Display Settings</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Configuraçãoes de visualização</DDTEXT>
+    </item>
+    <item>
+     <DDLANGUAGE>S</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Display Settings</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

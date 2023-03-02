@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_ACTION_PLANE</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>TEXT50</DOMNAME>
     <HEADLEN>30</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Descrição do Plano de Acção</DDTEXT>
-    <REPTEXT>Plano de Acção</REPTEXT>
-    <SCRTEXT_S>Plan Acção</SCRTEXT_S>
-    <SCRTEXT_M>Plano de Acção</SCRTEXT_M>
-    <SCRTEXT_L>Plano de Acção</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Descrição do Plano de Acção</DDTEXT>
+     <REPTEXT>Plano de Acção</REPTEXT>
+     <SCRTEXT_S>Plan Acção</SCRTEXT_S>
+     <SCRTEXT_M>Plano de Acção</SCRTEXT_M>
+     <SCRTEXT_L>Plano de Acção</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

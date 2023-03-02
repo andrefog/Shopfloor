@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_UPPER_LIMIT</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>MENGV13</DOMNAME>
     <HEADLEN>18</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Cronómetro Limite Superior</DDTEXT>
-    <REPTEXT>Limite Superior</REPTEXT>
-    <SCRTEXT_S>Limit. Sup</SCRTEXT_S>
-    <SCRTEXT_M>Limite Superior</SCRTEXT_M>
-    <SCRTEXT_L>Limite Superior</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Cronómetro Limite Superior</DDTEXT>
+     <REPTEXT>Limite Superior</REPTEXT>
+     <SCRTEXT_S>Limit. Sup</SCRTEXT_S>
+     <SCRTEXT_M>Limite Superior</SCRTEXT_M>
+     <SCRTEXT_L>Limite Superior</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

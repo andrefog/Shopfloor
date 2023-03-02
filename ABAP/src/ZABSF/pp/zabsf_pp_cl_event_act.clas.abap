@@ -139,39 +139,38 @@ METHOD calc_minutes.
 ENDMETHOD.
 
 
-  METHOD check_user.
-*
+METHOD check_user.
 *  Get all operator in Production Order
-    SELECT *
-      FROM zabsf_pp014
-      INTO TABLE @DATA(lt_pp_sf014)
-     WHERE aufnr EQ @aufnr
-       AND vornr EQ @vornr
-       AND arbpl EQ @arbpl.
+  SELECT *
+    FROM zabsf_pp014
+    INTO TABLE @DATA(lt_pp_sf014)
+   WHERE aufnr EQ @aufnr
+     AND vornr EQ @vornr
+     AND arbpl EQ @arbpl.
 
-    IF lt_pp_sf014[] IS NOT INITIAL.
+  IF lt_pp_sf014[] IS NOT INITIAL.
 *    Check if user exist
-      TRY.
-          DATA(ls_pp_sf014) = lt_pp_sf014[ oprid = inputobj-oprid ].
-        CATCH cx_sy_itab_line_not_found.
-      ENDTRY.
+    TRY.
+        DATA(ls_pp_sf014) = lt_pp_sf014[ oprid = inputobj-oprid ].
+      CATCH cx_sy_itab_line_not_found.
+    ENDTRY.
 
 *    If not exist user add first operator
-      IF ls_pp_sf014 IS INITIAL.
-        SORT lt_pp_sf014 BY udate ASCENDING utime ASCENDING.
-
-        CLEAR ls_pp_sf014.
-
-*      Get first operator associated
-        READ TABLE lt_pp_sf014 INTO ls_pp_sf014 INDEX 1.
-
-        IF sy-subrc EQ 0.
+    IF ls_pp_sf014 IS NOT INITIAL.
 *        Operator ID
-          oprid = ls_pp_sf014-oprid.
-        ENDIF.
+        oprid = ls_pp_sf014-oprid.
+    ELSE.
+      SORT lt_pp_sf014 BY udate ASCENDING utime ASCENDING.
+*      Get first operator associated
+      READ TABLE lt_pp_sf014 INTO ls_pp_sf014 INDEX 1.
+
+      IF sy-subrc EQ 0.
+*        Operator ID
+        oprid = ls_pp_sf014-oprid.
       ENDIF.
     ENDIF.
-  ENDMETHOD.
+  ENDIF.
+ENDMETHOD.
 
 
 METHOD CONSTRUCTOR.
@@ -183,7 +182,7 @@ METHOD CONSTRUCTOR.
 ENDMETHOD.
 
 
-  METHOD get_act_to_conf.
+METHOD get_act_to_conf.
 **  Internal tables
 *    DATA: lt_crco TYPE zlp_sf_t_crco.
 *
@@ -1747,631 +1746,642 @@ METHOD zif_absf_pp_event_act~set_confirm_time.
 ENDMETHOD.
 
 
-  method zif_absf_pp_event_act~set_conf_event_time.
+METHOD zif_absf_pp_event_act~set_conf_event_time.
 *  Internal tables
-    data: lt_zabsf_pp016   type table of zabsf_pp016,
-          lt_timeticket    type table of bapi_pp_timeticket,
-          lt_detail_return type table of bapi_coru_return,
-          lt_reg_oper      type table of zabsf_pp021,
-          lt_operator_tab  type zabsf_pp_t_operador,
-          lt_return_tab    type bapiret2_t.
+  DATA: lt_zabsf_pp016   TYPE TABLE OF zabsf_pp016,
+        lt_timeticket    TYPE TABLE OF bapi_pp_timeticket,
+        lt_detail_return TYPE TABLE OF bapi_coru_return,
+        lt_reg_oper      TYPE TABLE OF zabsf_pp021,
+        lt_operator_tab  TYPE zabsf_pp_t_operador,
+        lt_return_tab    TYPE bapiret2_t.
 
 *  Structures
-    data: ls_zabsf_pp016    type zabsf_pp016,
-          ls_pp_sf016_ini   type zabsf_pp016,
-          ls_timeticket     type bapi_pp_timeticket,
-          ls_timeticket_ini type bapi_pp_timeticket,
-          ls_return_tab     type bapiret2,
-          ls_return         type bapiret1,
-          ls_detail_return  type bapi_coru_return,
-          ls_zabsf_pp021    type zabsf_pp021,
-          ls_conf_data      type zabsf_pp_s_conf_adit_data,
-          ls_operator_tab   type zabsf_pp_s_operador,
-          ls_zabsf_pp066    type zabsf_pp066.
+  DATA: ls_zabsf_pp016    TYPE zabsf_pp016,
+        ls_pp_sf016_ini   TYPE zabsf_pp016,
+        ls_timeticket     TYPE bapi_pp_timeticket,
+        ls_timeticket_ini TYPE bapi_pp_timeticket,
+        ls_return_tab     TYPE bapiret2,
+        ls_return         TYPE bapiret1,
+        ls_detail_return  TYPE bapi_coru_return,
+        ls_zabsf_pp021    TYPE zabsf_pp021,
+        ls_conf_data      TYPE zabsf_pp_s_conf_adit_data,
+        ls_operator_tab   TYPE zabsf_pp_s_operador,
+        ls_zabsf_pp066    TYPE zabsf_pp066.
 
 *  References
-    data: lref_sf_status   type ref to zabsf_pp_cl_status,
-          lref_sf_calc_min type ref to zabsf_pp_cl_event_act,
-          lref_sf_prdord   type ref to zabsf_pp_cl_prdord.
+  DATA: lref_sf_status   TYPE REF TO zabsf_pp_cl_status,
+        lref_sf_calc_min TYPE REF TO zabsf_pp_cl_event_act,
+        lref_sf_prdord   TYPE REF TO zabsf_pp_cl_prdord.
 
 *  Variables
-    data: l_activity         type ru_ismng,
-          l_time             type atime,
-          l_off_nr           type num02,
-          l_time_act         type atime,
-          l_time_off         type atime,
-          l_time_c(10),
-          l_sub(1),
-          l_count            type i,
-          l_status_out       type j_status,
-          l_status_desc      type j_txt30,
-          l_stsma_out        type jsto-stsma,
-          l_date_calc        type datum,
-          l_time_calc        type pr_time,
-          l_ile01            type co_ismngeh,
-          l_ism01            type ru_ismng,
-          l_ile02            type co_ismngeh,
-          l_ism02            type ru_ismng,
-          l_ile03            type co_ismngeh,
-          l_ism03            type ru_ismng,
-          l_ile04            type co_ismngeh,
-          l_ism04            type ru_ismng,
-          l_ile05            type co_ismngeh,
-          l_ism05            type ru_ismng,
-          l_ile06            type co_ismngeh,
-          l_ism06            type ru_ismng,
-          l_conf_no          type co_rueck,
-          l_conf_cnt         type co_rmzhl,
-          l_nr_operator_calc type i,
-          l_oprid            type zabsf_pp_e_oprid.
+  DATA: l_activity         TYPE ru_ismng,
+        l_time             TYPE atime,
+        l_off_nr           TYPE num02,
+        l_time_act         TYPE atime,
+        l_time_off         TYPE atime,
+        l_time_c(10),
+        l_sub(1),
+        l_count            TYPE i,
+        l_status_out       TYPE j_status,
+        l_status_desc      TYPE j_txt30,
+        l_stsma_out        TYPE jsto-stsma,
+        l_date_calc        TYPE datum,
+        l_time_calc        TYPE pr_time,
+        l_ile01            TYPE co_ismngeh,
+        l_ism01            TYPE ru_ismng,
+        l_ile02            TYPE co_ismngeh,
+        l_ism02            TYPE ru_ismng,
+        l_ile03            TYPE co_ismngeh,
+        l_ism03            TYPE ru_ismng,
+        l_ile04            TYPE co_ismngeh,
+        l_ism04            TYPE ru_ismng,
+        l_ile05            TYPE co_ismngeh,
+        l_ism05            TYPE ru_ismng,
+        l_ile06            TYPE co_ismngeh,
+        l_ism06            TYPE ru_ismng,
+        l_conf_no          TYPE co_rueck,
+        l_conf_cnt         TYPE co_rmzhl,
+        l_nr_operator_calc TYPE i,
+        l_oprid            TYPE zabsf_pp_e_oprid.
 
 *  Constants
-    constants: c_min(3)             type c                       value 'MIN',
-               c_time_offset        type zabsf_pp_e_parid        value 'TIME_OFFSET',
-               c_objty_ho           type cr_objty                value 'A',            "Workcenter
-               c_status_stop        type j_status                value 'STOP',
-               c_post_wrong_entries type bapi_coru_param-ins_err value '2'.
+  CONSTANTS: c_min(3)             TYPE c                       VALUE 'MIN',
+             c_time_offset        TYPE zabsf_pp_e_parid        VALUE 'TIME_OFFSET',
+             c_objty_ho           TYPE cr_objty                VALUE 'A',            "Workcenter
+             c_status_stop        TYPE j_status                VALUE 'STOP',
+             c_post_wrong_entries TYPE bapi_coru_param-ins_err VALUE '2'.
 
 
-    refresh: lt_zabsf_pp016,
-             lt_timeticket,
-             lt_detail_return.
+  REFRESH: lt_zabsf_pp016,
+           lt_timeticket,
+           lt_detail_return.
 
-    clear: ls_zabsf_pp016,
-           ls_timeticket,
-           ls_return,
-           l_time,
-           l_sub,
-           l_off_nr,
-           l_time_off,
-           l_time_act,
-           l_oprid.
+  CLEAR: ls_zabsf_pp016,
+         ls_timeticket,
+         ls_return,
+         l_time,
+         l_sub,
+         l_off_nr,
+         l_time_off,
+         l_time_act,
+         l_oprid.
 
 *  Check lenght of time
-    data(l_lengh) = strlen( time ).
+  DATA(l_lengh) = strlen( time ).
 
-    if l_lengh lt 6.
-      concatenate '0' time into l_time.
-    else.
-      l_time = time.
-    endif.
+  IF l_lengh LT 6.
+    CONCATENATE '0' time INTO l_time.
+  ELSE.
+    l_time = time.
+  ENDIF.
 
 *  Upper case operator
-    translate inputobj-oprid to upper case.
+  TRANSLATE inputobj-oprid TO UPPER CASE.
 
 *  Check user in operation
-    call method me->check_user
-      exporting
-        aufnr = aufnr
-        vornr = vornr
-        arbpl = arbpl
-      importing
-        oprid = l_oprid.
+  CALL METHOD me->check_user
+    EXPORTING
+      aufnr = aufnr
+      vornr = vornr
+      arbpl = arbpl
+    IMPORTING
+      oprid = l_oprid.
 
-    if l_oprid is not initial.
-      inputobj-oprid = inputobj-pernr = l_oprid.
-    endif.
+  IF l_oprid IS NOT INITIAL.
+    inputobj-oprid = l_oprid.
+* ADR -  Validar se pernr é utilizado
+    inputobj-pernr = ''.
+  ENDIF.
 
-    if l_oprid is initial.
-      if backoffice is initial.
+  IF l_oprid IS INITIAL.
+    IF backoffice IS INITIAL.
 *      Get shift witch operator is associated
-        select single shiftid
-          from zabsf_pp052
-          into (@data(l_shiftid))
-         where areaid eq @inputobj-areaid
-           and oprid  eq @inputobj-oprid.
+      SELECT SINGLE shiftid
+        FROM zabsf_pp052
+        INTO (@DATA(l_shiftid))
+       WHERE areaid EQ @inputobj-areaid
+         AND oprid  EQ @inputobj-oprid.
 
-        if sy-subrc ne 0.
+      IF sy-subrc NE 0.
 *        Operator is not associated with shift
-          call method zabsf_pp_cl_log=>add_message
-            exporting
-              msgty      = 'E'
-              msgno      = '061'
-              msgv1      = inputobj-oprid
-            changing
-              return_tab = return_tab.
+        CALL METHOD zabsf_pp_cl_log=>add_message
+          EXPORTING
+            msgty      = 'E'
+            msgno      = '061'
+            msgv1      = inputobj-oprid
+          CHANGING
+            return_tab = return_tab.
 
-          exit.
-        endif.
-      else.
+        EXIT.
+      ENDIF.
+    ELSE.
 *      Shift ID
-        l_shiftid = shiftid.
-      endif.
-    endif.
+      l_shiftid = shiftid.
+    ENDIF.
+  ELSE.
+    l_shiftid = shiftid.
+  ENDIF.
 
-    "post de trabalho
-    if kapid is not initial.
-      select single name
-        from kako
-        into @data(lv_workstation_var)
-          where kapid eq @kapid.
-    else.
-      "obter posto de trabalho
-      select single kapid
-        from zabsf_pp014
-        into @data(lv_workstation_id_var)
-          where aufnr eq @aufnr
-            and vornr eq @vornr
-            and arbpl eq @arbpl
-            and oprid eq @inputobj-oprid
-            and kapid ne @space
-            and status eq 'A'.
-      if sy-subrc eq 0.
-        select single name
-          from kako
-          into @lv_workstation_var
-            where kapid eq @lv_workstation_id_var.
-      endif.
-    endif.
+  "post de trabalho
+  IF kapid IS NOT INITIAL.
+    SELECT SINGLE name
+      FROM kako
+      INTO @DATA(lv_workstation_var)
+        WHERE kapid EQ @kapid.
+  ELSE.
+    "obter posto de trabalho
+    SELECT SINGLE kapid
+      FROM zabsf_pp014
+      INTO @DATA(lv_workstation_id_var)
+        WHERE aufnr EQ @aufnr
+          AND vornr EQ @vornr
+          AND arbpl EQ @arbpl
+          AND oprid EQ @inputobj-oprid
+          AND kapid NE @space
+          AND status EQ 'A'.
+    IF sy-subrc EQ 0.
+      SELECT SINGLE name
+        FROM kako
+        INTO @lv_workstation_var
+          WHERE kapid EQ @lv_workstation_id_var.
+    ENDIF.
+  ENDIF.
 
 
 *  Get id of workcenter
-    select single objid
-      from crhd
-      into (@data(l_arbpl_id))
-     where arbpl eq @arbpl
-       and werks eq @werks.
+  SELECT SINGLE objid
+    FROM crhd
+    INTO (@DATA(l_arbpl_id))
+   WHERE arbpl EQ @arbpl
+     AND werks EQ @werks.
 
 *  Get hierarchy of Work center
-    select single objty_hy, objid_hy
-      from crhs
-      into (@data(l_hname_ty), @data(l_hname_id))
-     where objty_ho eq @c_objty_ho "Workcenter
-       and objid_ho eq @l_arbpl_id.
+  SELECT SINGLE objty_hy, objid_hy
+    FROM crhs
+    INTO (@DATA(l_hname_ty), @DATA(l_hname_id))
+   WHERE objty_ho EQ @c_objty_ho "Workcenter
+     AND objid_ho EQ @l_arbpl_id.
 
 *  Get name of hierarchy
-    select single name
-      from crhh
-      into (@data(l_hname))
-     where objty eq @l_hname_ty
-       and objid eq @l_hname_id.
+  SELECT SINGLE name
+    FROM crhh
+    INTO (@DATA(l_hname))
+   WHERE objty EQ @l_hname_ty
+     AND objid EQ @l_hname_id.
 
 *  Create object of class status
-    create object lref_sf_status
-      exporting
-        initial_refdt = refdt
-        input_object  = inputobj.
+  CREATE OBJECT lref_sf_status
+    EXPORTING
+      initial_refdt = refdt
+      input_object  = inputobj.
 
 
 *  Get last confirmation
-    select * up to 1 rows
-      from zabsf_pp016
-      into @data(ls_afru_sf016)
-     where areaid eq @inputobj-areaid
-       and hname  eq @l_hname
-       and werks  eq @inputobj-werks
-       and arbpl  eq @arbpl
-       and aufnr  eq @aufnr
-       and vornr  eq @vornr
-       and rueck  eq @rueck
-     order by rmzhl descending.
-    endselect.
+  SELECT * UP TO 1 ROWS
+    FROM zabsf_pp016
+    INTO @DATA(ls_afru_sf016)
+   WHERE areaid EQ @inputobj-areaid
+     AND hname  EQ @l_hname
+     AND werks  EQ @inputobj-werks
+     AND arbpl  EQ @arbpl
+     AND aufnr  EQ @aufnr
+     AND vornr  EQ @vornr
+     AND rueck  EQ @rueck
+   ORDER BY rmzhl DESCENDING.
+  ENDSELECT.
 
 *  Counter Number of employees in Production Order
-    select count( * )
-      from zabsf_pp014
-      into (@data(l_nr_operator))
-     where arbpl  eq @arbpl
-       and aufnr  eq @aufnr
-       and vornr  eq @vornr
-       and tipord eq 'N'
-       and status eq 'A'.
+  SELECT COUNT( * )
+    FROM zabsf_pp014
+    INTO (@DATA(l_nr_operator))
+   WHERE arbpl  EQ @arbpl
+     AND aufnr  EQ @aufnr
+     AND vornr  EQ @vornr
+     AND tipord EQ 'N'
+     AND status EQ 'A'.
 
-    if l_nr_operator is not initial.
-      clear l_nr_operator_calc.
+  IF l_nr_operator IS NOT INITIAL.
+    CLEAR l_nr_operator_calc.
 
-      l_nr_operator_calc = l_nr_operator.
-    endif.
+    l_nr_operator_calc = l_nr_operator.
+  ENDIF.
 
 *  Fill data for save in database
-    ls_pp_sf016_ini-areaid = inputobj-areaid.
-    ls_pp_sf016_ini-hname = l_hname.
-    ls_pp_sf016_ini-werks = inputobj-werks.
-    ls_pp_sf016_ini-arbpl = arbpl.
-    ls_pp_sf016_ini-aufnr = aufnr.
-    ls_pp_sf016_ini-vornr = vornr.
-    ls_pp_sf016_ini-rueck = rueck.
+  ls_pp_sf016_ini-areaid = inputobj-areaid.
+  ls_pp_sf016_ini-hname = l_hname.
+  ls_pp_sf016_ini-werks = inputobj-werks.
+  ls_pp_sf016_ini-arbpl = arbpl.
+  ls_pp_sf016_ini-aufnr = aufnr.
+  ls_pp_sf016_ini-vornr = vornr.
+  ls_pp_sf016_ini-rueck = rueck.
 *    ls_pp_sf016_ini-rmzhl = ls_afru_sf016-rmzhl + 1.
-    data(l_rmzhl) = ls_afru_sf016-rmzhl + 1.
-    ls_pp_sf016_ini-aufpl = aufpl.
-    ls_pp_sf016_ini-aplzl = aplzl.
-    ls_pp_sf016_ini-oprid = inputobj-oprid.
-    ls_pp_sf016_ini-shiftid = l_shiftid.
+  DATA(l_rmzhl) = ls_afru_sf016-rmzhl + 1.
+  ls_pp_sf016_ini-aufpl = aufpl.
+  ls_pp_sf016_ini-aplzl = aplzl.
+  ls_pp_sf016_ini-oprid = inputobj-oprid.
+  ls_pp_sf016_ini-shiftid = l_shiftid.
 
-    if l_nr_operator is not initial.
+  IF l_nr_operator IS NOT INITIAL.
 *    Number of employees
-      ls_pp_sf016_ini-no_of_employee = l_nr_operator.
-    endif.
+    ls_pp_sf016_ini-no_of_employee = l_nr_operator.
+  ENDIF.
 
 *  Fill timeticket for confirmation
-    ls_timeticket_ini-orderid = aufnr.
-    ls_timeticket_ini-operation = vornr.
-    ls_timeticket_ini-conf_no = rueck.
-    ls_timeticket_ini-postg_date = date.
-    ls_timeticket_ini-ex_created_by = inputobj-oprid.
-    ls_timeticket_ini-kaptprog = l_shiftid.
+  ls_timeticket_ini-orderid = aufnr.
+  ls_timeticket_ini-operation = vornr.
+  ls_timeticket_ini-conf_no = rueck.
+  ls_timeticket_ini-postg_date = date.
+  ls_timeticket_ini-ex_created_by = inputobj-oprid.
+  ls_timeticket_ini-kaptprog = l_shiftid.
 
-    if l_nr_operator is not initial.
+  IF l_nr_operator IS NOT INITIAL.
 *    Number of employees
-      ls_timeticket_ini-no_of_employee = l_nr_operator.
-    endif.
+    ls_timeticket_ini-no_of_employee = l_nr_operator.
+  ENDIF.
 
 *  Get Unit of measure
-    select single *
-      from afvv
-      into @data(ls_afvv)
-     where aufpl eq @aufpl
-       and aplzl eq @aplzl.
+  SELECT SINGLE *
+    FROM afvv
+    INTO @DATA(ls_afvv)
+   WHERE aufpl EQ @aufpl
+     AND aplzl EQ @aplzl.
 
 *  Activities Type in Shopfloor
-    case actv_id.
-      when init_pre. "Start Preparation
+  CASE actv_id.
+    WHEN init_pre. "Start Preparation
 *      Check Confirmed date for 'Processing start' is inital - Restart production
-        if ls_afru_sf016-stprsnid is not initial and ls_afru_sf016-isbd is not initial.
+      IF ls_afru_sf016-stprsnid IS NOT INITIAL AND ls_afru_sf016-isbd IS NOT INITIAL.
 *        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
 
-          ls_zabsf_pp016-stprsnid = ls_afru_sf016-stprsnid.
-          ls_zabsf_pp016-iebd = date.
-          ls_zabsf_pp016-iebz = l_time.
-          ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+        ls_zabsf_pp016-stprsnid = ls_afru_sf016-stprsnid.
+        ls_zabsf_pp016-iebd = date.
+        ls_zabsf_pp016-iebz = l_time.
+        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
 
 *        Calculated activities time
-          call method me->calc_minutes
-            exporting
-              date       = ls_afru_sf016-isbd
-              time       = ls_afru_sf016-isbz
-              proc_date  = ls_zabsf_pp016-iebd
-              proc_time  = ls_zabsf_pp016-iebz
-            changing
-              activity   = l_activity
-              return_tab = return_tab.
+        CALL METHOD me->calc_minutes
+          EXPORTING
+            date       = ls_afru_sf016-isbd
+            time       = ls_afru_sf016-isbz
+            proc_date  = ls_zabsf_pp016-iebd
+            proc_time  = ls_zabsf_pp016-iebz
+          CHANGING
+            activity   = l_activity
+            return_tab = return_tab.
 
 *        Check if exist erro in calcutation
-          read table return_tab into ls_return_tab with key type = 'E'.
+        READ TABLE return_tab INTO ls_return_tab WITH KEY type = 'E'.
 
-          if sy-subrc = 0.
-            exit.
-          endif.
+        IF sy-subrc = 0.
+          EXIT.
+        ENDIF.
 
 *        Add time to internal table
-          ls_zabsf_pp016-stoptime = l_activity.
+        ls_zabsf_pp016-stoptime = l_activity.
 *          ls_ZABSF_PP016-stopunit = ls_afvv-vge01.
-          ls_zabsf_pp016-stopunit = c_min.
+        ls_zabsf_pp016-stopunit = c_min.
 
 *        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-          append ls_zabsf_pp016 to lt_zabsf_pp016.
-
-*        Create new counter
-          add 1 to l_rmzhl.
-
-          clear ls_timeticket.
-
-*        Move initial data
-          move-corresponding ls_timeticket_ini to ls_timeticket.
-
-          ls_timeticket-exec_start_date = ls_afru_sf016-isbd.
-          ls_timeticket-exec_start_time = ls_afru_sf016-isbz.
-          ls_timeticket-proc_start_date = ls_afru_sf016-isbd.
-          ls_timeticket-proc_start_time = ls_afru_sf016-isbz.
-          ls_timeticket-proc_fin_date = ls_zabsf_pp016-iebd.
-          ls_timeticket-proc_fin_time = ls_zabsf_pp016-iebz.
-          ls_timeticket-break_unit = c_min.
-          ls_timeticket-break_time = l_activity.
-          ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
-          "BMR INSERT 16.06.2020
-          ls_timeticket-conf_text = lv_workstation_var.
-*        Times to confirm
-          append ls_timeticket to lt_timeticket.
-
-*        Confirmation to create break
-          describe table lt_timeticket lines data(l_conf_break).
-        endif.
-
-        clear: ls_zabsf_pp016.
-
-*      Move initial data
-        move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
-
-*      Fill Confirmed date for start of execution
-        ls_zabsf_pp016-isdd = date.
-        ls_zabsf_pp016-isdz = l_time.
-*      Confirmation counter
         ls_zabsf_pp016-rmzhl = l_rmzhl.
 
+        APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
+
+*        Create new counter
+        ADD 1 TO l_rmzhl.
+
+        CLEAR ls_timeticket.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
+
+        ls_timeticket-exec_start_date = ls_afru_sf016-isbd.
+        ls_timeticket-exec_start_time = ls_afru_sf016-isbz.
+        ls_timeticket-proc_start_date = ls_afru_sf016-isbd.
+        ls_timeticket-proc_start_time = ls_afru_sf016-isbz.
+        ls_timeticket-proc_fin_date = ls_zabsf_pp016-iebd.
+        ls_timeticket-proc_fin_time = ls_zabsf_pp016-iebz.
+        ls_timeticket-break_unit = c_min.
+        ls_timeticket-break_time = l_activity.
+        ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
+        "BMR INSERT 16.06.2020
+        ls_timeticket-conf_text = lv_workstation_var.
+*        Times to confirm
+
+        IF ls_timeticket-conf_no NE '0000000000'.
+          APPEND ls_timeticket TO lt_timeticket.
+        ENDIF.
+*        Confirmation to create break
+        DESCRIBE TABLE lt_timeticket LINES DATA(l_conf_break).
+      ENDIF.
+
+      CLEAR: ls_zabsf_pp016.
+
+*      Move initial data
+      MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
+
+*      Fill Confirmed date for start of execution
+      ls_zabsf_pp016-isdd = date.
+      ls_zabsf_pp016-isdz = l_time.
+*      Confirmation counter
+      ls_zabsf_pp016-rmzhl = l_rmzhl.
+
 *      Time to save
-        append ls_zabsf_pp016 to lt_zabsf_pp016.
+      IF ls_zabsf_pp016-conf_no NE '0000000000'.
+        APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
+      ENDIF.
 
 *        IF ls_afru_sf016-isdd IS INITIAL.
-        clear: ls_timeticket.
+      CLEAR: ls_timeticket.
 
 *      Move initial data
-        move-corresponding ls_timeticket_ini to ls_timeticket.
+      MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
 
 *      Fill Confirmed date for start of execution
-        ls_timeticket-exec_start_date = date.
-        ls_timeticket-exec_start_time = l_time.
+      ls_timeticket-exec_start_date = date.
+      ls_timeticket-exec_start_time = l_time.
 
 *      Times to confirm
-        append ls_timeticket to lt_timeticket.
+      APPEND ls_timeticket TO lt_timeticket.
 
 *      To create card number
-        data(l_card_create) = abap_true.
+      DATA(l_card_create) = abap_true.
 
 *      Confirmation to create card
-        describe table lt_timeticket lines data(l_conf_create).
+      DESCRIBE TABLE lt_timeticket LINES DATA(l_conf_create).
 
 *        ENDIF.
-      when init_pro. " Start Production and Restart Production
+    WHEN init_pro. " Start Production and Restart Production
 *      Check Confirmed date for start of execution is not initial
-        if ls_afru_sf016-isdd is not initial and ls_afru_sf016-isbd is initial.
-          clear ls_zabsf_pp016.
+      IF ls_afru_sf016-isdd IS NOT INITIAL AND ls_afru_sf016-isbd IS INITIAL.
+        CLEAR ls_zabsf_pp016.
 
 *        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
 
-          ls_zabsf_pp016-ierd = date.
-          ls_zabsf_pp016-ierz = l_time.
-          ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+        ls_zabsf_pp016-ierd = date.
+        ls_zabsf_pp016-ierz = l_time.
+        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
 
 *        Calculated activities time
-          call method me->calc_minutes
-            exporting
-              date       = ls_afru_sf016-isdd
-              time       = ls_afru_sf016-isdz
-              proc_date  = ls_zabsf_pp016-ierd
-              proc_time  = ls_zabsf_pp016-ierz
-            changing
-              activity   = l_activity
-              return_tab = return_tab.
+        CALL METHOD me->calc_minutes
+          EXPORTING
+            date       = ls_afru_sf016-isdd
+            time       = ls_afru_sf016-isdz
+            proc_date  = ls_zabsf_pp016-ierd
+            proc_time  = ls_zabsf_pp016-ierz
+          CHANGING
+            activity   = l_activity
+            return_tab = return_tab.
 
 *        Check if exist erro in calcutation
-          read table return_tab into ls_return_tab with key type = 'E'.
-          if sy-subrc = 0.
-            exit.
-          endif.
+        READ TABLE return_tab INTO ls_return_tab WITH KEY type = 'E'.
+        IF sy-subrc = 0.
+          EXIT.
+        ENDIF.
 
 *        Get activities types
-          call method me->get_act_to_conf
-            exporting
-              aufpl       = aufpl
-              aplzl       = aplzl
-              actv_value  = l_activity
-              afvv        = ls_afvv
-              nr_operator = l_nr_operator_calc
-            importing
-              ile01       = l_ile01
-              ism01       = l_ism01
-              ile02       = l_ile02
-              ism02       = l_ism02
-              ile03       = l_ile03
-              ism03       = l_ism03
-              ile04       = l_ile04
-              ism04       = l_ism04
-              ile05       = l_ile05
-              ism05       = l_ism05
-              ile06       = l_ile06
-              ism06       = l_ism06
-            changing
-              return_tab  = return_tab.
+        CALL METHOD me->get_act_to_conf
+          EXPORTING
+            aufpl       = aufpl
+            aplzl       = aplzl
+            actv_value  = l_activity
+            afvv        = ls_afvv
+            nr_operator = l_nr_operator_calc
+          IMPORTING
+            ile01       = l_ile01
+            ism01       = l_ism01
+            ile02       = l_ile02
+            ism02       = l_ism02
+            ile03       = l_ile03
+            ism03       = l_ism03
+            ile04       = l_ile04
+            ism04       = l_ism04
+            ile05       = l_ile05
+            ism05       = l_ism05
+            ile06       = l_ile06
+            ism06       = l_ism06
+          CHANGING
+            return_tab  = return_tab.
 
 *        Fill values calculated
-          ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
-          ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
-          ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
-          ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
-          ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
-          ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
-          ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
-          ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
-          ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
-          ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
-          ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
-          ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
+        ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
+        ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
+        ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
+        ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
+        ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
+        ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
+        ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
+        ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
+        ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
+        ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
+        ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
+        ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
 
 *        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-*        Time to save
-          append ls_zabsf_pp016 to lt_zabsf_pp016.
-
-*        Move initial data
-          move-corresponding ls_timeticket_ini to ls_timeticket.
-
-*        Fill Confirmed date for End of Execution
-          ls_timeticket-exec_start_date = date.
-          ls_timeticket-exec_start_time = l_time.
-          ls_timeticket-setup_fin_date = date.
-          ls_timeticket-setup_fin_time = l_time.
-          ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
-
-*        Times to confirm
-          append ls_timeticket to lt_timeticket.
-
-*        Create new counter
-          add 1 to l_rmzhl.
-        endif.
-
-*      Check Confirmed date for 'Processing start' is inital - Restart production
-        if ls_afru_sf016-stprsnid is not initial and ls_afru_sf016-isbd is not initial.
-          clear ls_zabsf_pp016.
-
-*        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
-
-          ls_zabsf_pp016-stprsnid = ls_afru_sf016-stprsnid.
-          ls_zabsf_pp016-iebd = date.
-          ls_zabsf_pp016-iebz = l_time.
-          ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
-
-*        Calculated activities time
-          call method me->calc_minutes
-            exporting
-              date       = ls_afru_sf016-isbd
-              time       = ls_afru_sf016-isbz
-              proc_date  = ls_zabsf_pp016-iebd
-              proc_time  = ls_zabsf_pp016-iebz
-            changing
-              activity   = l_activity
-              return_tab = return_tab.
-
-*        Check if exist erro in calcutation
-          read table return_tab into ls_return_tab with key type = 'E'.
-          if sy-subrc = 0.
-            exit.
-          endif.
-
-*        Add time to internal table
-          ls_zabsf_pp016-stoptime = l_activity.
-*          ls_ZABSF_PP016-stopunit = ls_afvv-vge01.
-          ls_zabsf_pp016-stopunit = c_min.
-
-*        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-*        Time to save
-          append ls_zabsf_pp016 to lt_zabsf_pp016.
-
-*        Create new counter
-          add 1 to l_rmzhl.
-
-          clear ls_timeticket.
-
-*        Move initial data
-          move-corresponding ls_timeticket_ini to ls_timeticket.
-
-          ls_timeticket-exec_start_date = ls_afru_sf016-isbd.
-          ls_timeticket-exec_start_time = ls_afru_sf016-isbz.
-          ls_timeticket-proc_start_date = ls_afru_sf016-isbd.
-          ls_timeticket-proc_start_time = ls_afru_sf016-isbz.
-          ls_timeticket-proc_fin_date = ls_zabsf_pp016-iebd.
-          ls_timeticket-proc_fin_time = ls_zabsf_pp016-iebz.
-          ls_timeticket-break_unit = c_min.
-          ls_timeticket-break_time = l_activity.
-          ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
-          ls_timeticket-conf_text = lv_workstation_var.
-
-*        Times to confirm
-          append ls_timeticket to lt_timeticket.
-
-*        Confirmation to create break
-          describe table lt_timeticket lines l_conf_break.
-        endif.
-
-        clear: ls_zabsf_pp016.
-
-*      Move initial data
-        move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
-
-*      Fill data to start production
-        ls_zabsf_pp016-isbd = date.
-        ls_zabsf_pp016-isbz = l_time.
-
-*      Confirmation counter
         ls_zabsf_pp016-rmzhl = l_rmzhl.
 
-*      Time to save
-        append ls_zabsf_pp016 to lt_zabsf_pp016.
+*        Time to save
+        APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
 
-        clear: ls_timeticket,
-               l_conf_create.
+*        Move initial data
+        MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
 
-*      Move initial data
-        move-corresponding ls_timeticket_ini to ls_timeticket.
-
-*      Fill Confirmed date for Start Production
+*        Fill Confirmed date for End of Execution
         ls_timeticket-exec_start_date = date.
         ls_timeticket-exec_start_time = l_time.
-        ls_timeticket-proc_start_date = date.
-        ls_timeticket-proc_start_time = l_time.
-        ls_timeticket-conf_text = lv_workstation_var.
-*      Times to confirm
-        append ls_timeticket to lt_timeticket.
+        ls_timeticket-setup_fin_date = date.
+        ls_timeticket-setup_fin_time = l_time.
+        ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
 
-*      To create card number
-        l_card_create = abap_true.
+*        Times to confirm
+        IF ls_timeticket-conf_no NE '0000000000'.
+          APPEND ls_timeticket TO lt_timeticket.
+        ENDIF.
+*        Create new counter
+        ADD 1 TO l_rmzhl.
+      ENDIF.
 
-*      Confirmation to create card
-        describe table lt_timeticket lines l_conf_create.
-      when stop_pro. " Stop Production\Preparation
-*      Check Confirmed date for 'start of execution' is initial
-        if ls_afru_sf016-ierd is initial and ls_afru_sf016-isdd is not initial.
-          clear ls_zabsf_pp016.
+*      Check Confirmed date for 'Processing start' is inital - Restart production
+      IF ls_afru_sf016-stprsnid IS NOT INITIAL AND ls_afru_sf016-isbd IS NOT INITIAL.
+        CLEAR ls_zabsf_pp016.
 
 *        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
 
-          ls_zabsf_pp016-ierd = date.
-          ls_zabsf_pp016-ierz = l_time.
-          ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+        ls_zabsf_pp016-stprsnid = ls_afru_sf016-stprsnid.
+        ls_zabsf_pp016-iebd = date.
+        ls_zabsf_pp016-iebz = l_time.
+        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
 
 *        Calculated activities time
-          call method me->calc_minutes
-            exporting
-              date       = ls_afru_sf016-isdd
-              time       = ls_afru_sf016-isdz
-              proc_date  = ls_zabsf_pp016-ierd
-              proc_time  = ls_zabsf_pp016-ierz
-            changing
-              activity   = l_activity
-              return_tab = return_tab.
+        CALL METHOD me->calc_minutes
+          EXPORTING
+            date       = ls_afru_sf016-isbd
+            time       = ls_afru_sf016-isbz
+            proc_date  = ls_zabsf_pp016-iebd
+            proc_time  = ls_zabsf_pp016-iebz
+          CHANGING
+            activity   = l_activity
+            return_tab = return_tab.
 
 *        Check if exist erro in calcutation
-          read table return_tab into ls_return_tab with key type = 'E'.
-          if sy-subrc = 0.
-            exit.
-          endif.
+        READ TABLE return_tab INTO ls_return_tab WITH KEY type = 'E'.
+        IF sy-subrc = 0.
+          EXIT.
+        ENDIF.
 
-          clear ls_timeticket.
-
-*        Move initial data
-          move-corresponding ls_timeticket_ini to ls_timeticket.
-
-*        Get activities types
-          call method me->get_act_to_conf
-            exporting
-              aufpl       = aufpl
-              aplzl       = aplzl
-              actv_value  = l_activity
-              afvv        = ls_afvv
-              nr_operator = l_nr_operator_calc
-            importing
-              ile01       = l_ile01
-              ism01       = l_ism01
-              ile02       = l_ile02
-              ism02       = l_ism02
-              ile03       = l_ile03
-              ism03       = l_ism03
-              ile04       = l_ile04
-              ism04       = l_ism04
-              ile05       = l_ile05
-              ism05       = l_ism05
-              ile06       = l_ile06
-              ism06       = l_ism06
-            changing
-              return_tab  = return_tab.
-
-*        Fill values calculated
-          ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
-          ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
-          ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
-          ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
-          ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
-          ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
-          ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
-          ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
-          ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
-          ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
-          ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
-          ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
+*        Add time to internal table
+        ls_zabsf_pp016-stoptime = l_activity.
+*          ls_ZABSF_PP016-stopunit = ls_afvv-vge01.
+        ls_zabsf_pp016-stopunit = c_min.
 
 *        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
 
 *        Time to save
-          append ls_zabsf_pp016 to lt_zabsf_pp016.
+        IF ls_zabsf_pp016-conf_no NE '0000000000'.
+          APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
+        ENDIF.
+
+*        Create new counter
+        ADD 1 TO l_rmzhl.
+
+        CLEAR ls_timeticket.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
+
+        ls_timeticket-exec_start_date = ls_afru_sf016-isbd.
+        ls_timeticket-exec_start_time = ls_afru_sf016-isbz.
+        ls_timeticket-proc_start_date = ls_afru_sf016-isbd.
+        ls_timeticket-proc_start_time = ls_afru_sf016-isbz.
+        ls_timeticket-proc_fin_date = ls_zabsf_pp016-iebd.
+        ls_timeticket-proc_fin_time = ls_zabsf_pp016-iebz.
+        ls_timeticket-break_unit = c_min.
+        ls_timeticket-break_time = l_activity.
+        ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
+        ls_timeticket-conf_text = lv_workstation_var.
+
+*        Times to confirm
+        APPEND ls_timeticket TO lt_timeticket.
+
+*        Confirmation to create break
+        DESCRIBE TABLE lt_timeticket LINES l_conf_break.
+      ENDIF.
+
+      CLEAR: ls_zabsf_pp016.
+
+*      Move initial data
+      MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
+
+*      Fill data to start production
+      ls_zabsf_pp016-isbd = date.
+      ls_zabsf_pp016-isbz = l_time.
+
+*      Confirmation counter
+      ls_zabsf_pp016-rmzhl = l_rmzhl.
+
+*      Time to save
+      APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
+
+      CLEAR: ls_timeticket,
+             l_conf_create.
+
+*      Move initial data
+      MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
+
+*      Fill Confirmed date for Start Production
+      ls_timeticket-exec_start_date = date.
+      ls_timeticket-exec_start_time = l_time.
+      ls_timeticket-proc_start_date = date.
+      ls_timeticket-proc_start_time = l_time.
+      ls_timeticket-conf_text = lv_workstation_var.
+*      Times to confirm
+      APPEND ls_timeticket TO lt_timeticket.
+
+*      To create card number
+      l_card_create = abap_true.
+
+*      Confirmation to create card
+      DESCRIBE TABLE lt_timeticket LINES l_conf_create.
+    WHEN stop_pro. " Stop Production\Preparation
+*      Check Confirmed date for 'start of execution' is initial
+      IF ls_afru_sf016-ierd IS INITIAL AND ls_afru_sf016-isdd IS NOT INITIAL.
+        CLEAR ls_zabsf_pp016.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
+
+        ls_zabsf_pp016-ierd = date.
+        ls_zabsf_pp016-ierz = l_time.
+        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+
+*        Calculated activities time
+        CALL METHOD me->calc_minutes
+          EXPORTING
+            date       = ls_afru_sf016-isdd
+            time       = ls_afru_sf016-isdz
+            proc_date  = ls_zabsf_pp016-ierd
+            proc_time  = ls_zabsf_pp016-ierz
+          CHANGING
+            activity   = l_activity
+            return_tab = return_tab.
+
+*        Check if exist erro in calcutation
+        READ TABLE return_tab INTO ls_return_tab WITH KEY type = 'E'.
+        IF sy-subrc = 0.
+          EXIT.
+        ENDIF.
+
+        CLEAR ls_timeticket.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
+
+*        Get activities types
+        CALL METHOD me->get_act_to_conf
+          EXPORTING
+            aufpl       = aufpl
+            aplzl       = aplzl
+            actv_value  = l_activity
+            afvv        = ls_afvv
+            nr_operator = l_nr_operator_calc
+          IMPORTING
+            ile01       = l_ile01
+            ism01       = l_ism01
+            ile02       = l_ile02
+            ism02       = l_ism02
+            ile03       = l_ile03
+            ism03       = l_ism03
+            ile04       = l_ile04
+            ism04       = l_ism04
+            ile05       = l_ile05
+            ism05       = l_ism05
+            ile06       = l_ile06
+            ism06       = l_ism06
+          CHANGING
+            return_tab  = return_tab.
+
+*        Fill values calculated
+        ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
+        ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
+        ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
+        ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
+        ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
+        ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
+        ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
+        ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
+        ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
+        ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
+        ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
+        ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
+
+*        Confirmation counter
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
+
+*        Time to save
+        APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
 
 *          CLEAR ls_timeticket.
 *
@@ -2379,842 +2389,869 @@ ENDMETHOD.
 *          MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
 
 *        Fill Confirmed date for End of Execution
-          ls_timeticket-exec_start_date = date.
-          ls_timeticket-exec_start_time = l_time.
-          ls_timeticket-setup_fin_date = date.
-          ls_timeticket-setup_fin_time = l_time.
-          ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
-          ls_timeticket-conf_text = lv_workstation_var.
+        ls_timeticket-exec_start_date = date.
+        ls_timeticket-exec_start_time = l_time.
+        ls_timeticket-setup_fin_date = date.
+        ls_timeticket-setup_fin_time = l_time.
+        ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
+        ls_timeticket-conf_text = lv_workstation_var.
 
 *        Times to confirm
-          append ls_timeticket to lt_timeticket.
+        IF ls_timeticket-conf_no NE '0000000000'.
+          APPEND ls_timeticket TO lt_timeticket.
+        ENDIF.
 
 *        Create new counter
-          add 1 to l_rmzhl.
+        ADD 1 TO l_rmzhl.
 
-          clear ls_zabsf_pp016.
+        CLEAR ls_zabsf_pp016.
 
 *        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
 
 *        Fill data to stop reason
-          ls_zabsf_pp016-stprsnid = stprsnid.
-          ls_zabsf_pp016-isbd = date.
-          ls_zabsf_pp016-isbz = l_time.
+        ls_zabsf_pp016-stprsnid = stprsnid.
+        ls_zabsf_pp016-isbd = date.
+        ls_zabsf_pp016-isbz = l_time.
 
-          if ls_zabsf_pp016-shiftid is initial.
+        IF ls_zabsf_pp016-shiftid IS INITIAL.
 *          Get shift witch operator is associated
-            select single shiftid
-              from zabsf_pp052
-              into (@data(l_shiftid_alt))
-             where areaid eq @inputobj-areaid
-               and oprid  eq @inputobj-oprid.
+          SELECT SINGLE shiftid
+            FROM zabsf_pp052
+            INTO (@DATA(l_shiftid_alt))
+           WHERE areaid EQ @inputobj-areaid
+             AND oprid  EQ @inputobj-oprid.
 
-            ls_zabsf_pp016-shiftid = l_shiftid_alt.
-          endif.
+          ls_zabsf_pp016-shiftid = l_shiftid_alt.
+        ENDIF.
 
 *        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
 
 *        Time to save
-          append ls_zabsf_pp016 to lt_zabsf_pp016.
+        IF ls_zabsf_pp016-conf_no NE '0000000000'.
+          APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
+        ENDIF.
 
 *        Create new counter
-          add 1 to l_rmzhl.
-        endif.
+        ADD 1 TO l_rmzhl.
+      ENDIF.
 
 *      Check Confirmed date for 'Processing Finish' is inital
-        if ls_afru_sf016-iebd is initial and ls_afru_sf016-isbd is not initial.
-          clear: ls_zabsf_pp016,
-                 ls_timeticket.
+      IF ls_afru_sf016-iebd IS INITIAL AND ls_afru_sf016-isbd IS NOT INITIAL.
+        CLEAR: ls_zabsf_pp016,
+               ls_timeticket.
 
 *        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
 
-          ls_zabsf_pp016-iebd = date.
-          ls_zabsf_pp016-iebz = l_time.
-          ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+        ls_zabsf_pp016-iebd = date.
+        ls_zabsf_pp016-iebz = l_time.
+        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
 
 *        Calculated activities time
-          call method me->calc_minutes
-            exporting
-              date       = ls_afru_sf016-isbd
-              time       = ls_afru_sf016-isbz
-              proc_date  = ls_zabsf_pp016-iebd
-              proc_time  = ls_zabsf_pp016-iebz
-            changing
-              activity   = l_activity
-              return_tab = return_tab.
+        CALL METHOD me->calc_minutes
+          EXPORTING
+            date       = ls_afru_sf016-isbd
+            time       = ls_afru_sf016-isbz
+            proc_date  = ls_zabsf_pp016-iebd
+            proc_time  = ls_zabsf_pp016-iebz
+          CHANGING
+            activity   = l_activity
+            return_tab = return_tab.
 
 *        Check if exist erro in calcutation
-          read table return_tab into ls_return_tab with key type = 'E'.
-          if sy-subrc = 0.
-            exit.
-          endif.
+        READ TABLE return_tab INTO ls_return_tab WITH KEY type = 'E'.
+        IF sy-subrc = 0.
+          EXIT.
+        ENDIF.
 
-          clear: ls_timeticket.
+        CLEAR: ls_timeticket.
 
 *        Move initial data
-          move-corresponding ls_timeticket_ini to ls_timeticket.
+        MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
 
 *        Get activities types
-          call method me->get_act_to_conf
-            exporting
-              aufpl       = aufpl
-              aplzl       = aplzl
-              actv_value  = l_activity
-              afvv        = ls_afvv
-              nr_operator = l_nr_operator_calc
-            importing
-              ile01       = l_ile01
-              ism01       = l_ism01
-              ile02       = l_ile02
-              ism02       = l_ism02
-              ile03       = l_ile03
-              ism03       = l_ism03
-              ile04       = l_ile04
-              ism04       = l_ism04
-              ile05       = l_ile05
-              ism05       = l_ism05
-              ile06       = l_ile06
-              ism06       = l_ism06
-            changing
-              return_tab  = return_tab.
+        CALL METHOD me->get_act_to_conf
+          EXPORTING
+            aufpl       = aufpl
+            aplzl       = aplzl
+            actv_value  = l_activity
+            afvv        = ls_afvv
+            nr_operator = l_nr_operator_calc
+          IMPORTING
+            ile01       = l_ile01
+            ism01       = l_ism01
+            ile02       = l_ile02
+            ism02       = l_ism02
+            ile03       = l_ile03
+            ism03       = l_ism03
+            ile04       = l_ile04
+            ism04       = l_ism04
+            ile05       = l_ile05
+            ism05       = l_ism05
+            ile06       = l_ile06
+            ism06       = l_ism06
+          CHANGING
+            return_tab  = return_tab.
 
 *        Fill values calculated
-          ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
-          ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
-          ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
-          ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
-          ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
-          ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
-          ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
-          ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
-          ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
-          ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
-          ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
-          ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
+        ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
+        ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
+        ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
+        ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
+        ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
+        ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
+        ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
+        ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
+        ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
+        ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
+        ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
+        ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
+*        ls_zabsf_pp016-stoptime = l_activity.
 
 *        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
 
 *        Time to save
-          append ls_zabsf_pp016 to lt_zabsf_pp016.
+        APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
 
 **        Move initial data
 *          MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
 
 *        Fill Confirmed date for End Production
-          ls_timeticket-exec_start_date = date.
-          ls_timeticket-exec_start_time = l_time.
-          ls_timeticket-proc_fin_date = date.
-          ls_timeticket-proc_fin_time = l_time.
-          ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
-          ls_timeticket-conf_text = lv_workstation_var.
-*        Times to confirm
-          append ls_timeticket to lt_timeticket.
-
-*        Create new counter
-          add 1 to l_rmzhl.
-
-          clear ls_zabsf_pp016.
-
-*        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
-
-*        Fill data to stop reason
-          ls_zabsf_pp016-stprsnid = stprsnid.
-          ls_zabsf_pp016-isbd = date.
-          ls_zabsf_pp016-isbz = l_time.
-
-*        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-*        Time to save
-          append ls_zabsf_pp016 to lt_zabsf_pp016.
-        endif.
-      when end_parc. " Fim parcial
-*      Check if Start Preparation is initialized
-        if ls_afru_sf016-isdd is not initial.
-          clear ls_zabsf_pp016.
-
-*        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
-
-          ls_zabsf_pp016-ierd = date.
-          ls_zabsf_pp016-ierz = l_time.
-          ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
-
-*        Calculated activities time
-          call method me->calc_minutes
-            exporting
-              date       = ls_afru_sf016-isdd
-              time       = ls_afru_sf016-isdz
-              proc_date  = ls_zabsf_pp016-ierd
-              proc_time  = ls_zabsf_pp016-ierz
-            changing
-              activity   = l_activity
-              return_tab = return_tab.
-
-*        Check if exist erro in calcutation
-          read table return_tab into ls_return_tab with key type = 'E'.
-          if sy-subrc = 0.
-            exit.
-          endif.
-
-*        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-          clear ls_timeticket.
-
-*        Move initial data
-          move-corresponding ls_timeticket_ini to ls_timeticket.
-
-*        Fill Confirmed date for End of Execution
-          ls_timeticket-exec_start_date = date.
-          ls_timeticket-exec_start_time = l_time.
-          ls_timeticket-setup_fin_date = date.
-          ls_timeticket-setup_fin_time = l_time.
-          ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
-          ls_timeticket-conf_text = lv_workstation_var.
-
-*      Check if Start Production is initialized
-        elseif ls_afru_sf016-isbd is not initial.
-          clear ls_zabsf_pp016.
-
-*        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
-
-          ls_zabsf_pp016-iebd = date.
-          ls_zabsf_pp016-iebz = l_time.
-          ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
-
-          call method me->calc_minutes
-            exporting
-              date       = ls_afru_sf016-isbd
-              time       = ls_afru_sf016-isbz
-              proc_date  = ls_zabsf_pp016-iebd
-              proc_time  = ls_zabsf_pp016-iebz
-            changing
-              activity   = l_activity
-              return_tab = return_tab.
-
-*        Check if exist erro in calcutation
-          read table return_tab into ls_return_tab with key type = 'E'.
-          if sy-subrc = 0.
-            exit.
-          endif.
-
-*        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-          clear ls_timeticket.
-
-*        Move initial data
-          move-corresponding ls_timeticket_ini to ls_timeticket.
-
-*        Fill Confirmed date for End Production
-          ls_timeticket-exec_start_date = date.
-          ls_timeticket-exec_start_time = l_time.
-          ls_timeticket-proc_fin_date = date.
-          ls_timeticket-proc_fin_time = l_time.
-          ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
-          ls_timeticket-conf_text = lv_workstation_var.
-        endif.
-
-*      Check stop reason is not inital
-        if ls_afru_sf016-stprsnid is not initial.
-          clear ls_zabsf_pp016.
-
-*        Move initial data
-          move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
-
-*        Shift ID
-          ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
-*        Cause ID
-          ls_zabsf_pp016-stprsnid = ls_afru_sf016-stprsnid.
-
-*        Add time to internal table
-          ls_zabsf_pp016-stoptime = l_activity.
-*          ls_ZABSF_PP016-stopunit = ls_afvv-vge01.
-          ls_zabsf_pp016-stopunit = c_min.
-
-*        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-          clear ls_timeticket.
-
-*        Move initial data
-          move-corresponding ls_timeticket_ini to ls_timeticket.
-
-          if ls_zabsf_pp016-iebd is initial.
-            ls_zabsf_pp016-iebd = date.
-          endif.
-
-          if ls_zabsf_pp016-iebz is initial.
-            ls_zabsf_pp016-iebz = l_time.
-          endif.
-
-          ls_timeticket-exec_start_date = ls_afru_sf016-isbd.
-          ls_timeticket-exec_start_time = ls_afru_sf016-isbz.
-          ls_timeticket-proc_start_date = ls_afru_sf016-isbd.
-          ls_timeticket-proc_start_time = ls_afru_sf016-isbz.
-          ls_timeticket-proc_fin_date = ls_zabsf_pp016-iebd.
-          ls_timeticket-proc_fin_time = ls_zabsf_pp016-iebz.
-          ls_timeticket-break_unit = c_min.
-          ls_timeticket-break_time = l_activity.
-          ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
-          ls_timeticket-conf_text = lv_workstation_var.
-
-*        Times to confirm
-          append ls_timeticket to lt_timeticket.
-
-*        Confirmation to create break
-          describe table lt_timeticket lines l_conf_break.
-
-        else.
-*        Get activities types
-          call method me->get_act_to_conf
-            exporting
-              aufpl       = aufpl
-              aplzl       = aplzl
-              actv_value  = l_activity
-              afvv        = ls_afvv
-              nr_operator = l_nr_operator_calc
-            importing
-              ile01       = l_ile01
-              ism01       = l_ism01
-              ile02       = l_ile02
-              ism02       = l_ism02
-              ile03       = l_ile03
-              ism03       = l_ism03
-              ile04       = l_ile04
-              ism04       = l_ism04
-              ile05       = l_ile05
-              ism05       = l_ism05
-              ile06       = l_ile06
-              ism06       = l_ism06
-            changing
-              return_tab  = return_tab.
-
-*        Fill values calculated
-          ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
-          ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
-          ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
-          ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
-          ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
-          ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
-          ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
-          ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
-          ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
-          ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
-          ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
-          ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
-
-*        Confirmation counter
-          ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-*        Times to confirm
-          append ls_timeticket to lt_timeticket.
-        endif.
-
-*      Time to save
-        append ls_zabsf_pp016 to lt_zabsf_pp016.
-
-*      Clear card active
-        data(l_clear_card) = abap_true.
-
-*      Confirmation to create card
-        describe table lt_timeticket lines l_conf_create.
-      when end_prod. "End Production
-        clear ls_zabsf_pp016.
-
-*      Move initial data
-        move-corresponding ls_pp_sf016_ini to ls_zabsf_pp016.
-
-*      Fill data to finish production
-        ls_zabsf_pp016-iebd = date.
-        ls_zabsf_pp016-iebz = l_time.
-        ls_zabsf_pp016-fin_conf = 'X'.
-        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
-
-        if ls_afru_sf016-isbd is not initial and ls_afru_sf016-isbz is not initial.
-*        Calculated activities time
-          call method me->calc_minutes
-            exporting
-              date       = ls_afru_sf016-isbd
-              time       = ls_afru_sf016-isbz
-              proc_date  = ls_zabsf_pp016-iebd
-              proc_time  = ls_zabsf_pp016-iebz
-            changing
-              activity   = l_activity
-              return_tab = return_tab.
-
-*        Check if exist erro in calcutation
-          read table return_tab into ls_return_tab with key type = 'E'.
-          if sy-subrc = 0.
-            exit.
-          endif.
-
-*        Get activities types
-          call method me->get_act_to_conf
-            exporting
-              aufpl       = aufpl
-              aplzl       = aplzl
-              actv_value  = l_activity
-              afvv        = ls_afvv
-              nr_operator = l_nr_operator_calc
-            importing
-              ile01       = l_ile01
-              ism01       = l_ism01
-              ile02       = l_ile02
-              ism02       = l_ism02
-              ile03       = l_ile03
-              ism03       = l_ism03
-              ile04       = l_ile04
-              ism04       = l_ism04
-              ile05       = l_ile05
-              ism05       = l_ism05
-              ile06       = l_ile06
-              ism06       = l_ism06
-            changing
-              return_tab  = return_tab.
-
-*        Fill values calculated
-          ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
-          ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
-          ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
-          ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
-          ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
-          ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
-          ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
-          ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
-          ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
-          ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
-          ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
-          ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
-        endif.
-
-*      Confirmation counter
-        ls_zabsf_pp016-rmzhl = l_rmzhl.
-
-*      Time to save
-        append ls_zabsf_pp016 to lt_zabsf_pp016.
-
-        clear ls_timeticket.
-
-*      Move initial data
-        move-corresponding ls_timeticket_ini to ls_timeticket.
-
-*      Fill data to finish production
+        ls_timeticket-exec_start_date = date.
+        ls_timeticket-exec_start_time = l_time.
         ls_timeticket-proc_fin_date = date.
         ls_timeticket-proc_fin_time = l_time.
-        ls_timeticket-fin_conf = 'X'.
+        ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
+        ls_timeticket-conf_text = lv_workstation_var.
+*        Times to confirm
+        IF ls_timeticket-conf_no NE '0000000000'.
+          APPEND ls_timeticket TO lt_timeticket.
+        ENDIF.
+
+*        Create new counter
+        ADD 1 TO l_rmzhl.
+
+        CLEAR ls_zabsf_pp016.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
+
+*        Fill data to stop reason
+        ls_zabsf_pp016-stprsnid = stprsnid.
+        ls_zabsf_pp016-isbd = date.
+        ls_zabsf_pp016-isbz = l_time.
+
+*        Confirmation counter
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
+
+*        Time to save
+        IF ls_zabsf_pp016-conf_no NE '0000000000'.
+          APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
+        ENDIF.
+      ENDIF.
+    WHEN end_parc. " Fim parcial
+*      Check if Start Preparation is initialized
+      IF ls_afru_sf016-isdd IS NOT INITIAL.
+        CLEAR ls_zabsf_pp016.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
+
+        ls_zabsf_pp016-ierd = date.
+        ls_zabsf_pp016-ierz = l_time.
+        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+
+*        Calculated activities time
+        CALL METHOD me->calc_minutes
+          EXPORTING
+            date       = ls_afru_sf016-isdd
+            time       = ls_afru_sf016-isdz
+            proc_date  = ls_zabsf_pp016-ierd
+            proc_time  = ls_zabsf_pp016-ierz
+          CHANGING
+            activity   = l_activity
+            return_tab = return_tab.
+
+*        Check if exist erro in calcutation
+        READ TABLE return_tab INTO ls_return_tab WITH KEY type = 'E'.
+        IF sy-subrc = 0.
+          EXIT.
+        ENDIF.
+
+*        Confirmation counter
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
+
+        CLEAR ls_timeticket.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
+
+*        Fill Confirmed date for End of Execution
+        ls_timeticket-exec_start_date = date.
+        ls_timeticket-exec_start_time = l_time.
+        ls_timeticket-setup_fin_date = date.
+        ls_timeticket-setup_fin_time = l_time.
         ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
         ls_timeticket-conf_text = lv_workstation_var.
 
-*      Times to confirm
-        append ls_timeticket to lt_timeticket.
-    endcase.
+*      Check if Start Production is initialized
+      ELSEIF ls_afru_sf016-isbd IS NOT INITIAL.
+        CLEAR ls_zabsf_pp016.
 
-    if lt_timeticket[] is not initial.
+*        Move initial data
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
+
+        ls_zabsf_pp016-iebd = date.
+        ls_zabsf_pp016-iebz = l_time.
+        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+
+        CALL METHOD me->calc_minutes
+          EXPORTING
+            date       = ls_afru_sf016-isbd
+            time       = ls_afru_sf016-isbz
+            proc_date  = ls_zabsf_pp016-iebd
+            proc_time  = ls_zabsf_pp016-iebz
+          CHANGING
+            activity   = l_activity
+            return_tab = return_tab.
+
+*        Check if exist erro in calcutation
+        READ TABLE return_tab INTO ls_return_tab WITH KEY type = 'E'.
+        IF sy-subrc = 0.
+          EXIT.
+        ENDIF.
+
+*        Confirmation counter
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
+
+        CLEAR ls_timeticket.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
+
+*        Fill Confirmed date for End Production
+        ls_timeticket-exec_start_date = date.
+        ls_timeticket-exec_start_time = l_time.
+        ls_timeticket-proc_fin_date = date.
+        ls_timeticket-proc_fin_time = l_time.
+        ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
+        ls_timeticket-conf_text = lv_workstation_var.
+      ENDIF.
+
+*      Check stop reason is not inital
+      IF ls_afru_sf016-stprsnid IS NOT INITIAL.
+        CLEAR ls_zabsf_pp016.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
+
+*        Shift ID
+        ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+*        Cause ID
+        ls_zabsf_pp016-stprsnid = ls_afru_sf016-stprsnid.
+
+*        Add time to internal table
+        ls_zabsf_pp016-stoptime = l_activity.
+*          ls_ZABSF_PP016-stopunit = ls_afvv-vge01.
+        ls_zabsf_pp016-stopunit = c_min.
+
+*        Confirmation counter
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
+
+        CLEAR ls_timeticket.
+
+*        Move initial data
+        MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
+
+        IF ls_zabsf_pp016-iebd IS INITIAL.
+          ls_zabsf_pp016-iebd = date.
+        ENDIF.
+
+        IF ls_zabsf_pp016-iebz IS INITIAL.
+          ls_zabsf_pp016-iebz = l_time.
+        ENDIF.
+
+        ls_timeticket-exec_start_date = ls_afru_sf016-isbd.
+        ls_timeticket-exec_start_time = ls_afru_sf016-isbz.
+        ls_timeticket-proc_start_date = ls_afru_sf016-isbd.
+        ls_timeticket-proc_start_time = ls_afru_sf016-isbz.
+        ls_timeticket-proc_fin_date = ls_zabsf_pp016-iebd.
+        ls_timeticket-proc_fin_time = ls_zabsf_pp016-iebz.
+        ls_timeticket-break_unit = c_min.
+        ls_timeticket-break_time = l_activity.
+        ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
+        ls_timeticket-conf_text = lv_workstation_var.
+
+*        Times to confirm
+        IF ls_timeticket-conf_no NE '0000000000'.
+          APPEND ls_timeticket TO lt_timeticket.
+        ENDIF.
+
+*        Confirmation to create break
+        DESCRIBE TABLE lt_timeticket LINES l_conf_break.
+
+      ELSE.
+*        Get activities types
+        CALL METHOD me->get_act_to_conf
+          EXPORTING
+            aufpl       = aufpl
+            aplzl       = aplzl
+            actv_value  = l_activity
+            afvv        = ls_afvv
+            nr_operator = l_nr_operator_calc
+          IMPORTING
+            ile01       = l_ile01
+            ism01       = l_ism01
+            ile02       = l_ile02
+            ism02       = l_ism02
+            ile03       = l_ile03
+            ism03       = l_ism03
+            ile04       = l_ile04
+            ism04       = l_ism04
+            ile05       = l_ile05
+            ism05       = l_ism05
+            ile06       = l_ile06
+            ism06       = l_ism06
+          CHANGING
+            return_tab  = return_tab.
+
+*        Fill values calculated
+        ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
+        ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
+        ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
+        ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
+        ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
+        ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
+        ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
+        ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
+        ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
+        ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
+        ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
+        ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
+
+*        Confirmation counter
+        ls_zabsf_pp016-rmzhl = l_rmzhl.
+
+*        Times to confirm
+        IF ls_timeticket-conf_no NE '0000000000'.
+          APPEND ls_timeticket TO lt_timeticket.
+        ENDIF.
+      ENDIF.
+
+*      Time to save
+      IF ls_zabsf_pp016-conf_no NE '0000000000'.
+        APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
+      ENDIF.
+
+*      Clear card active
+      DATA(l_clear_card) = abap_true.
+
+*      Confirmation to create card
+      DESCRIBE TABLE lt_timeticket LINES l_conf_create.
+    WHEN end_prod. "End Production
+      CLEAR ls_zabsf_pp016.
+
+*     Move initial data
+      MOVE-CORRESPONDING ls_pp_sf016_ini TO ls_zabsf_pp016.
+
+*     Fill data to finish production
+      ls_zabsf_pp016-iebd = date.
+      ls_zabsf_pp016-iebz = l_time.
+      ls_zabsf_pp016-fin_conf = 'X'.
+      ls_zabsf_pp016-shiftid = ls_afru_sf016-shiftid.
+
+      IF ls_afru_sf016-isbd IS NOT INITIAL AND ls_afru_sf016-isbz IS NOT INITIAL.
+*       Calculated activities time
+        CALL METHOD me->calc_minutes
+          EXPORTING
+            date       = ls_afru_sf016-isbd
+            time       = ls_afru_sf016-isbz
+            proc_date  = ls_zabsf_pp016-iebd
+            proc_time  = ls_zabsf_pp016-iebz
+          CHANGING
+            activity   = l_activity
+            return_tab = return_tab.
+
+*        Check if exist erro in calcutation
+        READ TABLE return_tab INTO ls_return_tab WITH KEY type = 'E'.
+        IF sy-subrc = 0.
+          EXIT.
+        ENDIF.
+
+*        Get activities types
+        CALL METHOD me->get_act_to_conf
+          EXPORTING
+            aufpl       = aufpl
+            aplzl       = aplzl
+            actv_value  = l_activity
+            afvv        = ls_afvv
+            nr_operator = l_nr_operator_calc
+          IMPORTING
+            ile01       = l_ile01
+            ism01       = l_ism01
+            ile02       = l_ile02
+            ism02       = l_ism02
+            ile03       = l_ile03
+            ism03       = l_ism03
+            ile04       = l_ile04
+            ism04       = l_ism04
+            ile05       = l_ile05
+            ism05       = l_ism05
+            ile06       = l_ile06
+            ism06       = l_ism06
+          CHANGING
+            return_tab  = return_tab.
+
+*        Fill values calculated
+        ls_zabsf_pp016-ile01 = ls_timeticket-conf_acti_unit1 = l_ile01.
+        ls_zabsf_pp016-ism01 = ls_timeticket-conf_activity1 = l_ism01.
+        ls_zabsf_pp016-ile02 = ls_timeticket-conf_acti_unit2 = l_ile02.
+        ls_zabsf_pp016-ism02 = ls_timeticket-conf_activity2 = l_ism02.
+        ls_zabsf_pp016-ile03 = ls_timeticket-conf_acti_unit3 = l_ile03.
+        ls_zabsf_pp016-ism03 = ls_timeticket-conf_activity3 = l_ism03. "* l_nr_operator.
+        ls_zabsf_pp016-ile04 = ls_timeticket-conf_acti_unit4 = l_ile04.
+        ls_zabsf_pp016-ism04 = ls_timeticket-conf_activity4 = l_ism04.
+        ls_zabsf_pp016-ile05 = ls_timeticket-conf_acti_unit5 = l_ile05.
+        ls_zabsf_pp016-ism05 = ls_timeticket-conf_activity5 = l_ism05.
+        ls_zabsf_pp016-ile06 = ls_timeticket-conf_acti_unit6 = l_ile06.
+        ls_zabsf_pp016-ism06 = ls_timeticket-conf_activity6 = l_ism06.
+      ENDIF.
+
+*      Confirmation counter
+      ls_zabsf_pp016-rmzhl = l_rmzhl.
+
+*      Time to save
+      APPEND ls_zabsf_pp016 TO lt_zabsf_pp016.
+
+      CLEAR ls_timeticket.
+
+*      Move initial data
+      MOVE-CORRESPONDING ls_timeticket_ini TO ls_timeticket.
+
+*      Fill data to finish production
+*      ls_timeticket-proc_fin_date = date.
+*      ls_timeticket-proc_fin_time = l_time.
+      ls_timeticket-fin_conf = 'X'.
+      ls_timeticket-kaptprog = ls_afru_sf016-shiftid.
+      ls_timeticket-conf_text = lv_workstation_var.
+
+*     Times to confirm
+      APPEND ls_timeticket TO lt_timeticket.
+
+  ENDCASE.
+
+
+  IF lt_timeticket[] IS NOT INITIAL.
+
+" No inicio de produção não fazer movimentação de quantidades - nãoi fazer confirmações de quantidades a 0.
+" Fazer confirmação de quantidade quando o status igual a "END_PROD" - fecho final
+    IF actv_id EQ end_prod.
 *    Create confirmation
-      call function 'BAPI_PRODORDCONF_CREATE_TT'
-        exporting
+      CALL FUNCTION 'BAPI_PRODORDCONF_CREATE_TT'
+        EXPORTING
           post_wrong_entries = c_post_wrong_entries
-        importing
+        IMPORTING
           return             = ls_return
-        tables
+        TABLES
           timetickets        = lt_timeticket
           detail_return      = lt_detail_return.
 
-      if ls_return is initial.
-*      Commit to save records
-        call function 'BAPI_TRANSACTION_COMMIT'
-          exporting
+      IF ls_return IS INITIAL.
+**      Commit to save records
+        CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+          EXPORTING
             wait = 'X'.
+      ENDIF.
+    ENDIF.
 
-        if lt_zabsf_pp016[] is not initial.
-*        Insert new lines
-          insert zabsf_pp016 from table lt_zabsf_pp016.
-        endif.
+    IF lt_zabsf_pp016[] IS NOT INITIAL.
+**    Insert new lines
+      INSERT zabsf_pp016 FROM TABLE lt_zabsf_pp016.
+    ENDIF.
 
-*      Save status of operation in database
-        call method lref_sf_status->status_object
-          exporting
+**    Save status of operation in database
+    CALL METHOD lref_sf_status->status_object
+      EXPORTING
+        arbpl      = arbpl
+        aufnr      = aufnr
+        vornr      = vornr
+        objty      = 'OV'
+        method     = 'S'
+        actionid   = actionid
+        stprsnid   = stprsnid
+      CHANGING
+        return_tab = return_tab.
+*  ENDIF.
+
+    LOOP AT lt_detail_return INTO ls_detail_return.
+      CLEAR ls_return.
+
+      ls_return-type = ls_detail_return-type.
+      ls_return-id = ls_detail_return-id.
+      ls_return-number = ls_detail_return-number.
+      ls_return-message = ls_detail_return-message.
+      ls_return-message_v1 = ls_detail_return-message_v1.
+      ls_return-message_v2 = ls_detail_return-message_v2.
+      ls_return-message_v3 = ls_detail_return-message_v3.
+      ls_return-message_v4 = ls_detail_return-message_v4.
+
+      APPEND ls_return TO return_tab.
+
+      IF ls_detail_return-type EQ 'I' OR ls_detail_return-type EQ 'S'.
+        IF ls_detail_return-conf_no IS NOT INITIAL AND ls_detail_return-conf_cnt IS NOT INITIAL.
+          CLEAR ls_conf_data.
+
+*          Work center
+          ls_conf_data-arbpl = arbpl.
+*          Production order
+          ls_conf_data-aufnr = aufnr.
+*          Production order operation
+          ls_conf_data-vornr = vornr.
+*          Confirmation number
+          ls_conf_data-conf_no = ls_detail_return-conf_no.
+*          Confirmation counter
+          ls_conf_data-conf_cnt = ls_detail_return-conf_cnt.
+*          Schedule
+          ls_conf_data-schedule_id = schedule_id.
+*          Regime
+          ls_conf_data-regime_id = regime_id.
+*          Initial counter
+          ls_conf_data-count_ini = count_ini.
+*          Final counter
+          IF count_fin IS NOT INITIAL.
+            ls_conf_data-count_fin = count_fin.
+          ENDIF.
+
+          IF l_card_create IS NOT INITIAL AND l_conf_create EQ ls_detail_return-row.
+*            Create number card
+            CONCATENATE ls_detail_return-conf_no ls_detail_return-conf_cnt INTO ls_conf_data-ficha.
+
+            CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+              EXPORTING
+                input  = ls_conf_data-ficha
+              IMPORTING
+                output = ls_conf_data-ficha.
+
+*            Check if exist record save in table ZABSF_PP066 - Card
+            SELECT SINGLE *
+              FROM zabsf_pp066
+              INTO @DATA(ls_batch_manag)
+             WHERE werks EQ @inputobj-werks
+               AND aufnr EQ @aufnr
+               AND vornr EQ @vornr.
+
+            IF sy-subrc EQ 0.
+*              Update exist record in table with card created
+*                update zabsf_pp066 from @( value #( base ls_batch_manag ficha = ls_conf_data-ficha ) ).
+              ls_batch_manag-ficha = ls_conf_data-ficha.
+              UPDATE zabsf_pp066 FROM ls_batch_manag.
+
+              COMMIT WORK AND WAIT.
+            ELSE.
+*              Insert new record with card active for production order
+*                insert zabsf_pp066 from table @( value #( ( werks = inputobj-werks
+*                                                             aufnr = aufnr
+*                                                             vornr = vornr
+*                                                             ficha = ls_conf_data-ficha ) ) ).
+              ls_zabsf_pp066-werks = inputobj-werks.
+              ls_zabsf_pp066-aufnr = aufnr.
+              ls_zabsf_pp066-vornr = vornr.
+              ls_zabsf_pp066-ficha = ls_conf_data-ficha.
+              INSERT INTO zabsf_pp066 VALUES ls_zabsf_pp066.
+
+              COMMIT WORK AND WAIT.
+            ENDIF.
+          ELSE.
+*            Get card active
+            SELECT SINGLE ficha
+              FROM zabsf_pp066
+              INTO @ls_conf_data-ficha
+             WHERE werks EQ @inputobj-werks
+               AND aufnr EQ @aufnr
+               AND vornr EQ @vornr.
+          ENDIF.
+
+*          Update with confirmation number
+          LOOP AT lt_zabsf_pp016 INTO DATA(ls_pp_sf016) WHERE stprsnid IS INITIAL.
+*            Update exist record in table with card created
+*              update zabsf_pp016 from @( value #( base ls_pp_sf016 conf_no = ls_detail_return-conf_no
+*                                                                    conf_cnt = ls_detail_return-conf_cnt ) ).
+            ls_pp_sf016-conf_no = ls_detail_return-conf_no.
+            ls_pp_sf016-conf_cnt = ls_detail_return-conf_cnt.
+            ls_pp_sf016-equipment = iv_equipment.
+            UPDATE zabsf_pp016 FROM ls_pp_sf016.
+
+            IF sy-subrc EQ 0.
+              COMMIT WORK AND WAIT.
+            ENDIF.
+          ENDLOOP.
+
+*          Cause ID
+          IF l_conf_break IS NOT INITIAL AND l_conf_break EQ ls_detail_return-row.
+            ls_conf_data-stprsnid = ls_afru_sf016-stprsnid.
+
+*            Update exist record in table with card created
+*              update zabsf_pp016 from @( value #( base ls_afru_sf016 conf_no = ls_detail_return-conf_no
+*                                                                      conf_cnt = ls_detail_return-conf_cnt ) ).
+            ls_afru_sf016-conf_no = ls_detail_return-conf_no.
+            ls_afru_sf016-conf_cnt = ls_detail_return-conf_cnt.
+*            ls_pp_sf016-equipment = iv_equipment.
+            UPDATE zabsf_pp016 FROM ls_afru_sf016.
+            IF sy-subrc EQ 0.
+              COMMIT WORK AND WAIT.
+            ENDIF.
+
+            CLEAR ls_pp_sf016.
+
+*            Update with confirmation number
+            LOOP AT lt_zabsf_pp016 INTO ls_pp_sf016 WHERE stprsnid IS NOT INITIAL.
+*              Update exist record in table with card created
+*                update zabsf_pp016 from @( value #( base ls_pp_sf016 conf_no = ls_detail_return-conf_no
+*                                                                      conf_cnt = ls_detail_return-conf_cnt ) ).
+              ls_pp_sf016-conf_no = ls_detail_return-conf_no.
+              ls_pp_sf016-conf_cnt = ls_detail_return-conf_cnt.
+*              ls_pp_sf016-equipment = iv_equipment.
+              UPDATE zabsf_pp016 FROM ls_pp_sf016.
+
+              IF sy-subrc EQ 0.
+                COMMIT WORK AND WAIT.
+              ENDIF.
+            ENDLOOP.
+          ENDIF.
+
+*          Get shift ID
+          READ TABLE lt_timeticket INTO ls_timeticket INDEX ls_detail_return-row.
+
+          IF sy-subrc EQ 0.
+*            Shift ID
+            ls_conf_data-shiftid = ls_timeticket-kaptprog.
+          ENDIF.
+
+
+          IF lref_sf_prdord IS NOT BOUND.
+*            Create object
+            CREATE OBJECT lref_sf_prdord
+              EXPORTING
+                initial_refdt = refdt
+                input_object  = inputobj.
+
+          ENDIF.
+
+*          Save aditional data of confirmation
+          CALL METHOD lref_sf_prdord->save_data_confirmation
+            EXPORTING
+              is_conf_data = ls_conf_data
+            CHANGING
+              return_tab   = return_tab.
+
+          IF l_clear_card IS NOT INITIAL AND l_conf_create EQ ls_detail_return-row.
+            CLEAR ls_batch_manag.
+
+*            Check if exist record save in table ZABSF_PP066 - Card
+            SELECT SINGLE *
+              FROM zabsf_pp066
+              INTO @ls_batch_manag
+             WHERE werks EQ @inputobj-werks
+               AND aufnr EQ @aufnr
+               AND vornr EQ @vornr.
+
+            IF sy-subrc EQ 0.
+*              Clear card active
+*                update zabsf_pp066 from @( value #( base ls_batch_manag ficha = space ) ).
+              ls_batch_manag-ficha = space.
+              UPDATE zabsf_pp066 FROM ls_batch_manag.
+
+              COMMIT WORK AND WAIT.
+            ENDIF.
+          ENDIF.
+
+          IF actv_id EQ end_parc.
+*            Get first operator assigned to Production Order
+            SELECT oprid, udate, utime
+              FROM zabsf_pp014
+              INTO TABLE @DATA(lt_pp_sf014)
+             WHERE arbpl  EQ @arbpl
+               AND aufnr  EQ @aufnr
+               AND vornr  EQ @vornr
+               AND status EQ 'A'
+               AND tipord EQ 'N'.
+
+            SORT lt_pp_sf014 BY udate DESCENDING utime DESCENDING.
+
+            IF no_clear_operators_from_order EQ abap_false.
+
+              LOOP AT lt_pp_sf014 INTO DATA(ls_pp_sf014).
+                REFRESH: lt_operator_tab,
+                         lt_return_tab.
+
+                CLEAR ls_operator_tab.
+
+                ls_operator_tab-oprid = ls_pp_sf014-oprid.
+                ls_operator_tab-status = 'I'.
+
+                APPEND ls_operator_tab TO lt_operator_tab.
+
+*              Get operators
+                CALL FUNCTION 'ZABSF_PP_SETOPERATORS'
+                  EXPORTING
+                    arbpl        = arbpl
+                    aufnr        = aufnr
+                    vornr        = vornr
+                    operator_tab = lt_operator_tab
+                    inputobj     = inputobj
+                  IMPORTING
+                    return_tab   = lt_return_tab.
+              ENDLOOP.
+            ENDIF.
+          ENDIF.
+        ENDIF.
+      ELSE.
+        CALL METHOD zabsf_pp_cl_log=>add_message
+          EXPORTING
+            msgty      = 'E'
+            msgno      = '012'
+          CHANGING
+            return_tab = return_tab.
+
+        EXIT.
+      ENDIF.
+    ENDLOOP.
+  ELSE.
+    IF lt_zabsf_pp016[] IS NOT INITIAL.
+      INSERT zabsf_pp016 FROM TABLE lt_zabsf_pp016.
+
+      IF sy-subrc EQ 0.
+*        Save status of operation in database
+        CALL METHOD lref_sf_status->status_object
+          EXPORTING
             arbpl      = arbpl
             aufnr      = aufnr
             vornr      = vornr
             objty      = 'OV'
             method     = 'S'
             actionid   = actionid
-          changing
+          CHANGING
             return_tab = return_tab.
-      endif.
-
-      loop at lt_detail_return into ls_detail_return.
-        clear ls_return.
-
-        ls_return-type = ls_detail_return-type.
-        ls_return-id = ls_detail_return-id.
-        ls_return-number = ls_detail_return-number.
-        ls_return-message = ls_detail_return-message.
-        ls_return-message_v1 = ls_detail_return-message_v1.
-        ls_return-message_v2 = ls_detail_return-message_v2.
-        ls_return-message_v3 = ls_detail_return-message_v3.
-        ls_return-message_v4 = ls_detail_return-message_v4.
-
-        append ls_return to return_tab.
-
-        if ls_detail_return-type eq 'I' or ls_detail_return-type eq 'S'.
-          if ls_detail_return-conf_no is not initial and ls_detail_return-conf_cnt is not initial.
-            clear ls_conf_data.
-
-*          Work center
-            ls_conf_data-arbpl = arbpl.
-*          Production order
-            ls_conf_data-aufnr = aufnr.
-*          Production order operation
-            ls_conf_data-vornr = vornr.
-*          Confirmation number
-            ls_conf_data-conf_no = ls_detail_return-conf_no.
-*          Confirmation counter
-            ls_conf_data-conf_cnt = ls_detail_return-conf_cnt.
-*          Schedule
-            ls_conf_data-schedule_id = schedule_id.
-*          Regime
-            ls_conf_data-regime_id = regime_id.
-*          Initial counter
-            ls_conf_data-count_ini = count_ini.
-*          Final counter
-            if count_fin is not initial.
-              ls_conf_data-count_fin = count_fin.
-            endif.
-
-            if l_card_create is not initial and l_conf_create eq ls_detail_return-row.
-*            Create number card
-              concatenate ls_detail_return-conf_no ls_detail_return-conf_cnt into ls_conf_data-ficha.
-
-              call function 'CONVERSION_EXIT_ALPHA_INPUT'
-                exporting
-                  input  = ls_conf_data-ficha
-                importing
-                  output = ls_conf_data-ficha.
-
-*            Check if exist record save in table ZABSF_PP066 - Card
-              select single *
-                from zabsf_pp066
-                into @data(ls_batch_manag)
-               where werks eq @inputobj-werks
-                 and aufnr eq @aufnr
-                 and vornr eq @vornr.
-
-              if sy-subrc eq 0.
-*              Update exist record in table with card created
-*                update zabsf_pp066 from @( value #( base ls_batch_manag ficha = ls_conf_data-ficha ) ).
-                ls_batch_manag-ficha = ls_conf_data-ficha.
-                update zabsf_pp066 from ls_batch_manag.
-
-                commit work and wait.
-              else.
-*              Insert new record with card active for production order
-*                insert zabsf_pp066 from table @( value #( ( werks = inputobj-werks
-*                                                             aufnr = aufnr
-*                                                             vornr = vornr
-*                                                             ficha = ls_conf_data-ficha ) ) ).
-                ls_zabsf_pp066-werks = inputobj-werks.
-                ls_zabsf_pp066-aufnr = aufnr.
-                ls_zabsf_pp066-vornr = vornr.
-                ls_zabsf_pp066-ficha = ls_conf_data-ficha.
-                insert into zabsf_pp066 values ls_zabsf_pp066.
-
-                commit work and wait.
-              endif.
-            else.
-*            Get card active
-              select single ficha
-                from zabsf_pp066
-                into @ls_conf_data-ficha
-               where werks eq @inputobj-werks
-                 and aufnr eq @aufnr
-                 and vornr eq @vornr.
-            endif.
-
-*          Update with confirmation number
-            loop at lt_zabsf_pp016 into data(ls_pp_sf016) where stprsnid is initial.
-*            Update exist record in table with card created
-*              update zabsf_pp016 from @( value #( base ls_pp_sf016 conf_no = ls_detail_return-conf_no
-*                                                                    conf_cnt = ls_detail_return-conf_cnt ) ).
-              ls_pp_sf016-conf_no = ls_detail_return-conf_no.
-              ls_pp_sf016-conf_cnt = ls_detail_return-conf_cnt.
-              update zabsf_pp016 from ls_pp_sf016.
-
-              if sy-subrc eq 0.
-                commit work and wait.
-              endif.
-            endloop.
-
-*          Cause ID
-            if l_conf_break is not initial and l_conf_break eq ls_detail_return-row.
-              ls_conf_data-stprsnid = ls_afru_sf016-stprsnid.
-
-*            Update exist record in table with card created
-*              update zabsf_pp016 from @( value #( base ls_afru_sf016 conf_no = ls_detail_return-conf_no
-*                                                                      conf_cnt = ls_detail_return-conf_cnt ) ).
-              ls_afru_sf016-conf_no = ls_detail_return-conf_no.
-              ls_afru_sf016-conf_cnt = ls_detail_return-conf_cnt.
-              update zabsf_pp016 from ls_afru_sf016.
-              if sy-subrc eq 0.
-                commit work and wait.
-              endif.
-
-              clear ls_pp_sf016.
-
-*            Update with confirmation number
-              loop at lt_zabsf_pp016 into ls_pp_sf016 where stprsnid is not initial.
-*              Update exist record in table with card created
-*                update zabsf_pp016 from @( value #( base ls_pp_sf016 conf_no = ls_detail_return-conf_no
-*                                                                      conf_cnt = ls_detail_return-conf_cnt ) ).
-                ls_pp_sf016-conf_no = ls_detail_return-conf_no.
-                ls_pp_sf016-conf_cnt = ls_detail_return-conf_cnt.
-                update zabsf_pp016 from ls_pp_sf016.
-
-                if sy-subrc eq 0.
-                  commit work and wait.
-                endif.
-              endloop.
-            endif.
-
-*          Get shift ID
-            read table lt_timeticket into ls_timeticket index ls_detail_return-row.
-
-            if sy-subrc eq 0.
-*            Shift ID
-              ls_conf_data-shiftid = ls_timeticket-kaptprog.
-            endif.
-
-
-            if lref_sf_prdord is not bound.
-*            Create object
-              create object lref_sf_prdord
-                exporting
-                  initial_refdt = refdt
-                  input_object  = inputobj.
-
-            endif.
-
-*          Save aditional data of confirmation
-            call method lref_sf_prdord->save_data_confirmation
-              exporting
-                is_conf_data = ls_conf_data
-              changing
-                return_tab   = return_tab.
-
-            if l_clear_card is not initial and l_conf_create eq ls_detail_return-row.
-              clear ls_batch_manag.
-
-*            Check if exist record save in table ZABSF_PP066 - Card
-              select single *
-                from zabsf_pp066
-                into @ls_batch_manag
-               where werks eq @inputobj-werks
-                 and aufnr eq @aufnr
-                 and vornr eq @vornr.
-
-              if sy-subrc eq 0.
-*              Clear card active
-*                update zabsf_pp066 from @( value #( base ls_batch_manag ficha = space ) ).
-                ls_batch_manag-ficha = space.
-                update zabsf_pp066 from ls_batch_manag.
-
-                commit work and wait.
-              endif.
-            endif.
-
-            if actv_id eq end_parc.
-*            Get first operator assigned to Production Order
-              select oprid, udate, utime
-                from zabsf_pp014
-                into table @data(lt_pp_sf014)
-               where arbpl  eq @arbpl
-                 and aufnr  eq @aufnr
-                 and vornr  eq @vornr
-                 and status eq 'A'
-                 and tipord eq 'N'.
-
-              sort lt_pp_sf014 by udate descending utime descending.
-
-              if no_clear_operators_from_order eq abap_false.
-
-                loop at lt_pp_sf014 into data(ls_pp_sf014).
-                  refresh: lt_operator_tab,
-                           lt_return_tab.
-
-                  clear ls_operator_tab.
-
-                  ls_operator_tab-oprid = ls_pp_sf014-oprid.
-                  ls_operator_tab-status = 'I'.
-
-                  append ls_operator_tab to lt_operator_tab.
-
-*              Get operators
-                  call function 'ZABSF_PP_SETOPERATORS'
-                    exporting
-                      arbpl        = arbpl
-                      aufnr        = aufnr
-                      vornr        = vornr
-                      operator_tab = lt_operator_tab
-                      inputobj     = inputobj
-                    importing
-                      return_tab   = lt_return_tab.
-                endloop.
-              endif.
-            endif.
-          endif.
-        else.
-          call method zabsf_pp_cl_log=>add_message
-            exporting
-              msgty      = 'E'
-              msgno      = '012'
-            changing
-              return_tab = return_tab.
-
-          exit.
-        endif.
-      endloop.
-    else.
-      if lt_zabsf_pp016[] is not initial.
-        insert zabsf_pp016 from table lt_zabsf_pp016.
-
-        if sy-subrc eq 0.
-*        Save status of operation in database
-          call method lref_sf_status->status_object
-            exporting
-              arbpl      = arbpl
-              aufnr      = aufnr
-              vornr      = vornr
-              objty      = 'OV'
-              method     = 'S'
-              actionid   = actionid
-            changing
-              return_tab = return_tab.
 
 *        Insert data successfully
-          call method zabsf_pp_cl_log=>add_message
-            exporting
-              msgty      = 'S'
-              msgno      = '013'
-            changing
-              return_tab = return_tab.
-        else.
-          call method zabsf_pp_cl_log=>add_message
-            exporting
-              msgty      = 'E'
-              msgno      = '012'
-            changing
-              return_tab = return_tab.
+        CALL METHOD zabsf_pp_cl_log=>add_message
+          EXPORTING
+            msgty      = 'S'
+            msgno      = '013'
+          CHANGING
+            return_tab = return_tab.
+      ELSE.
+        CALL METHOD zabsf_pp_cl_log=>add_message
+          EXPORTING
+            msgty      = 'E'
+            msgno      = '012'
+          CHANGING
+            return_tab = return_tab.
 
-          exit.
-        endif.
-      endif.
-    endif.
+        EXIT.
+      ENDIF.
+    ENDIF.
+  ENDIF.
 
-    clear: ls_zabsf_pp021,
-           l_count.
+  CLEAR: ls_zabsf_pp021,
+         l_count.
 
 *  Check if all operation had status different of STOP_PROD
-    select single status_next
-      from zabsf_pp022
-      into (@data(l_status_next))
-     where objty       eq 'OV'
-       and status_last eq @space
-       and status_next ne @space.
+  SELECT SINGLE status_next
+    FROM zabsf_pp022
+    INTO (@DATA(l_status_next))
+   WHERE objty       EQ 'OV'
+     AND status_last EQ @space
+     AND status_next NE @space.
 
-    refresh lt_reg_oper.
+  REFRESH lt_reg_oper.
 
 *  Get status of operation
-    select *
-      from zabsf_pp021
-      into table @data(lt_zabsf_pp021)
-     where arbpl       eq @arbpl
-       and status_oper ne @l_status_next
-       and status_oper ne 'CONC'
-       and status_oper ne 'AGU'.
+  SELECT *
+    FROM zabsf_pp021
+    INTO TABLE @DATA(lt_zabsf_pp021)
+   WHERE arbpl       EQ @arbpl
+     AND status_oper NE @l_status_next
+     AND status_oper NE 'CONC'
+     AND status_oper NE 'AGU'.
 
-    lt_reg_oper[] = lt_zabsf_pp021[].
+  lt_reg_oper[] = lt_zabsf_pp021[].
 
-    loop at lt_reg_oper assigning field-symbol(<fs_sf021>).
+  LOOP AT lt_reg_oper ASSIGNING FIELD-SYMBOL(<fs_sf021>).
 *    Get object of operation
-      select single afvc~objnr
-        into @data(l_objnr)
-        from afvc as afvc
-       inner join afko as afko
-          on afko~aufpl eq afvc~aufpl
-       where afko~aufnr eq @<fs_sf021>-aufnr
-         and afvc~vornr eq @<fs_sf021>-vornr.
+    SELECT SINGLE afvc~objnr
+      INTO @DATA(l_objnr)
+      FROM afvc AS afvc
+     INNER JOIN afko AS afko
+        ON afko~aufpl EQ afvc~aufpl
+     WHERE afko~aufnr EQ @<fs_sf021>-aufnr
+       AND afvc~vornr EQ @<fs_sf021>-vornr.
 
-      if l_objnr is not initial.
+    IF l_objnr IS NOT INITIAL.
 *      Check status
-        select *
-          from jest
-          into table @data(lt_jest)
-         where objnr eq @l_objnr
-           and ( stat  eq 'I0045'  "ENTE
-              or stat  eq 'I0009' )"CONF
-           and inact eq @space.
+      SELECT *
+        FROM jest
+        INTO TABLE @DATA(lt_jest)
+       WHERE objnr EQ @l_objnr
+         AND ( stat  EQ 'I0045'  "ENTE
+            OR stat  EQ 'I0009' )"CONF
+         AND inact EQ @space.
 
-        if lt_jest[] is not initial.
+      IF lt_jest[] IS NOT INITIAL.
 *        Update status of operation
-          update zabsf_pp021 set status_oper = 'CONC'
-                            where arbpl eq @arbpl
-                              and aufnr eq @<fs_sf021>-aufnr
-                              and vornr eq @<fs_sf021>-vornr.
+        UPDATE zabsf_pp021 SET status_oper = 'CONC'
+                          WHERE arbpl EQ @arbpl
+                            AND aufnr EQ @<fs_sf021>-aufnr
+                            AND vornr EQ @<fs_sf021>-vornr.
 
 *        Remove line updated
-          if sy-subrc eq 0.
-            delete lt_zabsf_pp021 where arbpl eq arbpl
-                                     and aufnr eq <fs_sf021>-aufnr
-                                     and vornr eq <fs_sf021>-vornr.
-          endif.
-        endif.
-      endif.
-    endloop.
+        IF sy-subrc EQ 0.
+          DELETE lt_zabsf_pp021 WHERE arbpl EQ arbpl
+                                   AND aufnr EQ <fs_sf021>-aufnr
+                                   AND vornr EQ <fs_sf021>-vornr.
+        ENDIF.
+      ENDIF.
+    ENDIF.
+  ENDLOOP.
 
 *  Get total lines
-    describe table lt_zabsf_pp021 lines data(l_lines).
+  DESCRIBE TABLE lt_zabsf_pp021 LINES DATA(l_lines).
 
-    loop at lt_zabsf_pp021 into ls_zabsf_pp021.
+  LOOP AT lt_zabsf_pp021 INTO ls_zabsf_pp021.
 *    Get total operation stop
-      if ls_zabsf_pp021-status_oper eq c_status_stop .
-        add 1 to l_count.
-      endif.
-    endloop.
+    IF ls_zabsf_pp021-status_oper EQ c_status_stop .
+      ADD 1 TO l_count.
+    ENDIF.
+  ENDLOOP.
 
 *  Get current status of Workcenter
-    call method lref_sf_status->status_object
-      exporting
-        arbpl       = arbpl
-        werks       = inputobj-werks
-        objty       = 'CA'
-        method      = 'G'
-      changing
-        status_out  = l_status_out
-        status_desc = l_status_desc
-        stsma_out   = l_stsma_out
-        return_tab  = return_tab.
+  CALL METHOD lref_sf_status->status_object
+    EXPORTING
+      arbpl       = arbpl
+      werks       = inputobj-werks
+      objty       = 'CA'
+      method      = 'G'
+    CHANGING
+      status_out  = l_status_out
+      status_desc = l_status_desc
+      stsma_out   = l_stsma_out
+      return_tab  = return_tab.
 
-    clear l_status_next.
+  CLEAR l_status_next.
 
 *  Get next status
-    select single status_next
-      from zabsf_pp022
-      into @l_status_next
-     where objty       eq 'CA'
-       and status_last eq @l_status_out
-       and stsma       eq @l_stsma_out
-       and actionid    eq @actionid.
+  SELECT SINGLE status_next
+    FROM zabsf_pp022
+    INTO @l_status_next
+   WHERE objty       EQ 'CA'
+     AND status_last EQ @l_status_out
+     AND stsma       EQ @l_stsma_out
+     AND actionid    EQ @actionid.
 
-    "BMR COMMENT 23.07.2020 - não realizar alterações de status no CT
+  "BMR COMMENT 23.07.2020 - não realizar alterações de status no CT
 
 *  Check if all operation had different status and change status of work center
 *    if l_lines eq l_count and actionid ne 'CONC'.
@@ -3341,7 +3378,7 @@ ENDMETHOD.
 *        endif.
 *      endif.
 *    endif.
-  endmethod.
+ENDMETHOD.
 
 
 METHOD ZIF_ABSF_PP_EVENT_ACT~SET_REFDT.

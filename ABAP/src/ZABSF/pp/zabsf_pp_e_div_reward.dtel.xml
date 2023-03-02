@@ -4,20 +4,33 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_DIV_REWARD</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <DOMNAME>FLAG</DOMNAME>
     <HEADLEN>55</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Combi (Prémios)</DDTEXT>
-    <REPTEXT>Combi (Prémios)</REPTEXT>
+    <DDTEXT>Combi (Reward)</DDTEXT>
+    <REPTEXT>Combi (Reward)</REPTEXT>
     <SCRTEXT_S>Combi</SCRTEXT_S>
-    <SCRTEXT_M>Combi (Prémios)</SCRTEXT_M>
-    <SCRTEXT_L>Combi (Prémios)</SCRTEXT_L>
+    <SCRTEXT_M>Combi (Reward)</SCRTEXT_M>
+    <SCRTEXT_L>Combi (Reward)</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Combi (Prémios)</DDTEXT>
+     <REPTEXT>Combi (Prémios)</REPTEXT>
+     <SCRTEXT_S>Combi</SCRTEXT_S>
+     <SCRTEXT_M>Combi (Prémios)</SCRTEXT_M>
+     <SCRTEXT_L>Combi (Prémios)</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

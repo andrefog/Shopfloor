@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_setquality_rpoint.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SETQUALITY_RPOINT.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(RPOINT) TYPE  ZABSF_PP_E_RPOINT
 *"     VALUE(MATNR) TYPE  MATNR
@@ -11,8 +11,8 @@ FUNCTION zabsf_pp_setquality_rpoint.
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_rpoint TYPE REF TO zabsf_pp_cl_rpoint.
+*"--------------------------------------------------------------------
+DATA lref_sf_rpoint TYPE REF TO zabsf_pp_cl_rpoint.
 
   CREATE OBJECT lref_sf_rpoint
     EXPORTING
@@ -30,4 +30,9 @@ FUNCTION zabsf_pp_setquality_rpoint.
       return_tab = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

@@ -11,7 +11,57 @@
     <FIXPT>X</FIXPT>
     <UNICODE>X</UNICODE>
    </VSEOCLASS>
+   <TPOOL>
+    <item>
+     <ID>I</ID>
+     <KEY>001</KEY>
+     <ENTRY>The main operator can not be dissociated from the transaction while there are other registered operators.</ENTRY>
+     <LENGTH>132</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>002</KEY>
+     <ENTRY>the transaction while there are other</ENTRY>
+     <LENGTH>108</LENGTH>
+    </item>
+    <item>
+     <ID>I</ID>
+     <KEY>003</KEY>
+     <ENTRY>registered operators.</ENTRY>
+     <LENGTH>21</LENGTH>
+    </item>
+   </TPOOL>
+   <I18N_TPOOL>
+    <item>
+     <LANGUAGE>F</LANGUAGE>
+     <TEXTPOOL>
+      <item>
+       <ID>I</ID>
+       <KEY>001</KEY>
+       <ENTRY>The main operator can not be dissociated from the transaction while there are other registered operators.</ENTRY>
+       <LENGTH>132</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>002</KEY>
+       <ENTRY>the transaction while there are other</ENTRY>
+       <LENGTH>108</LENGTH>
+      </item>
+      <item>
+       <ID>I</ID>
+       <KEY>003</KEY>
+       <ENTRY>registered operators.</ENTRY>
+       <LENGTH>21</LENGTH>
+      </item>
+     </TEXTPOOL>
+    </item>
+   </I18N_TPOOL>
    <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>CHECK_IF_OPERATOR_IS_ASSGINED</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Validar se o operador já está associado a uma actividade</DESCRIPT>
+    </SEOCOMPOTX>
     <SEOCOMPOTX>
      <CMPNAME>CONSTRUCTOR</CMPNAME>
      <LANGU>P</LANGU>

@@ -4,10 +4,8 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP074</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Shopfloor - Relatório Registo de Tempo util de produção</DDTEXT>
     <CONTFLAG>A</CONTFLAG>
     <EXCLASS>4</EXCLASS>
    </DD02V>
@@ -100,6 +98,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Relatório Registo de Tempo util de produção</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

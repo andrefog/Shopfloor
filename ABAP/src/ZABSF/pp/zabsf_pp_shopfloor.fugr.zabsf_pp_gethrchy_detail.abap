@@ -1,6 +1,6 @@
-function zabsf_pp_gethrchy_detail .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION zabsf_pp_gethrchy_detail.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AREAID) TYPE  ZABSF_PP_E_AREAID OPTIONAL
 *"     VALUE(WERKS) TYPE  WERKS_D OPTIONAL
@@ -12,27 +12,32 @@ function zabsf_pp_gethrchy_detail .
 *"  EXPORTING
 *"     VALUE(HRCHY_DETAIL) TYPE  ZABSF_PP_S_HRCHY_DETAIL
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
+  DATA lref_sf_hrchy TYPE REF TO zabsf_pp_cl_hrchy.
+  DATA ls_return TYPE bapiret2.
 
-  data lref_sf_hrchy type ref to zabsf_pp_cl_hrchy.
-  data ls_return type bapiret2.
-
-  create object lref_sf_hrchy
-    exporting
+  CREATE OBJECT lref_sf_hrchy
+    EXPORTING
       initial_refdt = refdt
       input_object  = inputobj.
 
 *Get hierarchy detail
-  call method lref_sf_hrchy->get_hierarchy_detail
-    exporting
+  CALL METHOD lref_sf_hrchy->get_hierarchy_detail
+    EXPORTING
       areaid         = inputobj-areaid    "Areaid
       werks          = inputobj-werks     "Werks
       shiftid        = shiftid
       hname          = hname
+      oprid          = inputobj-oprid
       no_shift_check = no_shift_check
-    changing
+    CHANGING
       hrchy_detail   = hrchy_detail
       return_tab     = return_tab.
 
-  delete adjacent duplicates from return_tab.
-endfunction.
+  DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
+ENDFUNCTION.

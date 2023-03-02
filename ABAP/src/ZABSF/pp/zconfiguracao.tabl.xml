@@ -4,10 +4,8 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZCONFIGURACAO</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Configuração de constantes em desenvolvimentos</DDTEXT>
     <MAINFLAG>X</MAINFLAG>
     <CONTFLAG>C</CONTFLAG>
    </DD02V>
@@ -57,6 +55,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Configuração de constantes em desenvolvimentos</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

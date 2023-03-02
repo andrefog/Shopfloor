@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_getrpoint_detail.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_GETRPOINT_DETAIL.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(HNAME) TYPE  CR_HNAME
 *"     VALUE(RPOINT) TYPE  ZABSF_PP_E_RPOINT
@@ -9,8 +9,8 @@ FUNCTION zabsf_pp_getrpoint_detail.
 *"  EXPORTING
 *"     VALUE(RPOINT_DETAIL_TAB) TYPE  ZABSF_PP_S_RPOINT_DETAIL
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_rpoint TYPE REF TO zabsf_pp_cl_rpoint.
+*"--------------------------------------------------------------------
+DATA lref_sf_rpoint TYPE REF TO zabsf_pp_cl_rpoint.
 
   CREATE OBJECT lref_sf_rpoint
     EXPORTING
@@ -26,4 +26,9 @@ FUNCTION zabsf_pp_getrpoint_detail.
       return_tab    = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

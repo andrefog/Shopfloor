@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_create_maint.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_CREATE_MAINT.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL) TYPE  ARBPL
 *"     VALUE(DESCRIPTION) TYPE  MATNR
@@ -12,9 +12,8 @@ FUNCTION zabsf_pp_create_maint.
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-
-  DATA: lref_sf_maintenance    TYPE REF TO zabsf_pp_cl_maintenance.
+*"--------------------------------------------------------------------
+DATA: lref_sf_maintenance    TYPE REF TO zabsf_pp_cl_maintenance.
 
   CREATE OBJECT lref_sf_maintenance
     EXPORTING
@@ -31,5 +30,9 @@ FUNCTION zabsf_pp_create_maint.
       commentary  = commentary
     IMPORTING
       return_tab  = return_tab.
+
+
+
+
 
 ENDFUNCTION.

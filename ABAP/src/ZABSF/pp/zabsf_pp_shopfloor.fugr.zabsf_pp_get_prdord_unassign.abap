@@ -1,10 +1,11 @@
 FUNCTION zabsf_pp_get_prdord_unassign.
 *"----------------------------------------------------------------------
-*"*"Interface local:
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL) TYPE  ARBPL
 *"     VALUE(REFDT) TYPE  VVDATUM DEFAULT SY-DATUM
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
+*"     VALUE(IT_STEUS_FILTERS) TYPE  STRING_TABLE OPTIONAL
 *"  EXPORTING
 *"     VALUE(PRDORD_UNASSIGN) TYPE  ZABSF_PP_T_PRODORD_UNASSIGN
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
@@ -31,6 +32,7 @@ FUNCTION zabsf_pp_get_prdord_unassign.
   CALL METHOD lref_sf_prdord->(l_method)
     EXPORTING
       arbpl           = arbpl
+      IT_STEUS_FILTERS = IT_STEUS_FILTERS
     CHANGING
       prdord_unassign = prdord_unassign
       return_tab      = return_tab.

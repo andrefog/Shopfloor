@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_TURNID</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_TURNID</DOMNAME>
     <HEADLEN>12</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - ID Volta</DDTEXT>
-    <REPTEXT>ID Volta</REPTEXT>
-    <SCRTEXT_S>ID Voltas</SCRTEXT_S>
-    <SCRTEXT_M>ID Volta</SCRTEXT_M>
-    <SCRTEXT_L>ID Volta</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - ID Volta</DDTEXT>
+     <REPTEXT>ID Volta</REPTEXT>
+     <SCRTEXT_S>ID Voltas</SCRTEXT_S>
+     <SCRTEXT_M>ID Volta</SCRTEXT_M>
+     <SCRTEXT_L>ID Volta</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

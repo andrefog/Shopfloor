@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_TIPORD</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_TIPORD</DOMNAME>
     <HEADLEN>13</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Tipo de Ordem</DDTEXT>
-    <REPTEXT>Tipo de Ordem</REPTEXT>
-    <SCRTEXT_S>Tip. Ordem</SCRTEXT_S>
-    <SCRTEXT_M>Tipo de Ordem</SCRTEXT_M>
-    <SCRTEXT_L>Tipo de Ordem</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Tipo de Ordem</DDTEXT>
+     <REPTEXT>Tipo de Ordem</REPTEXT>
+     <SCRTEXT_S>Tip. Ordem</SCRTEXT_S>
+     <SCRTEXT_M>Tipo de Ordem</SCRTEXT_M>
+     <SCRTEXT_L>Tipo de Ordem</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

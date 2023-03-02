@@ -21,3 +21,11 @@
 *
 *INCLUDE lzabsf_pp_shopfloorf01.
 *}   INSERT
+*{   INSERT         L03K900694                                        1
+*
+INCLUDE lzabsf_pp_shopflooro01.
+*}   INSERT
+*{   INSERT         L03K900694                                        2
+*
+INCLUDE lzabsf_pp_shopfloori01.
+*}   INSERT

@@ -1,14 +1,13 @@
 FUNCTION Z_PP10_CHANGE_STATUS.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     REFERENCE(IV_RUECK) TYPE  CO_RUECK
 *"     REFERENCE(IV_RMZHL) TYPE  CO_RMZHL
 *"     REFERENCE(IV_OPRID) TYPE  ZABSF_PP_E_OPRID
 *"  EXPORTING
 *"     REFERENCE(EV_FLAG) TYPE  FLAG
-*"----------------------------------------------------------------------
-
+*"--------------------------------------------------------------------
 *Variables
   DATA: l_batch_vulc  TYPE charg_d,
         l_wait_cancel TYPE i.
@@ -136,6 +135,8 @@ FUNCTION Z_PP10_CHANGE_STATUS.
       ev_flag = abap_true.
     ENDIF.
   ENDLOOP.
+
+
 
 
 

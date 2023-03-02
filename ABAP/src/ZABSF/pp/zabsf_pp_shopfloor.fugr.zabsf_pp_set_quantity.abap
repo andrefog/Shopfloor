@@ -1,6 +1,6 @@
-function zabsf_pp_set_quantity .
+FUNCTION zabsf_pp_set_quantity .
 *"----------------------------------------------------------------------
-*"*"Interface local:
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL) TYPE  ARBPL OPTIONAL
 *"     VALUE(QTY_CONF_TAB) TYPE  ZABSF_PP_T_QTY_CONF
@@ -13,171 +13,176 @@ function zabsf_pp_set_quantity .
 *"     VALUE(SHIFTID) TYPE  ZABSF_PP_E_SHIFTID OPTIONAL
 *"     VALUE(SUPERVISOR) TYPE  FLAG OPTIONAL
 *"     VALUE(VENDOR) TYPE  LIFNR OPTIONAL
+*"     VALUE(MATERIALBATCH) TYPE  ZABSF_PP_T_MATERIALBATCH OPTIONAL
+*"     VALUE(MATERIALSERIAL) TYPE  ZABSF_PP_T_MATERIALSERIAL OPTIONAL
+*"     VALUE(EQUIPMENT) TYPE  CHAR100 OPTIONAL
 *"  EXPORTING
 *"     VALUE(CONF_TAB) TYPE  ZABSF_PP_T_CONFIRMATION
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
 *"----------------------------------------------------------------------
 *Reference
-  data: lref_sf_prdord  type ref to zabsf_pp_cl_prdord.
+  DATA: lref_sf_prdord  TYPE REF TO zabsf_pp_cl_prdord.
 
 *Variables
-  data: l_gname  type seqg3-gname,
-        l_garg   type seqg3-garg,
-        l_guname type seqg3-guname,
-        l_subrc  type sy-subrc,
-        l_wait   type i.
+  DATA: l_gname  TYPE seqg3-gname,
+        l_garg   TYPE seqg3-garg,
+        l_guname TYPE seqg3-guname,
+        l_subrc  TYPE sy-subrc,
+        l_wait   TYPE i.
 
 *Constants
-  constants: c_wait type zabsf_pp_e_parid value 'WAIT'.
+  CONSTANTS: c_wait TYPE zabsf_pp_e_parid VALUE 'WAIT'.
 
 *Get time wait
-  select single parva
-    from zabsf_pp032
-    into (@data(l_wait_param))
-   where parid eq @c_wait.
+  SELECT SINGLE parva
+    FROM zabsf_pp032
+    INTO (@DATA(l_wait_param))
+   WHERE parid EQ @c_wait.
 
-  if l_wait_param is not initial.
+  IF l_wait_param IS NOT INITIAL.
     l_wait = l_wait_param.
-  endif.
-
+  ENDIF.
 
 *Create object of class
-  create object lref_sf_prdord
-    exporting
+  CREATE OBJECT lref_sf_prdord
+    EXPORTING
       initial_refdt = refdt
       input_object  = inputobj.
 
 *Get method of class to set quantity
-  select single methodname
-    from zabsf_pp003
-    into (@data(l_method))
-   where werks    eq @inputobj-werks
-     and id_class eq '12'
-     and endda    ge @refdt
-     and begda    le @refdt.
+  SELECT SINGLE methodname
+    FROM zabsf_pp003
+    INTO (@DATA(l_method))
+   WHERE werks    EQ @inputobj-werks
+     AND id_class EQ '12'
+     AND endda    GE @refdt
+     AND begda    LE @refdt.
 
-  clear l_subrc.
+  CLEAR l_subrc.
 
-  loop at qty_conf_tab into data(ls_qty_conf_tab).
-    clear: l_gname,
+  LOOP AT qty_conf_tab INTO DATA(ls_qty_conf_tab).
+    CLEAR: l_gname,
            l_garg,
            l_guname,
            l_subrc.
 
 *  Check blocks for Prodcution Order
-    call method zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_ord
-      exporting
+    CALL METHOD zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_ord
+      EXPORTING
         i_aufnr    = ls_qty_conf_tab-aufnr
         i_max_time = l_wait
-      importing
+      IMPORTING
         e_gname    = l_gname
         e_garg     = l_garg
         e_guname   = l_guname
         e_return   = l_subrc.
 
-    if l_subrc ne 0.
-      exit.
-    endif.
+    IF l_subrc NE 0.
+      EXIT.
+    ENDIF.
 
-    clear: l_gname,
+    CLEAR: l_gname,
            l_garg,
            l_guname,
            l_subrc.
 
 *  Check blocks for prodcution Order
-    call method zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_res
-      exporting
+    CALL METHOD zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_res
+      EXPORTING
         i_aufnr    = ls_qty_conf_tab-aufnr
         i_max_time = l_wait
-      importing
+      IMPORTING
         e_gname    = l_gname
         e_garg     = l_garg
         e_guname   = l_guname
         e_return   = l_subrc.
 
-    if l_subrc ne 0.
-      exit.
-    endif.
+    IF l_subrc NE 0.
+      EXIT.
+    ENDIF.
 
-    loop at ls_qty_conf_tab-charg_t assigning field-symbol(<fs_charg_t>).
+    LOOP AT ls_qty_conf_tab-charg_t ASSIGNING FIELD-SYMBOL(<fs_charg_t>).
 *    Add left zeros
-      call function 'CONVERSION_EXIT_ALPHA_INPUT'
-        exporting
+      CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+        EXPORTING
           input  = <fs_charg_t>-charg
-        importing
+        IMPORTING
           output = <fs_charg_t>-charg.
 
 *    Check blocks
-      call method zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_mat
-        exporting
+      CALL METHOD zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_mat
+        EXPORTING
           i_matnr    = <fs_charg_t>-matnr
           i_werks    = <fs_charg_t>-werks
           i_charg    = <fs_charg_t>-charg
           i_max_time = l_wait
-        importing
+        IMPORTING
           e_gname    = l_gname
           e_garg     = l_garg
           e_guname   = l_guname
           e_return   = l_subrc.
 
-      if l_subrc ne 0.
-        exit.
-      endif.
-    endloop.
+      IF l_subrc NE 0.
+        EXIT.
+      ENDIF.
+    ENDLOOP.
 
-    if sy-subrc ne 0.
-      call method zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_mat
-        exporting
+    IF sy-subrc NE 0.
+      CALL METHOD zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_mat
+        EXPORTING
           i_matnr  = ls_qty_conf_tab-matnr
           i_werks  = inputobj-werks
-        importing
+        IMPORTING
           e_gname  = l_gname
           e_garg   = l_garg
           e_guname = l_guname
           e_return = l_subrc.
 
-      if l_subrc ne 0.
-        exit.
-      endif.
-    endif.
+      IF l_subrc NE 0.
+        EXIT.
+      ENDIF.
+    ENDIF.
 
-    if l_subrc ne 0.
-      exit.
-    endif.
-  endloop.
+    IF l_subrc NE 0.
+      EXIT.
+    ENDIF.
+  ENDLOOP.
 
-  if l_subrc ne 0.
-    call method zabsf_pp_cl_log=>add_message
-      exporting
+  IF l_subrc NE 0.
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
         msgty      = 'E'
         msgno      = '093'
         msgv1      = l_guname
         msgv2      = l_gname
         msgv3      = l_guname
-      changing
+      CHANGING
         return_tab = return_tab.
-    exit.
-  endif.
+    EXIT.
+  ENDIF.
 
 *Confirmation of good quantity
-  call method lref_sf_prdord->(l_method)
-    exporting
-      areaid       = inputobj-areaid
-      werks        = inputobj-werks
-      inputobj     = inputobj
-      arbpl        = arbpl
-      qty_conf_tab = qty_conf_tab
-      tipord       = tipord
-      check_stock  = check_stock
-      first_cycle  = first_cycle
-      backoffice   = backoffice
-      shiftid      = shiftid
-      supervisor   = supervisor
-      vendor       = |{ vendor alpha = in }|
-    importing
-      conf_tab     = conf_tab
-    changing
-      return_tab   = return_tab.
+  CALL METHOD lref_sf_prdord->(l_method)
+    EXPORTING
+      areaid         = inputobj-areaid
+      werks          = inputobj-werks
+      inputobj       = inputobj
+      arbpl          = arbpl
+      qty_conf_tab   = qty_conf_tab
+      tipord         = tipord
+      check_stock    = check_stock
+      first_cycle    = first_cycle
+      backoffice     = backoffice
+      shiftid        = shiftid
+      supervisor     = supervisor
+      vendor         = |{ vendor ALPHA = IN }|
+      materialbatch  = materialbatch[]
+      materialserial = materialserial[]
+      iv_equipment   = equipment
+    IMPORTING
+      conf_tab       = conf_tab
+    CHANGING
+      return_tab     = return_tab.
 
-  delete adjacent duplicates from return_tab.
-endfunction.
+  DELETE ADJACENT DUPLICATES FROM return_tab.
+ENDFUNCTION.

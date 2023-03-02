@@ -1,14 +1,13 @@
-FUNCTION zabsf_pp_consumables_get.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_CONSUMABLES_GET.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AUFNR) TYPE  AUFNR
 *"  EXPORTING
 *"     VALUE(CONSUMABLES) TYPE  ZPP_CONSUMABLES_TABLE
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-
-  " Check input
+*"--------------------------------------------------------------------
+" Check input
   IF aufnr IS INITIAL.
     CALL METHOD zabsf_pp_cl_log=>add_message
       EXPORTING
@@ -43,5 +42,9 @@ FUNCTION zabsf_pp_consumables_get.
         return_tab = return_tab.
     RETURN.
   ENDIF.
+
+
+
+
 
 ENDFUNCTION.

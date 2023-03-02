@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_getreports_detail.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_GETREPORTS_DETAIL.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(HNAME) TYPE  CR_HNAME OPTIONAL
 *"     VALUE(AREAID) TYPE  ZABSF_PP_E_AREAID OPTIONAL
@@ -13,8 +13,8 @@ FUNCTION zabsf_pp_getreports_detail.
 *"  EXPORTING
 *"     VALUE(REPORTS_DETAIL_ST) TYPE  ZABSF_PP_S_REPORTS_DETAIL
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_display TYPE REF TO zabsf_pp_cl_display_statistic.
+*"--------------------------------------------------------------------
+DATA lref_sf_display TYPE REF TO zabsf_pp_cl_display_statistic.
 
   CREATE OBJECT lref_sf_display
     EXPORTING
@@ -34,4 +34,9 @@ FUNCTION zabsf_pp_getreports_detail.
       return_tab        = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

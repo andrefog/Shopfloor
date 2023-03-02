@@ -65,7 +65,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_BATCH_OPERATIONS IMPLEMENTATION.
 
 
-  method check_batch_stock.
+method check_batch_stock.
     "constantes
     constants: lc_ordertype_cst type aufart value 'ZPP2'.
 *  Internal table
@@ -108,7 +108,7 @@ CLASS ZABSF_PP_CL_BATCH_OPERATIONS IMPLEMENTATION.
         output = l_vornr.
 
 *  Set local language for user
-    l_langu = inputobj-language.
+    l_langu = sy-langu.
     set locale language l_langu.
 
 
@@ -432,7 +432,7 @@ CLASS ZABSF_PP_CL_BATCH_OPERATIONS IMPLEMENTATION.
   endmethod.
 
 
-  method check_batch_stock_rpack.
+method check_batch_stock_rpack.
 *  Internal table
     data: lt_return_tab type bapiret2_t.
 
@@ -464,7 +464,7 @@ CLASS ZABSF_PP_CL_BATCH_OPERATIONS IMPLEMENTATION.
         output = l_vornr.
 
 *  Set local language for user
-    l_langu = inputobj-language.
+    l_langu = sy-langu.
     set locale language l_langu.
 
 
@@ -770,7 +770,7 @@ CLASS ZABSF_PP_CL_BATCH_OPERATIONS IMPLEMENTATION.
   endmethod.
 
 
-  method close_batch.
+method close_batch.
 *  Variables
     data: l_source_value type i,
           l_lmnga        type lmnga,
@@ -939,7 +939,7 @@ CLASS ZABSF_PP_CL_BATCH_OPERATIONS IMPLEMENTATION.
   endmethod.
 
 
-  METHOD CONSTRUCTOR.
+METHOD CONSTRUCTOR.
 *ref. date
     refdt    = initial_refdt.
 
@@ -1171,7 +1171,7 @@ METHOD create_batch.
 ENDMETHOD.
 
 
-  METHOD get_batch.
+METHOD get_batch.
     data: l_batch type charg_d.
 
 *  Get batch from z table
@@ -1191,7 +1191,7 @@ ENDMETHOD.
   ENDMETHOD.
 
 
-  method retreive_batch.
+method retreive_batch.
 *  Variables
     data: l_batch type charg_d,
           l_lenum type lenum,

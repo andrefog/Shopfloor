@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_OBJNR</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>CHAR12</DOMNAME>
     <HEADLEN>17</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>17</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Número do objecto</DDTEXT>
-    <REPTEXT>Número do objecto</REPTEXT>
-    <SCRTEXT_S>Num. Obj.</SCRTEXT_S>
-    <SCRTEXT_M>Número do objecto</SCRTEXT_M>
-    <SCRTEXT_L>Número do objecto</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Número do objecto</DDTEXT>
+     <REPTEXT>Número do objecto</REPTEXT>
+     <SCRTEXT_S>Num. Obj.</SCRTEXT_S>
+     <SCRTEXT_M>Número do objecto</SCRTEXT_M>
+     <SCRTEXT_L>Número do objecto</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

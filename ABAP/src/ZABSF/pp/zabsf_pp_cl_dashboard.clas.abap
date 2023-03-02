@@ -5,63 +5,53 @@ class ZABSF_PP_CL_DASHBOARD definition
 
 public section.
 
-  methods CONSTRUCTOR
-    importing
-      value(INPUT_INPUTOBJ) type ZABSF_PP_S_INPUTOBJECT
-      value(INPUT_REFDT) type VVDATUM optional .
-  methods GET_WORKCENTER_SHORT_DETAIL
-    importing
-      value(AREAID) type ZABSF_PP_E_AREAID
-      value(WERKS) type WERKS_D
-      value(HNAME) type CR_HNAME
-      value(ARBPL) type ARBPL
-      !ACTIONID type ZABSF_PP_E_ACTION optional
-    changing
-      value(WRKCTR_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
-      value(RETURN_TAB) type BAPIRET2_T optional .
-  methods GET_WORKCENTER_FULL_DETAIL
-    importing
-      value(AUFNR) type AUFNR optional
-      value(VORNR) type VORNR optional
-      value(WRKCTR_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
-    changing
-      value(RETURN_TAB) type BAPIRET2_T
-      value(WORKCENTER_DASHBOARD) type ZABSF_PP_S_WORKCENTER_DASHBOARD .
-  methods GET_WORKCENTERS_LIST
-    importing
-      !HNAME type CR_HNAME
-      !WERKS type WERKS_D
-    changing
-      !WRKCTR_TAB type ZABSF_PP_T_WRKCTR
-      !RETURN_TAB type BAPIRET2_T .
-  methods MAP_VALUES
-    importing
-      value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
-    changing
-      value(WORKCENTER_DASHBOARD) type ZABSF_PP_S_WORKCENTER_DASHBOARD .
-  methods COMPARE_STATUS
-    exporting
-      value(DASHBOARD_STATUS) type ZABSF_PP_E_DASH_COLOURS
-      value(STOP_REASON_DESC) type ZABSF_PP_E_STPRSNDESC
-    changing
-      value(I_WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL .
-  methods GET_OPERATORS
-    changing
-      value(PRODORD) type ZABSF_PP_S_PRDORD_DETAIL .
-  methods CALCULATE_OEE_INDICATORS
-    importing
-      value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
-    changing
-      value(WORKCENTER_DASHBOARD) type ZABSF_PP_S_WORKCENTER_DASHBOARD .
-  methods GET_HIERARCHIES
-    changing
-      value(HIERARCHIES) type ZABSF_PP_T_HRCHY optional .
+  constants GC_MTYPE_PLANNED type ZABSF_PP_E_MOTIVETYPE value 'P' ##NO_TEXT.
+  constants GC_MTYPE_NOT_PLANNED type ZABSF_PP_E_MOTIVETYPE value 'NP' ##NO_TEXT.
+  constants GC_OEEID_AVAILABILY type ZABSF_PP_E_OEEID value 1 ##NO_TEXT.
+  constants GC_OEEID_OEE type ZABSF_PP_E_OEEID value 4 ##NO_TEXT.
+  constants GC_OEEID_PERFORMANCE type ZABSF_PP_E_OEEID value 2 ##NO_TEXT.
+  constants GC_OEEID_PLANNED_TIME type ZABSF_PP_E_OEEID value 6 ##NO_TEXT.
+  constants GC_OEEID_PRODUCTION_TIME type ZABSF_PP_E_OEEID value 7 ##NO_TEXT.
+  constants GC_OEEID_PRODUCTIVITY type ZABSF_PP_E_OEEID value 5 ##NO_TEXT.
+  constants GC_OEEID_QUALITY type ZABSF_PP_E_OEEID value 3 ##NO_TEXT.
+  constants GC_START_TIME type UZEIT value '060000' ##NO_TEXT.
+
+  methods GET_REVIEW
+    returning
+      value(RT_REVIEW) type ZABSF_PP_T_DASHB_REVIEW .
+  methods GET_PERFORMANCE
+    returning
+      value(RT_PERFORMANCE) type ZABSF_PP_T_DASHB_PERFORMANCE .
+  methods GET_AVAILABILITY
+    returning
+      value(RT_AVAILABILITY) type ZABSF_PP_T_DASHB_AVAILABILITY .
+  methods GET_LOSTS
+    returning
+      value(RT_LOSTS) type ZABSF_PP_T_DASHB_LOSTS .
+  methods GET_QUALITY
+    returning
+      value(RT_QUALITY) type ZABSF_PP_T_DASHB_QUALITIES .
+  methods GET_STOPS
+    returning
+      value(RT_STOPS) type ZABSF_PP_T_DASHB_STOPS .
   methods CALCULATE_OEE_AVAILABILITY
     importing
       value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
     exporting
       value(OEE_AVAILABILITY) type ZABSF_PP_E_QTDOEE
       value(TOTAL_RUN_TIME) type MENGV13 .
+  methods CALCULATE_OEE_INDICATORS
+    importing
+      value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
+    changing
+      value(WORKCENTER_DASHBOARD) type ZABSF_PP_S_WORKCENTER_DASHBOAR .
+  methods CALCULATE_OEE_PERFORMANCE
+    importing
+      value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
+      value(TOTAL_RUN_TIME) type MENGV13
+    exporting
+      value(OEE_PERFORMANCE) type ZABSF_PP_E_QTDOEE
+      value(OEE_QUALITY) type ZABSF_PP_E_QTDOEE .
   methods CALCULATE_OEE_PRODUCTIVITY
     importing
       value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
@@ -72,19 +62,18 @@ public section.
       value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
     exporting
       value(OEE_QUALITY) type ZABSF_PP_E_QTDOEE .
-  methods CALCULATE_OEE_PERFORMANCE
-    importing
-      value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
-      value(TOTAL_RUN_TIME) type MENGV13
+  methods COMPARE_STATUS
     exporting
-      value(OEE_PERFORMANCE) type ZABSF_PP_E_QTDOEE
-      value(OEE_QUALITY) type ZABSF_PP_E_QTDOEE .
-  methods GET_OPERATOR_MONTHLY_LOG
-    importing
-      value(OPRID) type ZABSF_PP_E_OPRID optional
+      value(DASHBOARD_STATUS) type ZABSF_PP_E_DASH_COLOURS
+      value(STOP_REASON_DESC) type ZABSF_PP_E_STPRSNDESC
     changing
-      value(KPI_TAB) type ZABSF_PP_T_CALC_WORKERS_KPI optional
-      value(OPERATOR_LOG_TAB) type ZABSF_PP_T_OPERATOR_LOG optional .
+      value(I_WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL .
+  methods CONSTRUCTOR
+    importing
+      value(INPUT_INPUTOBJ) type ZABSF_PP_S_INPUTOBJECT
+      value(INPUT_REFDT) type VVDATUM optional
+      !IR_HNAME type /GIB/DCP_CR_HNAME_TR optional
+      !IR_ARBPL type /GIB/DCP_ARBPL_TR optional .
   methods GET_DASHBOARD_DETAIL
     importing
       value(ARBPL) type ARBPL optional
@@ -97,11 +86,62 @@ public section.
     exporting
       value(WORKCENTER_DASHBOARD) type ZABSF_PP_T_WORKCENTER_DASHBOAR
       value(RETURN_TAB) type BAPIRET2_T .
+  methods GET_HIERARCHIES
+    changing
+      value(HIERARCHIES) type ZABSF_PP_T_HRCHY optional .
+  methods GET_OPERATORS
+    changing
+      value(PRODORD) type ZABSF_PP_S_PRDORD_DETAIL .
+  methods GET_OPERATOR_MONTHLY_LOG
+    importing
+      value(OPRID) type ZABSF_PP_E_OPRID optional
+    changing
+      value(KPI_TAB) type ZABSF_PP_T_CALC_WORKERS_KPI optional
+      value(OPERATOR_LOG_TAB) type ZABSF_PP_T_OPERATOR_LOG optional .
+  methods GET_WORKCENTERS_LIST
+    importing
+      !HNAME type CR_HNAME
+      !WERKS type WERKS_D
+    changing
+      !WRKCTR_TAB type ZABSF_PP_T_WRKCTR
+      !RETURN_TAB type BAPIRET2_T .
+  methods GET_WORKCENTER_DASHBOARD
+    exporting
+      !EV_OEE type ZABSF_PP_E_QTDOEE
+      !EV_AVAILABILITY type ZABSF_PP_E_QTDOEE
+      !EV_PERFORMANCE type ZABSF_PP_E_QTDOEE
+      !EV_QUALITY type ZABSF_PP_E_QTDOEE
+      !ET_EVOLUTION type ZABSF_PP_T_DASHB_EVOLUTION .
+  methods GET_WORKCENTER_FULL_DETAIL
+    importing
+      value(AUFNR) type AUFNR optional
+      value(VORNR) type VORNR optional
+      value(WRKCTR_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
+    changing
+      value(RETURN_TAB) type BAPIRET2_T
+      value(WORKCENTER_DASHBOARD) type ZABSF_PP_S_WORKCENTER_DASHBOAR .
+  methods GET_WORKCENTER_SHORT_DETAIL
+    importing
+      value(AREAID) type ZABSF_PP_E_AREAID
+      value(WERKS) type WERKS_D
+      value(HNAME) type CR_HNAME
+      value(ARBPL) type ARBPL
+      !ACTIONID type ZABSF_PP_E_ACTION optional
+    changing
+      value(WRKCTR_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
+      value(RETURN_TAB) type BAPIRET2_T optional .
+  methods MAP_VALUES
+    importing
+      value(WORKCENTER_DETAIL) type ZABSF_PP_S_WRKCTR_DETAIL
+    changing
+      value(WORKCENTER_DASHBOARD) type ZABSF_PP_S_WORKCENTER_DASHBOAR .
 protected section.
 private section.
 
   data INPUTOBJ type ZABSF_PP_S_INPUTOBJECT .
   data REFDT type VVDATUM .
+  data GR_ARBPL type /GIB/DCP_ARBPL_TR .
+  data GR_HNAME type /GIB/DCP_CR_HNAME_TR .
 ENDCLASS.
 
 
@@ -109,7 +149,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
 
 
-  METHOD calculate_oee_availability.
+METHOD calculate_oee_availability.
 
     DATA: lt_zabsf_pp006 TYPE TABLE OF zabsf_pp006.
 
@@ -339,7 +379,7 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD calculate_oee_indicators.
+METHOD calculate_oee_indicators.
 
     DATA: lv_total_run_time TYPE mengv13.
 
@@ -373,7 +413,7 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  method calculate_oee_performance.
+method calculate_oee_performance.
 
     constants: gc_type_area type zabsf_pp_e_tarea_id value 'AT01'.
 
@@ -578,7 +618,7 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   endmethod.
 
 
-  METHOD CALCULATE_OEE_PRODUCTIVITY.
+METHOD CALCULATE_OEE_PRODUCTIVITY.
 
 *       DATA: p_run_rate     TYPE mengv13,
 *        p_run_rate_prd TYPE mengv13,
@@ -596,7 +636,7 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD CALCULATE_OEE_QUALITY.
+METHOD CALCULATE_OEE_QUALITY.
 
     DATA: lv_arbid      TYPE cr_objid,
           lv_lmnga      TYPE ru_lmnga,
@@ -644,152 +684,151 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD compare_status.
+METHOD compare_status.
 
-    CONSTANTS: g_active(4) VALUE '0002',
-               g_stoped(4) VALUE '0003',
-               c_proc(4)   VALUE 'PROC',
-               c_stop(4)   VALUE 'STOP',
-               c_prep(4)   VALUE 'PREP'.
+  CONSTANTS: g_active(4) VALUE '0002',
+             g_stoped(4) VALUE '0003',
+             c_proc(4)   VALUE 'PROC',
+             c_stop(4)   VALUE 'STOP',
+             c_prep(4)   VALUE 'PREP'.
 
-    DATA:  lref_sf_status   TYPE REF TO zabsf_pp_cl_status.
+  DATA:  lref_sf_status   TYPE REF TO zabsf_pp_cl_status.
 
-    DATA: lv_workcenter_status TYPE j_status,
-          lv_wrkctr_desc       TYPE j_txt30,
-          lv_veran             TYPE ap_veran,
-          lv_alt_spras         TYPE spras.
+  DATA: lv_workcenter_status TYPE j_status,
+        lv_wrkctr_desc       TYPE j_txt30,
+        lv_veran             TYPE ap_veran,
+        lv_alt_spras         TYPE spras.
 
-    DATA: ld_date TYPE zabsf_pp010-endda.
-    DATA: ls_sf010 TYPE  zabsf_pp010,
-          ls_sf011 TYPE  zabsf_pp011.
+  DATA: ld_date TYPE zabsf_pp010-endda.
+  DATA: ls_sf010 TYPE  zabsf_pp010,
+        ls_sf011 TYPE  zabsf_pp011.
 
-    DATA: return_tab TYPE bapiret2_t.
+  DATA: return_tab TYPE bapiret2_t.
 
 * get default language
-    SELECT SINGLE spras FROM zabsf_pp061 INTO lv_alt_spras
-        WHERE werks = inputobj-werks
-        AND is_default EQ abap_true.
+  SELECT SINGLE spras FROM zabsf_pp061 INTO lv_alt_spras
+      WHERE werks = inputobj-werks
+      AND is_default EQ abap_true.
 
 
 *  Create object of class status
-    CREATE OBJECT lref_sf_status
-      EXPORTING
-        initial_refdt = refdt
-        input_object  = inputobj.
+  CREATE OBJECT lref_sf_status
+    EXPORTING
+      initial_refdt = refdt
+      input_object  = inputobj.
 
 *  Get current status of Workcenter
-    CALL METHOD lref_sf_status->status_object
-      EXPORTING
-        arbpl       = i_workcenter_detail-arbpl
-        werks       = i_workcenter_detail-werks
-        objty       = 'CA'
-        method      = 'G'
-      CHANGING
-        status_out  = lv_workcenter_status
-        status_desc = lv_wrkctr_desc
-        return_tab  = return_tab.
+  CALL METHOD lref_sf_status->status_object
+    EXPORTING
+      arbpl       = i_workcenter_detail-arbpl
+      werks       = i_workcenter_detail-werks
+      objty       = 'CA'
+      method      = 'G'
+    CHANGING
+      status_out  = lv_workcenter_status
+      status_desc = lv_wrkctr_desc
+      return_tab  = return_tab.
 
 *   Get WC responsability
-    SELECT SINGLE veran FROM crhd INTO lv_veran
-      WHERE arbpl = i_workcenter_detail-arbpl
-      AND objty = 'A'
-      AND werks = inputobj-werks.
+  SELECT SINGLE veran FROM crhd INTO lv_veran
+    WHERE arbpl = i_workcenter_detail-arbpl
+    AND objty = 'A'
+    AND werks = inputobj-werks.
 
 *  Logic for colours on dashboard screen.
-    CASE lv_workcenter_status.
+  CASE lv_workcenter_status.
 
-      WHEN g_active. "Active
+    WHEN g_active. "Active
 
-        CASE i_workcenter_detail-status.
+      CASE i_workcenter_detail-status.
 
-          WHEN c_prep OR c_proc.
+        WHEN c_prep OR c_proc.
 
-            SELECT SINGLE * FROM zabsf_pp068 INTO @DATA(ls_sf068)
-              WHERE stprsnid = @lv_veran
-              AND wc_status = @g_active.
-
-            IF sy-subrc NE 0.
-              " Get default value -->White
-              SELECT SINGLE * FROM zabsf_pp068 INTO ls_sf068
-                 WHERE stprsnid = ''
-                 AND wc_status = g_active.
-            ENDIF.
-
-            dashboard_status = ls_sf068-color.
-
-          WHEN c_stop.
-            dashboard_status = 'YELLOW'.
-
-          WHEN ''.
-            dashboard_status = 'WHITE'.
-
-        ENDCASE.
-
-      WHEN g_stoped. "Stoped
-        CLEAR ld_date.
-
-        SELECT SINGLE * FROM zabsf_pp010 INTO ls_sf010
-          WHERE "areaid = i_workcenter_detail-areadid AND
-*              hname =  i_workcenter_detail-hname
-          hname =  'LINHA_A'
-          AND werks = i_workcenter_detail-werks
-          AND arbpl = i_workcenter_detail-arbpl
-          AND endda = ld_date
-          AND stoptime = 0.
-
-        IF sy-subrc EQ 0.
-
-          SELECT SINGLE * FROM zabsf_pp068 INTO ls_sf068
-            WHERE stprsnid = ls_sf010-stprsnid
-            AND wc_status = g_stoped.
+          SELECT SINGLE * FROM zabsf_pp068 INTO @DATA(ls_sf068)
+            WHERE stprsnid = @lv_veran
+            AND wc_status = @g_active.
 
           IF sy-subrc NE 0.
-            " get default value
+            " Get default value -->White
             SELECT SINGLE * FROM zabsf_pp068 INTO ls_sf068
-              WHERE stprsnid = ''
-              AND wc_status = g_stoped.
-
-          ENDIF.
-* get reason description
-          SELECT SINGLE stprsn_desc FROM zabsf_pp011_t INTO stop_reason_desc
-            WHERE "areaid = i_workcenter_detail-areadid AND
-                werks = i_workcenter_detail-werks
-*              AND arbpl = i_workcenter_detail-arbpl
-            AND stprsnid = ls_sf010-stprsnid "ls_sf068-stprsnid
-            AND spras = sy-langu.
-
-          IF sy-subrc NE 0.
-* get reason description default language
-            SELECT SINGLE stprsn_desc FROM zabsf_pp011_t INTO stop_reason_desc
-              WHERE "areaid = i_workcenter_detail-areadid AND
-              werks = i_workcenter_detail-werks
-*                AND arbpl = i_workcenter_detail-arbpl
-              AND stprsnid = ls_sf010-stprsnid "ls_sf068-stprsnid
-              AND spras = lv_alt_spras.
-
-          ENDIF.
-
-* no orders on workcenter. set status hour and date of workcenter stopage.
-          IF i_workcenter_detail-status_date IS INITIAL.
-            i_workcenter_detail-status_date = ls_sf010-datesr.
-            i_workcenter_detail-status_hour = ls_sf010-time.
-
+               WHERE stprsnid = ''
+               AND wc_status = g_active.
           ENDIF.
 
           dashboard_status = ls_sf068-color.
 
-        ELSE.
+        WHEN c_stop.
+          dashboard_status = 'YELLOW'.
+
+        WHEN ''.
           dashboard_status = 'WHITE'.
+
+      ENDCASE.
+
+    WHEN g_stoped. "Stoped
+      CLEAR ld_date.
+
+      SELECT SINGLE * FROM zabsf_pp010 INTO ls_sf010
+        WHERE areaid = i_workcenter_detail-areadid
+        AND hname =  i_workcenter_detail-hname
+        AND werks = i_workcenter_detail-werks
+        AND arbpl = i_workcenter_detail-arbpl
+        AND endda = ld_date
+        AND stoptime = 0.
+
+      IF sy-subrc EQ 0.
+
+        SELECT SINGLE * FROM zabsf_pp068 INTO ls_sf068
+          WHERE stprsnid = ls_sf010-stprsnid
+          AND wc_status = g_stoped.
+
+        IF sy-subrc NE 0.
+          " get default value
+          SELECT SINGLE * FROM zabsf_pp068 INTO ls_sf068
+            WHERE stprsnid = ''
+            AND wc_status = g_stoped.
+
+        ENDIF.
+* get reason description
+        SELECT SINGLE stprsn_desc FROM zabsf_pp011_t INTO stop_reason_desc
+          WHERE "areaid = i_workcenter_detail-areadid AND
+              werks = i_workcenter_detail-werks
+*              AND arbpl = i_workcenter_detail-arbpl
+          AND stprsnid = ls_sf010-stprsnid "ls_sf068-stprsnid
+          AND spras = sy-langu.
+
+        IF sy-subrc NE 0.
+* get reason description default language
+          SELECT SINGLE stprsn_desc FROM zabsf_pp011_t INTO stop_reason_desc
+            WHERE "areaid = i_workcenter_detail-areadid AND
+            werks = i_workcenter_detail-werks
+*                AND arbpl = i_workcenter_detail-arbpl
+            AND stprsnid = ls_sf010-stprsnid "ls_sf068-stprsnid
+            AND spras = lv_alt_spras.
+
         ENDIF.
 
-      WHEN OTHERS.
+* no orders on workcenter. set status hour and date of workcenter stopage.
+        IF i_workcenter_detail-status_date IS INITIAL.
+          i_workcenter_detail-status_date = ls_sf010-datesr.
+          i_workcenter_detail-status_hour = ls_sf010-time.
+
+        ENDIF.
+
+        dashboard_status = ls_sf068-color.
+
+      ELSE.
         dashboard_status = 'WHITE'.
-    ENDCASE.
+      ENDIF.
 
-  ENDMETHOD.
+    WHEN OTHERS.
+      dashboard_status = 'WHITE'.
+  ENDCASE.
+
+ENDMETHOD.
 
 
-  METHOD CONSTRUCTOR.
+METHOD CONSTRUCTOR.
 
 *Ref. Date
     refdt    = input_refdt.
@@ -797,256 +836,342 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
 *App input data
     inputobj = input_inputobj.
 
-
+    gr_hname = ir_hname.
+    gr_arbpl = ir_arbpl.
   ENDMETHOD.
 
 
-  METHOD get_dashboard_detail.
+  METHOD get_availability.
+
+    " Get Availability
+    SELECT *
+      FROM zabsf_pp051
+      INTO TABLE @DATA(lt_pp051)
+      WHERE oeeid IN (@gc_oeeid_availabily, @gc_oeeid_planned_time, @gc_oeeid_production_time)
+        AND hname IN @gr_hname
+        AND arbpl IN @gr_Arbpl
+        AND data  EQ @refdt.
+    CHECK lt_pp051[] IS NOT INITIAL.
+    SORT lt_pp051 BY arbpl oeeid.
+
+    " Get Goals
+    DATA(lt_fae) = lt_pp051[].
+    DELETE ADJACENT DUPLICATES FROM lt_fae COMPARING arbpl.
+
+    SELECT *
+      FROM zabsf_pp090
+      INTO TABLE @DATA(lt_goals)
+      FOR ALL ENTRIES IN @lt_fae
+      WHERE arbpl EQ @lt_fae-arbpl
+        AND endda GE @refdt
+        AND begda LE @refdt.
+
+    DATA:
+      lt_availability TYPE STANDARD TABLE OF zabsf_pp051,
+      lt_minutes      TYPE STANDARD TABLE OF zabsf_pp051,
+      lt_total        TYPE STANDARD TABLE OF zabsf_pp051.
+
+    " Sumarize values on tables
+    LOOP AT lt_pp051 ASSIGNING FIELD-SYMBOL(<ls_pp051>).
+      CASE <ls_pp051>-oeeid.
+        WHEN gc_oeeid_availabily.
+          COLLECT
+            VALUE zabsf_pp051(
+              arbpl  = <ls_pp051>-arbpl
+              qtdoee = <ls_pp051>-qtdoee
+            ) INTO lt_availability.
+
+          COLLECT
+            VALUE zabsf_pp051(
+              arbpl  = <ls_pp051>-arbpl
+              qtdoee = 1
+            ) INTO lt_total.
+        WHEN gc_oeeid_planned_time OR gc_oeeid_production_time.
+          COLLECT
+            VALUE zabsf_pp051(
+              arbpl  = <ls_pp051>-arbpl
+              qtdoee = COND #( WHEN <ls_pp051>-oeeid EQ gc_oeeid_planned_time THEN <ls_pp051>-qtdoee ELSE <ls_pp051>-qtdoee * -1 )
+            ) INTO lt_minutes.
+      ENDCASE.
+    ENDLOOP.
+
+    " Calculate values
+    LOOP AT lt_availability ASSIGNING FIELD-SYMBOL(<ls_availability>).
+      DATA(lv_total)        = lt_total[ arbpl = <ls_availability>-arbpl ]-qtdoee.
+      DATA(lv_minutes)      = lt_minutes[ arbpl = <ls_availability>-arbpl ]-qtdoee.
+      DATA(lv_availability) = <ls_availability>-qtdoee / lv_total. " Get the Average
+      DATA(lv_goal)         = VALUE #( lt_goals[ arbpl = <ls_availability>-arbpl ]-goal OPTIONAL ).
+
+      APPEND
+        VALUE #(
+          workcenterid = <ls_availability>-arbpl
+          availability = lv_availability
+          minutes      = lv_minutes
+          goal         = lv_goal
+          delta        = lv_goal - lv_availability
+        ) TO rt_availability.
+    ENDLOOP.
+
+    SORT rt_availability BY delta DESCENDING.
+  ENDMETHOD.
+
+
+METHOD get_dashboard_detail.
 
 *Local references
-    DATA: lref_sf_wrkctr    TYPE REF TO zabsf_pp_cl_wrkctr,
-          lref_sf_dashboard TYPE REF TO zabsf_pp_cl_dashboard.
+  DATA: lref_sf_wrkctr    TYPE REF TO zabsf_pp_cl_wrkctr,
+        lref_sf_dashboard TYPE REF TO zabsf_pp_cl_dashboard.
 
 *Internal tables and structures
-    DATA: ls_return               TYPE bapiret2,
-          lt_workcenter           TYPE zabsf_pp_t_wrkctr,
-          ls_workcenter           LIKE LINE OF lt_workcenter,
-          ls_workcenter_detail    TYPE zabsf_pp_s_wrkctr_detail,
-          ls_workcenter_dashboard TYPE zabsf_pp_s_workcenter_dashboar,
-          ls_hierarchies          TYPE zabsf_pp_s_hrchy.
+  DATA: ls_return               TYPE bapiret2,
+        lt_workcenter           TYPE zabsf_pp_t_wrkctr,
+        ls_workcenter           LIKE LINE OF lt_workcenter,
+        ls_workcenter_detail    TYPE zabsf_pp_s_wrkctr_detail,
+        ls_workcenter_dashboard TYPE zabsf_pp_s_workcenter_dashboar,
+        ls_hierarchies          TYPE zabsf_pp_s_hrchy.
 
-    DATA: "ls_prodord LIKE LINE OF wrkctr_detail-prord_tab,
-      ls_afko  TYPE afko,
-      ls_afvc  TYPE afvc,
-      ls_afvv  TYPE afvv,
-      lv_vgw02 TYPE vgwrt,
-      lv_bmsch TYPE bmsch.
+  DATA: "ls_prodord LIKE LINE OF wrkctr_detail-prord_tab,
+    ls_afko  TYPE afko,
+    ls_afvc  TYPE afvc,
+    ls_afvv  TYPE afvv,
+    lv_vgw02 TYPE vgwrt,
+    lv_bmsch TYPE bmsch.
 
-    DATA: lv_qty_out TYPE bstmg,
-          lv_un_out  TYPE lrmei,
-          lv_matnr   TYPE matnr,
-          lt_afru    TYPE STANDARD TABLE OF afru,
-          l_lmnga    TYPE ru_lmnga,
-          l_xmnga    TYPE ru_xmnga,
-          l_rmnga    TYPE ru_rmnga.
+  DATA: lv_qty_out TYPE bstmg,
+        lv_un_out  TYPE lrmei,
+        lv_matnr   TYPE matnr,
+        lt_afru    TYPE STANDARD TABLE OF afru,
+        l_lmnga    TYPE ru_lmnga,
+        l_xmnga    TYPE ru_xmnga,
+        l_rmnga    TYPE ru_rmnga.
 
-    CONSTANTS ct_kg(2) VALUE 'KG'.
+  CONSTANTS ct_kg(2) VALUE 'KG'.
 
 
 
 *Create objects of references
-    CREATE OBJECT lref_sf_wrkctr
-      EXPORTING
-        initial_refdt = refdt
-        input_object  = inputobj.
+  CREATE OBJECT lref_sf_wrkctr
+    EXPORTING
+      initial_refdt = refdt
+      input_object  = inputobj.
 
-    CREATE OBJECT lref_sf_dashboard
-      EXPORTING
-        input_refdt    = refdt
-        input_inputobj = inputobj.
+  CREATE OBJECT lref_sf_dashboard
+    EXPORTING
+      input_refdt    = refdt
+      input_inputobj = inputobj.
 
-    IF arbpl IS INITIAL.
+  IF arbpl IS INITIAL.
 *  Fetch all workcenters
-      LOOP AT hierarchies INTO ls_hierarchies.
+    LOOP AT hierarchies INTO ls_hierarchies.
 
-        CALL METHOD lref_sf_dashboard->get_workcenters_list
-          EXPORTING
-            hname      = ls_hierarchies-hname
-            werks      = inputobj-werks
-          CHANGING
-            wrkctr_tab = lt_workcenter
-            return_tab = return_tab.
+      CALL METHOD lref_sf_dashboard->get_workcenters_list
+        EXPORTING
+          hname      = ls_hierarchies-hname
+          werks      = inputobj-werks
+        CHANGING
+          wrkctr_tab = lt_workcenter
+          return_tab = return_tab.
 
-        LOOP AT lt_workcenter INTO ls_workcenter.
+* BEG - João Lopes - 24.02.2023
+* Areas: OPT e MTG - sort hierarchies and work centers by "KTEXT" field
+*        MEC - sort hierarchies and work centers by "ARBPL" field
+    IF inputobj-areaid <> 'MEC'.
+      SORT lt_workcenter BY ktext.
+    ELSE.
+      SORT lt_workcenter BY arbpl.
+    ENDIF.
+* END - João Lopes
+
+      LOOP AT lt_workcenter INTO ls_workcenter.
 *      For each workcenter, get details
-          CALL METHOD lref_sf_dashboard->get_workcenter_short_detail
-            EXPORTING
-              areaid        = inputobj-areaid
-              werks         = inputobj-werks
-              hname         = ls_hierarchies-hname
-              arbpl         = ls_workcenter-arbpl
-            CHANGING
-              wrkctr_detail = ls_workcenter_detail
-              return_tab    = return_tab.
+        CALL METHOD lref_sf_dashboard->get_workcenter_short_detail
+          EXPORTING
+            areaid        = inputobj-areaid
+            werks         = inputobj-werks
+            hname         = ls_hierarchies-hname
+            arbpl         = CONV #( ls_workcenter-arbpl )
+          CHANGING
+            wrkctr_detail = ls_workcenter_detail
+            return_tab    = return_tab.
 
 **MJP:FIM:ABACO_ABAP: 06.06.2019 14:15:55
 *  Get all orders from Z table
-          SELECT *
-            FROM zabsf_pp021
-            INTO TABLE @DATA(lt_zlp_pp_sf021)
-           WHERE arbpl EQ @ls_workcenter-arbpl
-            AND status_oper NE 'CONC'
-            AND status_oper NE 'AGU'
-            AND status_oper NE 'INI'.
+        SELECT *
+          FROM zabsf_pp021
+          INTO TABLE @DATA(lt_zlp_pp_sf021)
+         WHERE arbpl EQ @ls_workcenter-arbpl
+          AND status_oper NE 'CONC'
+          AND status_oper NE 'AGU'
+          AND status_oper NE 'INI'.
 
 
-          LOOP AT lt_zlp_pp_sf021 INTO DATA(ls_sf021).
+        LOOP AT lt_zlp_pp_sf021 INTO DATA(ls_sf021).
 
-            SELECT SINGLE * FROM afko INTO ls_afko
-              WHERE aufnr = ls_sf021-aufnr.
+          SELECT SINGLE * FROM afko INTO ls_afko
+            WHERE aufnr = ls_sf021-aufnr.
 
 * get routing anf counter
-            SELECT SINGLE * FROM afvc INTO ls_afvc
-              WHERE aufpl EQ ls_afko-aufpl
-                AND vornr EQ ls_sf021-vornr.
+          SELECT SINGLE * FROM afvc INTO ls_afvc
+            WHERE aufpl EQ ls_afko-aufpl
+              AND vornr EQ ls_sf021-vornr.
 
 * get quantity of operation
-            SELECT SINGLE * FROM afvv INTO ls_afvv
-              WHERE aufpl = ls_afvc-aufpl
-              AND aplzl = ls_afvc-aplzl.
+          SELECT SINGLE * FROM afvv INTO ls_afvv
+            WHERE aufpl = ls_afvc-aufpl
+            AND aplzl = ls_afvc-aplzl.
 
-            SELECT * FROM afru INTO CORRESPONDING FIELDS OF TABLE lt_afru
-                   WHERE rueck EQ ls_afvc-rueck
-                     AND aufnr EQ ls_sf021-aufnr
-                     AND vornr EQ ls_sf021-vornr
-                     AND stokz EQ space
-                     AND stzhl EQ space.
+          SELECT * FROM afru INTO CORRESPONDING FIELDS OF TABLE lt_afru
+                 WHERE rueck EQ ls_afvc-rueck
+                   AND aufnr EQ ls_sf021-aufnr
+                   AND vornr EQ ls_sf021-vornr
+                   AND stokz EQ space
+                   AND stzhl EQ space.
 
-            LOOP AT lt_afru INTO DATA(ls_afru).
+          LOOP AT lt_afru INTO DATA(ls_afru).
 
-              IF ls_afru-meinh NE 'KG'.
+            IF ls_afru-meinh NE 'KG'.
 
-                IF ls_afko-plnbez IS INITIAL.
-                  lv_matnr = ls_afko-stlbez.
-                ELSE.
-                  lv_matnr = ls_afko-plnbez.
-                ENDIF.
-
-* SEMPRE NA GELPEIXE
-                lv_un_out = ct_kg.
-
-*xmnga - Refugo a ser confirmado neste momento
-                CLEAR lv_qty_out.
-                CALL FUNCTION 'MD_CONVERT_MATERIAL_UNIT'
-                  EXPORTING
-                    i_matnr              = lv_matnr
-                    i_in_me              = ls_afru-meinh
-                    i_out_me             = lv_un_out
-                    i_menge              = ls_afru-xmnga
-                  IMPORTING
-                    e_menge              = lv_qty_out
-                  EXCEPTIONS
-                    error_in_application = 1
-                    error                = 2
-                    OTHERS               = 3.
-
-                l_xmnga = l_xmnga + lv_qty_out.
-
+              IF ls_afko-plnbez IS INITIAL.
+                lv_matnr = ls_afko-stlbez.
               ELSE.
-                l_xmnga = l_xmnga + ls_afru-xmnga.
+                lv_matnr = ls_afko-plnbez.
               ENDIF.
 
-            ENDLOOP.
+* SEMPRE NA GELPEIXE
+              lv_un_out = ct_kg.
+
+*xmnga - Refugo a ser confirmado neste momento
+              CLEAR lv_qty_out.
+              CALL FUNCTION 'MD_CONVERT_MATERIAL_UNIT'
+                EXPORTING
+                  i_matnr              = lv_matnr
+                  i_in_me              = ls_afru-meinh
+                  i_out_me             = lv_un_out
+                  i_menge              = ls_afru-xmnga
+                IMPORTING
+                  e_menge              = lv_qty_out
+                EXCEPTIONS
+                  error_in_application = 1
+                  error                = 2
+                  OTHERS               = 3.
+
+              l_xmnga = l_xmnga + lv_qty_out.
+
+            ELSE.
+              l_xmnga = l_xmnga + ls_afru-xmnga.
+            ENDIF.
+
           ENDLOOP.
-
-**MJP:FIM:ABACO_ABAP: 06.06.2019 14:15:55
-          ls_workcenter_detail-prd_sheet_defects = l_xmnga.
-
-*      Assign values to export table
-          CALL METHOD lref_sf_dashboard->map_values
-            EXPORTING
-              workcenter_detail    = ls_workcenter_detail
-            CHANGING
-              workcenter_dashboard = ls_workcenter_dashboard.
-
-          APPEND ls_workcenter_dashboard TO workcenter_dashboard.
-
-          CLEAR: ls_workcenter_detail, ls_workcenter_dashboard.
         ENDLOOP.
 
-        CLEAR ls_hierarchies.
-        REFRESH lt_workcenter.
-      ENDLOOP.
-    ELSE.
-*  For each workcenter, get details
-      CALL METHOD lref_sf_dashboard->get_workcenter_short_detail
-        EXPORTING
-          areaid        = inputobj-areaid
-          werks         = inputobj-werks
-          hname         = hname
-          arbpl         = arbpl
-        CHANGING
-          wrkctr_detail = ls_workcenter_detail
-          return_tab    = return_tab.
+**MJP:FIM:ABACO_ABAP: 06.06.2019 14:15:55
+        ls_workcenter_detail-prd_sheet_defects = l_xmnga.
 
-      IF aufnr IS NOT INITIAL AND vornr IS NOT INITIAL.
-*    Get information for a specific workcenter/production order/operation
-        CALL METHOD lref_sf_dashboard->get_workcenter_full_detail
+*      Assign values to export table
+        CALL METHOD lref_sf_dashboard->map_values
           EXPORTING
-            aufnr                = aufnr
-            vornr                = vornr
-            wrkctr_detail        = ls_workcenter_detail
+            workcenter_detail    = ls_workcenter_detail
           CHANGING
-            workcenter_dashboard = ls_workcenter_dashboard
-            return_tab           = return_tab.
+            workcenter_dashboard = ls_workcenter_dashboard.
 
-      ENDIF.
-*  Calculate oee indicators for only 1 workcenter.
-      CALL METHOD lref_sf_dashboard->calculate_oee_indicators
+        APPEND ls_workcenter_dashboard TO workcenter_dashboard.
+
+        CLEAR: ls_workcenter_detail, ls_workcenter_dashboard.
+      ENDLOOP.
+
+      CLEAR ls_hierarchies.
+      REFRESH lt_workcenter.
+    ENDLOOP.
+  ELSE.
+*  For each workcenter, get details
+    CALL METHOD lref_sf_dashboard->get_workcenter_short_detail
+      EXPORTING
+        areaid        = inputobj-areaid
+        werks         = inputobj-werks
+        hname         = hname
+        arbpl         = arbpl
+      CHANGING
+        wrkctr_detail = ls_workcenter_detail
+        return_tab    = return_tab.
+
+    IF aufnr IS NOT INITIAL AND vornr IS NOT INITIAL.
+*    Get information for a specific workcenter/production order/operation
+      CALL METHOD lref_sf_dashboard->get_workcenter_full_detail
         EXPORTING
-          workcenter_detail    = ls_workcenter_detail
+          aufnr                = aufnr
+          vornr                = vornr
+          wrkctr_detail        = ls_workcenter_detail
         CHANGING
-          workcenter_dashboard = ls_workcenter_dashboard.
+          workcenter_dashboard = ls_workcenter_dashboard
+          return_tab           = return_tab.
 
-      APPEND ls_workcenter_dashboard TO workcenter_dashboard.
     ENDIF.
-  ENDMETHOD.
+*  Calculate oee indicators for only 1 workcenter.
+    CALL METHOD lref_sf_dashboard->calculate_oee_indicators
+      EXPORTING
+        workcenter_detail    = ls_workcenter_detail
+      CHANGING
+        workcenter_dashboard = ls_workcenter_dashboard.
+
+    APPEND ls_workcenter_dashboard TO workcenter_dashboard.
+  ENDIF.
+ENDMETHOD.
 
 
-  METHOD get_hierarchies.
+METHOD get_hierarchies.
 *Types
-    TYPES: BEGIN OF ty_crtx,
-             name  TYPE cr_hname,
-             ktext TYPE cr_ktext,
-           END OF ty_crtx.
+  TYPES: BEGIN OF ty_crtx,
+           name  TYPE cr_hname,
+           ktext TYPE cr_ktext,
+         END OF ty_crtx.
 
 *Internl tables
-    DATA: lt_crtx TYPE TABLE OF ty_crtx.
+  DATA: lt_crtx TYPE TABLE OF ty_crtx.
 
-    "  IF inputobj-areaid IS INITIAL.
+  "  IF inputobj-areaid IS INITIAL.
 
-    SELECT DISTINCT werks areaid hname
-       FROM zabsf_pp002
-       INTO CORRESPONDING FIELDS OF TABLE hierarchies
-      WHERE werks EQ inputobj-werks
-        AND begda LE sy-datum
-        AND endda GE sy-datum.
+  SELECT DISTINCT werks areaid hname
+     FROM zabsf_pp002
+     INTO CORRESPONDING FIELDS OF TABLE hierarchies
+    WHERE werks EQ inputobj-werks
+      AND begda LE sy-datum
+      AND endda GE sy-datum.
 
-    " ELSE.
+  " ELSE.
 *      SELECT * FROM zlp_pp_sf002 INTO CORRESPONDING FIELDS OF TABLE hierarchies
 *        WHERE werks = inputobj-werks
 *        AND areaid = inputobj-areaid
 *        AND begda LE sy-datum
 *        AND endda GE sy-datum.
 
-    "  ENDIF.
+  "  ENDIF.
 
-    CHECK hierarchies IS NOT INITIAL.
+  CHECK hierarchies IS NOT INITIAL.
 
 *    SORT hierarchies BY hname.
 *    DELETE ADJACENT DUPLICATES FROM hierarchies COMPARING hname.
 
 *  Get hierarchy description
-    SELECT crhh~name crtx~ktext
-      INTO CORRESPONDING FIELDS OF TABLE lt_crtx
-      FROM crtx AS crtx
-     INNER JOIN crhh AS crhh
-        ON crhh~objty EQ crtx~objty
-       AND crhh~objid EQ crtx~objid
-       FOR ALL ENTRIES IN hierarchies
-     WHERE crhh~name  EQ hierarchies-hname
-       AND crhh~werks EQ hierarchies-werks
-       AND crhh~objty EQ 'H'
-       AND crtx~spras EQ inputobj-language.
+  SELECT crhh~name crtx~ktext
+    INTO CORRESPONDING FIELDS OF TABLE lt_crtx
+    FROM crtx AS crtx
+   INNER JOIN crhh AS crhh
+      ON crhh~objty EQ crtx~objty
+     AND crhh~objid EQ crtx~objid
+     FOR ALL ENTRIES IN hierarchies
+   WHERE crhh~name  EQ hierarchies-hname
+     AND crhh~werks EQ hierarchies-werks
+     AND crhh~objty EQ 'H'
+     AND crtx~spras EQ inputobj-language.
 
-    IF lt_crtx[] IS INITIAL.
+  IF lt_crtx[] IS INITIAL.
 *    Get alternative language
-      SELECT SINGLE spras
-        FROM zabsf_pp061
-        INTO (@DATA(l_langu))
-       WHERE werks      EQ @inputobj-werks
-         AND is_default NE @space.
-
+    SELECT SINGLE spras
+      FROM zabsf_pp061
+      INTO (@DATA(l_langu))
+     WHERE werks      EQ @inputobj-werks
+       AND is_default NE @space.
+    IF  sy-subrc IS INITIAL.
 *    Get hierarchy description
       SELECT crhh~name crtx~ktext
         INTO CORRESPONDING FIELDS OF TABLE lt_crtx
@@ -1060,20 +1185,72 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
          AND crhh~objty EQ 'H'
          AND crtx~spras EQ l_langu.
     ENDIF.
+  ENDIF.
 
-    LOOP AT hierarchies ASSIGNING FIELD-SYMBOL(<fs_hierarchies>).
+  LOOP AT hierarchies ASSIGNING FIELD-SYMBOL(<fs_hierarchies>).
 *    Read hierarchy description
-      READ TABLE lt_crtx INTO DATA(ls_crtx) WITH KEY name = <fs_hierarchies>-hname.
+    READ TABLE lt_crtx INTO DATA(ls_crtx) WITH KEY name = <fs_hierarchies>-hname.
 
-      IF sy-subrc EQ 0.
+    IF sy-subrc EQ 0.
 *      Hierarchy description
-        <fs_hierarchies>-ktext = ls_crtx-ktext.
-      ENDIF.
+      <fs_hierarchies>-ktext = ls_crtx-ktext.
+    ENDIF.
+  ENDLOOP.
+ENDMETHOD.
+
+
+  METHOD get_losts.
+    DATA(lv_spras) = CONV spras( inputobj-language ).
+    DATA(lv_prev_day) = CONV datum( refdt - 1 ).
+
+    " Get All Scraps
+    SELECT grund, scrap_qty
+      FROM zabsf_pp034
+      INTO TABLE @DATA(lt_pp034)
+      WHERE hname IN @gr_hname
+        AND arbpl IN @gr_arbpl
+        AND ( ( data EQ @lv_prev_day AND
+                time GE @gc_start_time ) OR
+              ( data EQ @refdt AND
+                time LE @gc_start_time ) ).
+    CHECK sy-subrc IS INITIAL.
+
+    " Sumarize by reason
+    DATA lt_losts TYPE STANDARD TABLE OF zabsf_pp034.
+    LOOP AT lt_pp034 ASSIGNING FIELD-SYMBOL(<ls_pp034>).
+      COLLECT
+        VALUE zabsf_pp034(
+          grund     = <ls_pp034>-grund
+          scrap_qty = <ls_pp034>-scrap_qty
+        ) INTO lt_losts.
+    ENDLOOP.
+
+    SELECT grund, grdtx
+      FROM trugt
+      INTO TABLE @DATA(lt_trugt)
+      FOR ALL ENTRIES IN @lt_losts
+      WHERE spras EQ @lv_spras
+        AND grund EQ @lt_losts-grund.
+
+    " Sumarize Total
+    DATA(lv_total) =
+      REDUCE #(
+        INIT t = '0.0'
+        FOR l IN lt_losts
+        NEXT t = t + l-scrap_qty ).
+
+    " Fill result table
+    LOOP AT lt_losts ASSIGNING FIELD-SYMBOL(<ls_losts>).
+      APPEND
+        VALUE #(
+          defect     = |{ <ls_losts>-grund } - { VALUE #( lt_trugt[ grund = <ls_losts>-grund ]-grdtx OPTIONAL ) }|
+          percentage = <ls_losts>-scrap_qty / lv_total * 100
+        ) TO rt_losts.
     ENDLOOP.
   ENDMETHOD.
 
 
-  METHOD get_operators.
+METHOD get_operators.
 
     DATA: ls_oprid        TYPE zabsf_pp_s_operador,
           ls_zlp_pp_sf014 TYPE zabsf_pp014.
@@ -1116,7 +1293,7 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_operator_monthly_log.
+METHOD get_operator_monthly_log.
 *  Internal tables
     DATA: lt_selection     TYPE TABLE OF rsparams,
           lt_output_report TYPE TABLE OF zabsf_pp_s_calc_workers_kpi,
@@ -1229,7 +1406,234 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_workcenters_list.
+  METHOD get_performance.
+    " Get Performance
+    SELECT *
+      FROM zabsf_pp051
+      INTO TABLE @DATA(lt_pp051)
+      WHERE hname IN @gr_hname
+        AND arbpl IN @gr_arbpl
+        AND oeeid EQ @gc_oeeid_performance
+        AND data  EQ @refdt.
+    CHECK lt_pp051[] IS NOT INITIAL.
+    SORT lt_pp051 BY arbpl oeeid.
+
+    " Get Goals
+    DATA(lt_fae) = lt_pp051[].
+    DELETE ADJACENT DUPLICATES FROM lt_fae COMPARING arbpl.
+
+    SELECT *
+      FROM zabsf_pp092
+      INTO TABLE @DATA(lt_goals)
+      FOR ALL ENTRIES IN @lt_fae
+      WHERE arbpl EQ @lt_fae-arbpl
+        AND endda GE @refdt
+        AND begda LE @refdt.
+
+    DATA:
+      lt_performance TYPE STANDARD TABLE OF zabsf_pp051,
+      lt_total       TYPE STANDARD TABLE OF zabsf_pp051.
+
+    " Sumarize values on tables
+    LOOP AT lt_pp051 ASSIGNING FIELD-SYMBOL(<ls_pp051>).
+      COLLECT
+        VALUE zabsf_pp051(
+          arbpl  = <ls_pp051>-arbpl
+          qtdoee = <ls_pp051>-qtdoee
+        ) INTO lt_performance.
+
+      COLLECT
+        VALUE zabsf_pp051(
+          arbpl  = <ls_pp051>-arbpl
+          qtdoee = 1
+        ) INTO lt_total.
+    ENDLOOP.
+
+    " Calculate values
+    LOOP AT lt_performance ASSIGNING FIELD-SYMBOL(<ls_performance>).
+      DATA(lv_total)       = lt_total[ arbpl = <ls_performance>-arbpl ]-qtdoee.
+      DATA(lv_goal)        = VALUE #( lt_goals[ arbpl = <ls_performance>-arbpl ]-goal OPTIONAL ).
+      DATA(lv_performance) = <ls_performance>-qtdoee / lv_total. " Get the Average
+
+      APPEND
+        VALUE #(
+          workcenterid = <ls_performance>-arbpl
+          performance  = <ls_performance>-qtdoee / lv_total
+          goal         = lv_goal
+          delta        = lv_goal - lv_performance
+        ) TO rt_performance.
+    ENDLOOP.
+
+    SORT rt_performance BY delta DESCENDING.
+  ENDMETHOD.
+
+
+  METHOD get_quality.
+    " Get Availability
+    SELECT *
+      FROM zabsf_pp051
+      INTO TABLE @DATA(lt_pp051)
+      WHERE hname IN @gr_hname
+        AND arbpl IN @gr_arbpl
+        AND oeeid EQ @gc_oeeid_quality
+        AND data  EQ @refdt.
+    CHECK lt_pp051[] IS NOT INITIAL.
+    SORT lt_pp051 BY arbpl oeeid.
+
+    " Get Goals
+    DATA(lt_fae) = lt_pp051[].
+    DELETE ADJACENT DUPLICATES FROM lt_fae COMPARING arbpl.
+
+    SELECT *
+      FROM zabsf_pp091
+      INTO TABLE @DATA(lt_goals)
+      FOR ALL ENTRIES IN @lt_fae
+      WHERE arbpl EQ @lt_fae-arbpl
+        AND endda GE @refdt
+        AND begda LE @refdt.
+
+    DATA:
+      lt_quality TYPE STANDARD TABLE OF zabsf_pp051,
+      lt_total   TYPE STANDARD TABLE OF zabsf_pp051.
+
+    " Sumarize values on tables
+    LOOP AT lt_pp051 ASSIGNING FIELD-SYMBOL(<ls_pp051>).
+      COLLECT
+        VALUE zabsf_pp051(
+          arbpl  = <ls_pp051>-arbpl
+          qtdoee = <ls_pp051>-qtdoee
+        ) INTO lt_quality.
+
+      COLLECT
+        VALUE zabsf_pp051(
+          arbpl  = <ls_pp051>-arbpl
+          qtdoee = 1
+        ) INTO lt_total.
+    ENDLOOP.
+
+    " Calculate values
+    LOOP AT lt_quality ASSIGNING FIELD-SYMBOL(<ls_quality>).
+      DATA(lv_total)   = lt_total[ arbpl = <ls_quality>-arbpl ]-qtdoee.
+      DATA(lv_goal)    = VALUE #( lt_goals[ arbpl = <ls_quality>-arbpl ]-goal OPTIONAL ).
+      DATA(lv_quality) = <ls_quality>-qtdoee / lv_total. " Get the Average
+
+      APPEND
+        VALUE #(
+          workcenterid = <ls_quality>-arbpl
+          quality      = <ls_quality>-qtdoee / lv_total
+          goal         = lv_goal
+          delta        = lv_goal - lv_quality
+        ) TO rt_quality.
+    ENDLOOP.
+
+    SORT rt_quality BY delta DESCENDING.
+  ENDMETHOD.
+
+
+  METHOD get_review.
+    " Get review
+    SELECT *
+      FROM zabsf_pp051
+      INTO TABLE @DATA(lt_pp051)
+      WHERE hname IN @gr_hname
+        AND arbpl IN @gr_arbpl
+        AND oeeid EQ @gc_oeeid_oee
+        AND data  EQ @refdt.
+    CHECK lt_pp051[] IS NOT INITIAL.
+    SORT lt_pp051 BY arbpl oeeid.
+
+    DATA:
+      lt_review TYPE STANDARD TABLE OF zabsf_pp051,
+      lt_total  TYPE STANDARD TABLE OF zabsf_pp051.
+
+    " Sumarize values on tables
+    LOOP AT lt_pp051 ASSIGNING FIELD-SYMBOL(<ls_pp051>).
+      COLLECT
+        VALUE zabsf_pp051(
+          arbpl   = <ls_pp051>-arbpl
+          shiftid = <ls_pp051>-shiftid
+          qtdoee  = <ls_pp051>-qtdoee
+        ) INTO lt_review.
+
+      COLLECT
+        VALUE zabsf_pp051(
+          arbpl   = <ls_pp051>-arbpl
+          shiftid = <ls_pp051>-shiftid
+          qtdoee  = 1
+        ) INTO lt_total.
+    ENDLOOP.
+
+    " Calculate values
+    LOOP AT lt_review ASSIGNING FIELD-SYMBOL(<ls_review>).
+      DATA(lv_total)  = lt_total[ arbpl = <ls_review>-arbpl shiftid = <ls_review>-shiftid ]-qtdoee.
+      DATA(lv_review) = <ls_review>-qtdoee / lv_total. " Get the Average
+
+      APPEND
+        VALUE #(
+          workcenterid = <ls_review>-arbpl
+          shiftid      = <ls_review>-shiftid
+          percentage   = <ls_review>-qtdoee / lv_total
+        ) TO rt_review.
+    ENDLOOP.
+
+    SORT rt_review BY workcenterid shiftid.
+  ENDMETHOD.
+
+
+  METHOD get_stops.
+    DATA(lv_prev_day) = refdt - 1.
+
+    " Get Stops time
+    SELECT s~*
+      FROM zabsf_pp010 AS s
+        INNER JOIN zabsf_pp011 AS r
+          ON r~areaid   EQ s~areaid   AND
+             r~werks    EQ s~werks    AND
+             r~arbpl    EQ s~arbpl    AND
+             r~stprsnid EQ s~stprsnid AND
+             r~endda    GE s~datesr   AND
+             r~begda    LE s~datesr
+      INTO TABLE @DATA(lt_pp010)
+      WHERE s~hname      IN @gr_hname
+        and s~arbpl      IN @gr_arbpl
+        AND ( ( s~datesr EQ @lv_prev_day AND
+                s~time   GE @gc_start_time ) OR
+              ( s~datesr EQ @refdt AND
+                s~time   LE @gc_start_time ) )
+        AND s~stoptime   NE 0
+        AND r~motivetype EQ @gc_mtype_not_planned.
+
+    SORT lt_pp010 BY arbpl stprsnid.
+
+    " Sumarize by reason
+    DATA lt_stops TYPE STANDARD TABLE OF zabsf_pp010.
+    LOOP AT lt_pp010 ASSIGNING FIELD-SYMBOL(<ls_pp010>).
+      COLLECT
+        VALUE zabsf_pp010(
+          stprsnid = <ls_pp010>-stprsnid
+          stoptime = <ls_pp010>-stoptime
+        ) INTO lt_stops.
+    ENDLOOP.
+
+    " Sumarize Total
+    DATA(lv_total) =
+      REDUCE #(
+        INIT t = '00000.0000'
+        FOR s IN lt_stops
+        NEXT t = t + s-stoptime ).
+
+    " Fill result table
+    LOOP AT lt_stops ASSIGNING FIELD-SYMBOL(<ls_stop>).
+      APPEND
+        VALUE #(
+          reason     = <ls_stop>-stprsnid
+          percentage = <ls_stop>-stoptime / lv_total * 100
+        ) TO rt_stops.
+    ENDLOOP.
+  ENDMETHOD.
+
+
+METHOD get_workcenters_list.
 
 *Internal tables
     DATA: lt_crhs TYPE TABLE OF crhs,
@@ -1401,7 +1805,108 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_workcenter_full_detail.
+  METHOD get_workcenter_dashboard.
+    " Get Eleven months before to get Evolution Data
+    DATA(lv_evolution_date) = CONV datum( refdt(6) && '01' ).
+
+    CALL FUNCTION 'RP_CALC_DATE_IN_INTERVAL'
+      EXPORTING
+        date      = lv_evolution_date
+        days      = 0
+        months    = 11
+        signum    = '-'
+        years     = 0
+      IMPORTING
+        calc_date = lv_evolution_date.
+
+    " Select Data
+    SELECT *
+      FROM zabsf_pp051
+      INTO TABLE @DATA(lt_pp051)
+      WHERE ( hname IN @gr_hname AND
+              arbpl IN @gr_arbpl AND
+              data  EQ @refdt )
+        OR  ( hname IN @gr_hname AND
+              oeeid EQ @gc_oeeid_oee AND
+              data  GE @lv_evolution_date ).
+    SORT lt_pp051 BY shiftid data.
+
+    DATA:
+      lv_ac        TYPE i,
+      lv_pc        TYPE i,
+      lv_qc        TYPE i,
+      lv_oc        TYPE i,
+      lt_evolution TYPE STANDARD TABLE OF zabsf_pp051,
+      lt_total     TYPE STANDARD TABLE OF zabsf_pp051.
+
+    LOOP AT lt_pp051 ASSIGNING FIELD-SYMBOL(<ls_pp051>).
+      CASE <ls_pp051>-oeeid.
+        WHEN 1. "DISP - Availabily
+          ADD <ls_pp051>-qtdoee TO ev_availability.
+          ADD 1 TO lv_ac.
+
+        WHEN 2. "PERF - Performance
+          ADD <ls_pp051>-qtdoee TO ev_performance.
+          ADD 1 TO lv_pc.
+
+        WHEN 3. "QUAL - Quality
+          ADD <ls_pp051>-qtdoee TO ev_quality.
+          ADD 1 TO lv_qc.
+
+        WHEN 4. "OEE
+          IF <ls_pp051>-data EQ refdt.
+            ADD <ls_pp051>-qtdoee TO ev_oee.
+            ADD 1 TO lv_oc.
+          ENDIF.
+
+          COLLECT
+            VALUE zabsf_pp051(
+              data    = <ls_pp051>-data(6) && '01'
+              shiftid = <ls_pp051>-shiftid
+              qtdoee  = <ls_pp051>-qtdoee
+            ) INTO lt_evolution.
+
+          COLLECT
+            VALUE zabsf_pp051(
+              data    = <ls_pp051>-data(6) && '01'
+              shiftid = <ls_pp051>-shiftid
+              qtdoee  = 1
+            ) INTO lt_total.
+      ENDCASE.
+    ENDLOOP.
+
+    " Calculate Average
+    ev_availability = COND #( WHEN lv_ac NE 0 THEN ev_availability / lv_ac ).
+    ev_performance = COND #( WHEN lv_pc NE 0 THEN ev_performance / lv_pc ).
+    ev_quality = COND #( WHEN lv_qc NE 0 THEN ev_quality / lv_qc ).
+    ev_oee = COND #( WHEN lv_oc NE 0 THEN ev_oee / lv_oc ).
+
+    DATA(lv_spras) = CONV spras( inputobj-language ).
+
+    IF lv_spras IS INITIAL.
+      lv_spras = sy-langu.
+    ENDIF.
+
+    SELECT *
+      FROM t247
+      INTO TABLE @DATA(lt_t247)
+      WHERE spras EQ @lv_spras.
+
+    LOOP AT lt_evolution ASSIGNING FIELD-SYMBOL(<ls_evolution>).
+      DATA(ls_total) = lt_total[ data = <ls_evolution>-data shiftid = <ls_evolution>-shiftid ].
+
+      APPEND
+        VALUE #(
+          period     = <ls_evolution>-data(6)
+          month      = VALUE #( lt_t247[ mnr = <ls_evolution>-data+4(2) ]-ltx OPTIONAL )
+          shiftid    = <ls_evolution>-shiftid
+          percentage = <ls_evolution>-qtdoee / ls_total-qtdoee
+        ) TO et_evolution.
+    ENDLOOP.
+  ENDMETHOD.
+
+
+METHOD get_workcenter_full_detail.
 
     DATA: lref_sf_prdord TYPE REF TO zabsf_pp_cl_prdord.
 
@@ -1690,7 +2195,7 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_workcenter_short_detail.
+METHOD get_workcenter_short_detail.
 
 *Contants:
     CONSTANTS: c_proc(4) VALUE 'PROC',
@@ -1960,7 +2465,7 @@ CLASS ZABSF_PP_CL_DASHBOARD IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD map_values.
+METHOD map_values.
 
     DATA: ls_prodord LIKE LINE OF workcenter_detail-prord_tab,
           ls_oprid   TYPE zabsf_pp_s_operador.

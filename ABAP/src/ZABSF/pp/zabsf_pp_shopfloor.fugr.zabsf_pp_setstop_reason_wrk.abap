@@ -1,6 +1,6 @@
 FUNCTION zabsf_pp_setstop_reason_wrk .
 *"----------------------------------------------------------------------
-*"*"Interface local:
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL) TYPE  ARBPL
 *"     VALUE(WERKS) TYPE  WERKS_D OPTIONAL
@@ -8,9 +8,11 @@ FUNCTION zabsf_pp_setstop_reason_wrk .
 *"     VALUE(TIME) TYPE  ATIME
 *"     VALUE(STPRSNID) TYPE  ZABSF_PP_E_STPRSNID
 *"     VALUE(ACTIONID) TYPE  ZABSF_PP_E_ACTION OPTIONAL
+*"     VALUE(SHIFTID) TYPE  ZABSF_PP_E_SHIFTID OPTIONAL
 *"     VALUE(COUNT_FIN_TAB) TYPE  ZABSF_PP_T_COUNTERS OPTIONAL
 *"     VALUE(REFDT) TYPE  VVDATUM DEFAULT SY-DATUM
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
+*"     VALUE(HNAME) TYPE  CR_HNAME
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
 *"----------------------------------------------------------------------
@@ -32,6 +34,8 @@ FUNCTION zabsf_pp_setstop_reason_wrk .
       time          = time
       stprsnid      = stprsnid
       count_fin_tab = count_fin_tab
+      shiftid       = shiftid
+      hname         = hname
     CHANGING
       actionid      = actionid
       return_tab    = return_tab.

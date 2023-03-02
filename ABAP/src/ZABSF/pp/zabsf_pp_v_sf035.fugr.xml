@@ -2,9 +2,11 @@
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
-   <AREAT>atualização ampliada de tabelas (gerada)</AREAT>
    <INCLUDES>
+    <SOBJ_NAME>LZABSF_PP_V_SF035F00</SOBJ_NAME>
+    <SOBJ_NAME>LZABSF_PP_V_SF035I00</SOBJ_NAME>
     <SOBJ_NAME>LZABSF_PP_V_SF035T00</SOBJ_NAME>
+    <SOBJ_NAME>LZABSF_PP_V_SF035TOP</SOBJ_NAME>
     <SOBJ_NAME>SAPLZABSF_PP_V_SF035</SOBJ_NAME>
    </INCLUDES>
    <FUNCTIONS>
@@ -446,11 +448,12 @@
        <VISLENGTH>010</VISLENGTH>
        <HEIGHT>001</HEIGHT>
        <GROUP1>KEY</GROUP1>
-       <FORMAT>CHAR</FORMAT>
+       <FORMAT>INT1</FORMAT>
        <FROM_DICT>X</FROM_DICT>
        <MODIFIC>X</MODIFIC>
        <OUTPUT_FLD>X</OUTPUT_FLD>
        <REQU_ENTRY>N</REQU_ENTRY>
+       <DICT_I_VAL>X</DICT_I_VAL>
       </RPY_DYFATC>
       <RPY_DYFATC>
        <CONT_TYPE>TABLE_CTRL</CONT_TYPE>

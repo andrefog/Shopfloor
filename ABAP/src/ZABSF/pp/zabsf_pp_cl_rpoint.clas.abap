@@ -75,6 +75,16 @@ public section.
       !DEFECTS_TAB type ZABSF_PP_T_DEFECTS optional
       !REASON_TAB type ZABSF_PP_T_REASON optional
       !RETURN_TAB type BAPIRET2_T .
+  methods SET_SCRAP_RPOINT
+    importing
+      !RPOINT type ZABSF_PP_E_RPOINT
+      !MATNR type MATNR
+      !PLANORDER type PLNUM optional
+      !REFDT type DATUM
+      !SCRAP_TAB type ZABSF_PP_T_SCRAP
+      !IS_INPUTOBJ type ZABSF_PP_S_INPUTOBJECT
+    changing
+      !RETURN_TAB type BAPIRET2_T .
 protected section.
 private section.
 
@@ -394,7 +404,6 @@ METHOD get_material_rpoint.
               years     = '00'
             IMPORTING
               calc_date = ld_day_week.
-
         ENDWHILE.
 
         IF ld_days EQ 0.
@@ -481,7 +490,7 @@ METHOD get_material_rpoint.
           FROM plpo AS plpo
          INNER JOIN t430 AS t430
             ON t430~steus EQ plpo~steus
-           AND t430~ruek EQ '1'
+*           AND t430~ruek EQ '1'  "Código original Shopfloor
          INNER JOIN plas AS plas
             ON plas~plnty EQ plpo~plnty
            AND plas~plnnr EQ plpo~plnnr
@@ -493,7 +502,11 @@ METHOD get_material_rpoint.
            AND plpo~plnty EQ lt_mkal-plnty
            AND plpo~plnnr EQ lt_mkal-plnnr
            AND plas~datuv LE sy-datum
-           AND plas~loekz EQ space.
+           AND plas~loekz EQ space
+* Begin JOL - 22/11/2022
+           AND ( t430~ruek EQ '1' OR
+                 t430~ruek EQ space ). "Mostar chaves de controlo FPY0 e ZPSU
+* End JOL - 22/11/2022
       ENDIF.
 
       LOOP AT lt_zabsf_pp042 INTO ls_zabsf_pp042.
@@ -524,6 +537,13 @@ METHOD get_material_rpoint.
 *      Sum quantity planned
         LOOP AT lt_plaf INTO ls_plaf WHERE matnr EQ ls_mat_plan-matnr.
           ADD ls_plaf-gsmng TO ls_mat_plan-gsmng.
+* Begin JOL - 22/11/2022 - "Get previous planned orders"
+          IF ls_plaf-pedtr BETWEEN ld_first_day AND ld_last_day.
+            ADD ls_plaf-gsmng TO ls_mat_plan-gsmngweek.
+          ELSE.
+            ADD ls_plaf-gsmng TO ls_mat_plan-gsmngdelay.
+          ENDIF.
+* End JOL - 22/11/2022
           CLEAR ls_plaf.
 *        For add planned material
           flag_plan = 'X'.
@@ -536,22 +556,51 @@ METHOD get_material_rpoint.
 *          ls_mat_plan-amount = ls_ZABSF_PP042-takt.
         ENDIF.
 
-*      Get operation and operation description
+* Begin JOL - 22/11/2022 - Get stock from warehouse 0070 and 0079
+*      Stock 0070
+        SELECT SINGLE labst
+          FROM mard
+          INTO @ls_mat_plan-stk0070
+          WHERE matnr  EQ @ls_mat_plan-matnr
+            AND werks  EQ @inputobj-werks
+            AND lgort  EQ '0070'.
+*      Stock 0079
+        SELECT SINGLE labst
+           FROM mard
+           INTO @ls_mat_plan-stk0079
+          WHERE matnr  EQ @ls_mat_plan-matnr
+            AND werks  EQ @inputobj-werks
+            AND lgort  EQ '0079'.
+* End JOL - 22/11/2022
+
+* Get operation and operation description
         READ TABLE lt_mkal INTO ls_mkal WITH KEY matnr = ls_mat_plan-matnr.
 
         IF sy-subrc EQ 0.
 *          READ TABLE lt_plpo INTO ls_plpo WITH KEY plnty = ls_mkal-plnty
 *                                                   plnnr = ls_mkal-plnnr.
+          DATA(lv_length) = ''.
 
           LOOP AT lt_plpo INTO ls_plpo WHERE plnty EQ ls_mkal-plnty
                                          AND plnnr EQ ls_mkal-plnnr.
-
-
+            CLEAR: lv_length.
 *          IF sy-subrc EQ 0.
 *          Operation
             ls_mat_plan-vornr = ls_plpo-vornr.
+* Begin JOL - 22/12/2022 - delete leading zeros "ltxa1" field.
 *          Operation Description
-            ls_mat_plan-ltxa1 = ls_plpo-ltxa1.
+            lv_length = strlen( ls_plpo-ltxa1 ).
+
+            IF lv_length ne 2.
+              CALL FUNCTION 'CONVERSION_EXIT_ALPHA_OUTPUT'
+                EXPORTING
+                  input  = ls_plpo-ltxa1
+                IMPORTING
+                  output = ls_plpo-ltxa1.
+            ENDIF.
+
+            ls_mat_plan-ltxa1 =  ls_plpo-ltxa1.
+* Begin JOL - 22/12/2022
 *          ENDIF.
 
 *          Get all operation of cost collector
@@ -776,7 +825,8 @@ METHOD get_rpoint_detail.
          ld_class,
          ld_shiftid.
 
-  TRANSLATE inputobj-oprid TO UPPER CASE. "CLS 16.06.2015
+  TRANSLATE inputobj-oprid TO UPPER CASE.
+
 *Get shift witch operator is associated
   SELECT SINGLE shiftid
     FROM zabsf_pp052
@@ -917,6 +967,10 @@ METHOD get_rpoint_detail.
         operator_tab = rpoint_detail-opr_arpoint_tab
         return_tab   = return_tab.
 
+*    LOOP AT rpoint_detail-opr_arpoint_tab ASSIGNING FIELD-SYMBOL(<ls_aop>).
+*      DELETE rpoint_detail-oper_rpoint_tab WHERE oprid = <ls_aop>-oprid.
+*    ENDLOOP.
+
   ELSE.
 *  No workcenter detail found
     CALL METHOD zabsf_pp_cl_log=>add_message
@@ -951,11 +1005,8 @@ METHOD set_pass_material.
     ls_zabsf_pp047-gernr = gernr.
 *  Passage number
     ls_zabsf_pp047-passnumber = passnumber.
-
-*>>> PAP - Correcções - 20.05.2015
 *  Date
     ls_zabsf_pp047-date_reg = sy-datum.
-*<<< PAP - Correcções - 20.05.2015
 
 *  Get Description for defect flag in Domain
     CALL FUNCTION 'STF4_GET_DOMAIN_VALUE_TEXT'
@@ -980,6 +1031,7 @@ METHOD set_pass_material.
       INTO ls_zabsf_pp047-defect_desc
      WHERE areaid   EQ inputobj-areaid
        AND werks    EQ inputobj-werks
+       AND arbpl    EQ rpoint
        AND defectid EQ defectid
        AND spras    EQ sy-langu.
 
@@ -1159,5 +1211,285 @@ METHOD SET_REFDT.
 *Set new reference date
   refdt = new_refdt.
 
+  ENDMETHOD.
+
+
+  METHOD set_scrap_rpoint.
+    DATA: ls_bflushflags    TYPE bapi_rm_flg,
+          ls_bflushdatagen  TYPE bapi_rm_datgen,
+          ls_bflushdatamts  TYPE bapi_rm_datstock,
+          lv_plnum          TYPE plnum,
+          lv_confirmation   TYPE bapi_rm_datkey-confirmation,
+          ls_return         TYPE bapiret2,
+          ls_goodsmovements TYPE bapi2017_gm_item_create,
+          lt_goodsmovements TYPE TABLE OF bapi2017_gm_item_create,
+          lt_components     TYPE zabsf_pp_t_components,
+          lt_return         TYPE bapiret2_t,
+          lref_sf_consum    TYPE REF TO zif_absf_pp_consumptions,
+          lv_class          TYPE recaimplclname,
+          lv_method         TYPE seocmpname,
+          ls_zabsf_pp049    TYPE zabsf_pp049,
+          lv_qty_av         TYPE bapicm61v-wkbst,
+          lv_stock_fail(1),
+          lt_wmdvs          TYPE TABLE OF bapiwmdvs,
+          lt_wmdve          TYPE TABLE OF bapiwmdve.
+
+    CONSTANTS: c_bwart TYPE bwart VALUE '261'.
+
+    TRANSLATE inputobj-oprid TO UPPER CASE.
+
+* Get shift witch operator is associated
+    SELECT SINGLE shiftid
+      FROM zabsf_pp052
+      INTO @DATA(lv_shiftid)
+     WHERE areaid EQ @inputobj-areaid
+       AND oprid EQ @inputobj-oprid.
+
+    IF sy-subrc NE 0.
+      IF 1 = 2. MESSAGE e061(zabsf_pp) . ENDIF.
+* Operator is not associated with shift
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = 'E'
+          msgno      = '061'
+          msgv1      = inputobj-oprid
+        CHANGING
+          return_tab = return_tab.
+
+      EXIT.
+    ENDIF.
+
+    IF scrap_tab[] IS NOT INITIAL.
+
+*Get class of interface
+      SELECT SINGLE imp_clname methodname
+         FROM zabsf_pp003
+         INTO (lv_class, lv_method)
+         WHERE werks    EQ is_inputobj-werks
+           AND id_class EQ '9'
+           AND endda    GE refdt
+           AND begda    LE refdt.
+
+      TRY .
+          CREATE OBJECT lref_sf_consum TYPE (lv_class)
+            EXPORTING
+              initial_refdt = CONV datum( refdt )
+              input_object  = is_inputobj.
+
+        CATCH cx_sy_create_object_error INTO DATA(lo_exception).
+
+          CALL METHOD zcl_lp_pp_sf_log=>add_message
+            EXPORTING
+              msgty      = 'E'
+              msgno      = '019'
+              msgv1      = lv_class
+            CHANGING
+              return_tab = lt_return.
+
+          EXIT.
+      ENDTRY.
+
+      LOOP AT scrap_tab INTO DATA(ls_scrap).
+        CLEAR: ls_bflushflags,
+               ls_bflushdatagen,
+               ls_bflushdatamts,
+               lt_goodsmovements[].
+
+        "" Control PARAMETERS for confirmation
+* Backflush type
+        ls_bflushflags-bckfltype = '02'.
+* Scrap type for reporting point scrap backflush
+        ls_bflushflags-rp_scraptype = '1'.
+* Scope of activity backflush
+        ls_bflushflags-activities_type = '1'.
+* Scope of GI posting
+        ls_bflushflags-components_type = '1'.
+
+*Backflush Parameters Independent of Process
+* Material
+        ls_bflushdatagen-materialnr = matnr.
+* Plant
+        ls_bflushdatagen-prodplant = inputobj-werks.
+* Planning plant
+        ls_bflushdatagen-planplant = inputobj-werks.
+
+* Production Versions of Material
+        SELECT SINGLE *
+          FROM mkal
+          INTO @DATA(ls_mkal)
+         WHERE matnr EQ @matnr
+           AND werks EQ @inputobj-werks
+           AND adatu LE @refdt
+           AND bdatu GE @refdt.
+
+        IF sy-subrc EQ 0.
+* Storage Location
+          ls_bflushdatagen-storageloc = ls_mkal-alort.
+* Production Version
+          ls_bflushdatagen-prodversion = ls_mkal-verid.
+* Production line
+          ls_bflushdatagen-prodline = ls_mkal-mdv01.
+        ENDIF.
+
+* Posting date
+        ls_bflushdatagen-postdate = refdt.
+* Document date
+        ls_bflushdatagen-docdate = refdt.
+* Quantity scrap in Unit of Entry
+        ls_bflushdatagen-scrapquant = ls_scrap-scrap_qty.
+* Unit of measure
+        ls_bflushdatagen-unitofmeasure = ls_scrap-meins.
+* Shift
+        ls_bflushdatagen-docheadertxt = lv_shiftid.
+
+*    IF planorder IS NOT INITIAL.
+*      CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+*        EXPORTING
+*          input  = planorder
+*        IMPORTING
+*          output = lv_plnum.
+*
+** Check if plan order exist in system
+*      SELECT SINGLE *
+*        FROM plaf
+*        INTO @data(ls_plaf)
+*        WHERE plnum EQ @lv_plnum.
+*
+*      IF sy-subrc NE 0.
+**
+*        CALL METHOD zabsf_pp_cl_log=>add_message
+*          EXPORTING
+*            msgty      = 'E'
+*            msgno      = '048'
+*            msgv1      = planorder
+*          CHANGING
+*            return_tab = return_tab.
+*
+*        EXIT.
+*      ELSE.
+** Plan order
+*        ls_bflushdatagen-planorder = lv_plnum.
+*      ENDIF.
+*    ENDIF.
+
+
+* nº operation report point
+        ls_bflushdatamts-reppoint = ls_scrap-vornr.
+
+        CLEAR lt_components[].
+        CLEAR lt_return[].
+* get components material
+        CALL METHOD lref_sf_consum->(lv_method)
+          EXPORTING
+            matnr          = CONV matnr( matnr )
+            vornr          = CONV pzpnr( ls_scrap-vornr )
+            lmnga          = CONV lmnga( ls_scrap-scrap_qty )
+            meins          = CONV meins( ls_scrap-meins )
+          CHANGING
+            components_tab = lt_components
+            return_tab     = lt_return.
+
+        DELETE ADJACENT DUPLICATES FROM lt_return.
+
+        IF lt_return[] IS INITIAL AND lt_components[] IS NOT INITIAL.
+          LOOP AT lt_components INTO DATA(ls_component).
+            CLEAR ls_goodsmovements.
+* Material - Component
+            ls_goodsmovements-material = ls_component-matnr.
+* Plant
+            ls_goodsmovements-plant = inputobj-werks.
+* Storage Location
+            ls_goodsmovements-stge_loc =  ls_component-lgort.
+* Movement Type
+            ls_goodsmovements-move_type = c_bwart.
+* Quantity
+            ls_goodsmovements-entry_qnt = ls_component-consqty.
+* Unit
+            ls_goodsmovements-entry_uom =  ls_component-meins.
+* Reservation
+            ls_goodsmovements-reserv_no = ls_component-rsnum.
+            ls_goodsmovements-res_item = ls_component-rspos.
+
+            APPEND ls_goodsmovements TO lt_goodsmovements.
+
+*Check material availability
+            CALL FUNCTION 'BAPI_MATERIAL_AVAILABILITY'
+              EXPORTING
+                plant      = inputobj-werks
+                material   = ls_component-matnr
+                unit       = ls_component-meins
+                stge_loc   = ls_component-lgort
+              IMPORTING
+                av_qty_plt = lv_qty_av
+              TABLES
+                wmdvsx     = lt_wmdvs
+                wmdvex     = lt_wmdve.
+
+            IF lv_qty_av < ls_component-consqty.
+              lv_stock_fail = 'X'.
+              EXIT.
+            ENDIF.
+          ENDLOOP.
+
+          CLEAR: ls_return, lv_confirmation.
+
+          IF lv_stock_fail IS INITIAL.
+*create consumption
+            CALL FUNCTION 'BAPI_REPMANCONF1_CREATE_MTS'
+              EXPORTING
+                bflushflags    = ls_bflushflags
+                bflushdatagen  = ls_bflushdatagen
+                bflushdatamts  = ls_bflushdatamts
+              IMPORTING
+                confirmation   = lv_confirmation
+                return         = ls_return
+              TABLES
+                goodsmovements = lt_goodsmovements.
+
+            IF ls_return IS INITIAL AND lv_confirmation IS NOT INITIAL.
+              CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+                EXPORTING
+                  wait = 'X'.
+
+*  Get number od document created
+              SELECT SINGLE belnr
+                FROM blpp
+                INTO @DATA(lv_belnr)
+                WHERE prtnr EQ @lv_confirmation
+                  AND belnr NE @space.
+
+              CALL METHOD zabsf_pp_cl_log=>add_message
+                EXPORTING
+                  msgty      = 'S'
+                  msgno      = '034'
+                  msgv1      = lv_belnr
+                CHANGING
+                  return_tab = return_tab.
+            ELSE.
+              IF ls_return-type = 'A'.
+                ls_return-type = 'E'.
+              ENDIF.
+
+              APPEND ls_return TO return_tab.
+            ENDIF.
+          ELSE.
+            CALL METHOD zcl_lp_pp_sf_log=>add_message
+              EXPORTING
+                msgty      = 'E'
+                msgno      = '064'
+                msgv1      = ls_component-matnr
+                msgv2      = inputobj-werks
+                msgv3      = ls_component-lgort
+                msgv4      = lv_qty_av
+              CHANGING
+                return_tab = return_tab.
+
+            EXIT.
+          ENDIF.
+
+          DELETE ADJACENT DUPLICATES FROM return_tab.
+        ENDIF.
+      ENDLOOP.
+    ENDIF.
   ENDMETHOD.
 ENDCLASS.

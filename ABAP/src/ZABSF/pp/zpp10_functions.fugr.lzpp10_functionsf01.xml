@@ -12,13 +12,6 @@
     <LDBNAME>D$S</LDBNAME>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <TPOOL>
-    <item>
-     <ID>R</ID>
-     <ENTRY>Include LZPP10_FUNCTIONSF01</ENTRY>
-     <LENGTH>27</LENGTH>
-    </item>
-   </TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

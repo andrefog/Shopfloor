@@ -4,9 +4,7 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP_S_STAT_OEE</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
-    <DDTEXT>Shopfloor - Estatisticas dos indicadores OEE</DDTEXT>
     <EXCLASS>4</EXCLASS>
    </DD02V>
    <DD03P_TABLE>
@@ -43,6 +41,15 @@
      <COMPTYPE>L</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Estatisticas dos indicadores OEE</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

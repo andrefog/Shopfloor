@@ -9,13 +9,6 @@
     <FIXPT>X</FIXPT>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <TPOOL>
-    <item>
-     <ID>R</ID>
-     <ENTRY>Programa impressão etiqueta de devolução</ENTRY>
-     <LENGTH>40</LENGTH>
-    </item>
-   </TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

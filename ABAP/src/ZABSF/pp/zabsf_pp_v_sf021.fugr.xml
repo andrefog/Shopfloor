@@ -2,7 +2,6 @@
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
-   <AREAT>atualização ampliada de tabelas (gerada)</AREAT>
    <INCLUDES>
     <SOBJ_NAME>LZABSF_PP_V_SF021F00</SOBJ_NAME>
     <SOBJ_NAME>LZABSF_PP_V_SF021I00</SOBJ_NAME>
@@ -456,6 +455,38 @@
       <RPY_DYFATC>
        <CONT_TYPE>TABLE_CTRL</CONT_TYPE>
        <CONT_NAME>TCTRL_ZABSF_PP_V_SF021</CONT_NAME>
+       <TYPE>TEXT</TYPE>
+       <NAME>*ZABSF_PP_V_SF021-LGORT</NAME>
+       <LINE>001</LINE>
+       <COLUMN>007</COLUMN>
+       <LENGTH>040</LENGTH>
+       <VISLENGTH>004</VISLENGTH>
+       <HEIGHT>001</HEIGHT>
+       <FORMAT>CHAR</FORMAT>
+       <FROM_DICT>X</FROM_DICT>
+       <MODIFIC>4</MODIFIC>
+       <REQU_ENTRY>N</REQU_ENTRY>
+       <TC_HEADING>X</TC_HEADING>
+      </RPY_DYFATC>
+      <RPY_DYFATC>
+       <CONT_TYPE>TABLE_CTRL</CONT_TYPE>
+       <CONT_NAME>TCTRL_ZABSF_PP_V_SF021</CONT_NAME>
+       <TYPE>TEXT</TYPE>
+       <NAME>*ZABSF_PP_V_SF021-MOTIVETYPE</NAME>
+       <LINE>001</LINE>
+       <COLUMN>008</COLUMN>
+       <LENGTH>040</LENGTH>
+       <VISLENGTH>050</VISLENGTH>
+       <HEIGHT>001</HEIGHT>
+       <FORMAT>CHAR</FORMAT>
+       <FROM_DICT>X</FROM_DICT>
+       <MODIFIC>V</MODIFIC>
+       <REQU_ENTRY>N</REQU_ENTRY>
+       <TC_HEADING>X</TC_HEADING>
+      </RPY_DYFATC>
+      <RPY_DYFATC>
+       <CONT_TYPE>TABLE_CTRL</CONT_TYPE>
+       <CONT_NAME>TCTRL_ZABSF_PP_V_SF021</CONT_NAME>
        <TYPE>CHECK</TYPE>
        <NAME>VIM_MARKED</NAME>
        <LINE>001</LINE>
@@ -482,7 +513,6 @@
        <FORMAT>CHAR</FORMAT>
        <FROM_DICT>X</FROM_DICT>
        <MODIFIC>X</MODIFIC>
-       <FOREIGNKEY>X</FOREIGNKEY>
        <OUTPUT_FLD>X</OUTPUT_FLD>
        <REQU_ENTRY>N</REQU_ENTRY>
        <DICT_I_FKY>X</DICT_I_FKY>
@@ -582,8 +612,47 @@
        <INPUT_FLD>X</INPUT_FLD>
        <OUTPUT_FLD>X</OUTPUT_FLD>
       </RPY_DYFATC>
+      <RPY_DYFATC>
+       <CONT_TYPE>TABLE_CTRL</CONT_TYPE>
+       <CONT_NAME>TCTRL_ZABSF_PP_V_SF021</CONT_NAME>
+       <TYPE>TEMPLATE</TYPE>
+       <NAME>ZABSF_PP_V_SF021-LGORT</NAME>
+       <TEXT>____</TEXT>
+       <LINE>001</LINE>
+       <COLUMN>007</COLUMN>
+       <LENGTH>004</LENGTH>
+       <VISLENGTH>004</VISLENGTH>
+       <HEIGHT>001</HEIGHT>
+       <FORMAT>CHAR</FORMAT>
+       <FROM_DICT>X</FROM_DICT>
+       <MODIFIC>X</MODIFIC>
+       <PARAM_ID>LAG</PARAM_ID>
+       <INPUT_FLD>X</INPUT_FLD>
+       <OUTPUT_FLD>X</OUTPUT_FLD>
+      </RPY_DYFATC>
+      <RPY_DYFATC>
+       <CONT_TYPE>TABLE_CTRL</CONT_TYPE>
+       <CONT_NAME>TCTRL_ZABSF_PP_V_SF021</CONT_NAME>
+       <TYPE>TEMPLATE</TYPE>
+       <NAME>ZABSF_PP_V_SF021-MOTIVETYPE</NAME>
+       <TEXT>__________________________________________________</TEXT>
+       <LINE>001</LINE>
+       <COLUMN>008</COLUMN>
+       <LENGTH>050</LENGTH>
+       <VISLENGTH>050</VISLENGTH>
+       <HEIGHT>001</HEIGHT>
+       <FORMAT>CHAR</FORMAT>
+       <FROM_DICT>X</FROM_DICT>
+       <MODIFIC>X</MODIFIC>
+       <INPUT_FLD>X</INPUT_FLD>
+       <OUTPUT_FLD>X</OUTPUT_FLD>
+       <DICT_I_VAL>X</DICT_I_VAL>
+      </RPY_DYFATC>
      </FIELDS>
      <FLOW_LOGIC>
+      <RPY_DYFLOW>
+       <LINE>* VCL-Modifications</LINE>
+      </RPY_DYFLOW>
       <RPY_DYFLOW>
        <LINE>PROCESS BEFORE OUTPUT.</LINE>
       </RPY_DYFLOW>
@@ -642,6 +711,12 @@
        <LINE>    FIELD ZABSF_PP_V_SF021-DEFECT_DESC .</LINE>
       </RPY_DYFLOW>
       <RPY_DYFLOW>
+       <LINE>    FIELD ZABSF_PP_V_SF021-LGORT .</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>    FIELD ZABSF_PP_V_SF021-MOTIVETYPE .</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
        <LINE>    MODULE SET_UPDATE_FLAG ON CHAIN-REQUEST.</LINE>
       </RPY_DYFLOW>
       <RPY_DYFLOW>
@@ -676,6 +751,15 @@
       </RPY_DYFLOW>
       <RPY_DYFLOW>
        <LINE> MODULE LISTE_AFTER_LOOP.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>*</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>PROCESS ON VALUE-REQUEST.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>    FIELD  ZABSF_PP_V_SF021-AREAID MODULE VCL_HELP_VALUES.</LINE>
       </RPY_DYFLOW>
      </FLOW_LOGIC>
     </item>

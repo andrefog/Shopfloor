@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_setoperators.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SETOPERATORS.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL) TYPE  ARBPL
 *"     VALUE(AUFNR) TYPE  AUFNR
@@ -11,8 +11,8 @@ FUNCTION zabsf_pp_setoperators.
 *"     VALUE(KAPID) TYPE  KAPID OPTIONAL
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_operator TYPE REF TO zif_absf_pp_operator.
+*"--------------------------------------------------------------------
+DATA lref_sf_operator TYPE REF TO zif_absf_pp_operator.
 
   DATA: ld_class  TYPE recaimplclname,
         ld_method TYPE seocmpname.
@@ -56,4 +56,9 @@ FUNCTION zabsf_pp_setoperators.
       return_tab   = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

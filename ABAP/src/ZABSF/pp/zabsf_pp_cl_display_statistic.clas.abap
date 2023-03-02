@@ -1,65 +1,65 @@
-CLASS zabsf_pp_cl_display_statistic DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+class ZABSF_PP_CL_DISPLAY_STATISTIC definition
+  public
+  final
+  create public .
 
-  PUBLIC SECTION.
+public section.
 
-    TYPES:
-      ty_r_hname TYPE RANGE OF cr_hname .
-    TYPES:
-      ty_r_area  TYPE RANGE OF zabsf_pp_e_areaid .
-    TYPES:
-      ty_r_shift TYPE RANGE OF zabsf_pp_e_shiftid .
-    TYPES:
-      ty_r_arbpl TYPE RANGE OF arbpl .
-    TYPES ty_t_dates TYPE rsis_t_range .
+  types:
+    ty_r_hname TYPE RANGE OF cr_hname .
+  types:
+    ty_r_area  TYPE RANGE OF zabsf_pp_e_areaid .
+  types:
+    ty_r_shift TYPE RANGE OF zabsf_pp_e_shiftid .
+  types:
+    ty_r_arbpl TYPE RANGE OF arbpl .
+  types TY_T_DATES type RSIS_T_RANGE .
 
-    METHODS constructor
-      IMPORTING
-        !initial_refdt TYPE vvdatum
-        !input_object  TYPE zabsf_pp_s_inputobject .
-    METHODS set_refdt
-      IMPORTING
-        !new_refdt TYPE vvdatum .
-    METHODS display_lcd
-      IMPORTING
-        !hname        TYPE cr_hname
-        !shiftid      TYPE zabsf_pp_e_shiftid
-      CHANGING
-        !stat_oee_tab TYPE zabsf_pp_t_stat_oee
-        !return_tab   TYPE bapiret2_t .
-    METHODS get_filter
-      CHANGING
-        !filter_tab TYPE zabsf_pp_t_filter
-        !return_tab TYPE bapiret2_t .
-    METHODS display_reports
-      IMPORTING
-        !hname             TYPE cr_hname OPTIONAL
-        !areaid            TYPE zabsf_pp_e_areaid OPTIONAL
-        !shiftid           TYPE zabsf_pp_e_shiftid OPTIONAL
-        !arbpl             TYPE arbpl OPTIONAL
-        !begda             TYPE begda OPTIONAL
-        !endda             TYPE endda OPTIONAL
-      CHANGING
-        !reports_detail_st TYPE zabsf_pp_s_reports_detail
-        !return_tab        TYPE bapiret2_t .
-    METHODS get_stops .
-    METHODS get_capacity_time
-      IMPORTING
-        !r_hname  TYPE ty_r_hname OPTIONAL
-        !r_area   TYPE ty_r_area OPTIONAL
-        !r_shift  TYPE ty_r_shift OPTIONAL
-        !r_arbpl  TYPE ty_r_arbpl OPTIONAL
-        !r_dates  TYPE ty_t_dates OPTIONAL
-      EXPORTING
-        !capacity TYPE mengv13 .
-    METHODS ajust_time_interval
-      IMPORTING
-        !is_kako        TYPE kako
-        !is_shift       TYPE zabsf_pp001
-      CHANGING
-        !e_shift_wktime TYPE mengv13 .
+  methods CONSTRUCTOR
+    importing
+      !INITIAL_REFDT type VVDATUM
+      !INPUT_OBJECT type ZABSF_PP_S_INPUTOBJECT .
+  methods SET_REFDT
+    importing
+      !NEW_REFDT type VVDATUM .
+  methods DISPLAY_LCD
+    importing
+      !HNAME type CR_HNAME
+      !SHIFTID type ZABSF_PP_E_SHIFTID
+    changing
+      !STAT_OEE_TAB type ZABSF_PP_T_STAT_OEE
+      !RETURN_TAB type BAPIRET2_T .
+  methods GET_FILTER
+    changing
+      !FILTER_TAB type ZABSF_PP_T_FILTER
+      !RETURN_TAB type BAPIRET2_T .
+  methods DISPLAY_REPORTS
+    importing
+      !HNAME type CR_HNAME optional
+      !AREAID type ZABSF_PP_E_AREAID optional
+      !SHIFTID type ZABSF_PP_E_SHIFTID optional
+      !ARBPL type ARBPL optional
+      !BEGDA type BEGDA optional
+      !ENDDA type ENDDA optional
+    changing
+      !REPORTS_DETAIL_ST type ZABSF_PP_S_REPORTS_DETAIL
+      !RETURN_TAB type BAPIRET2_T .
+  methods GET_STOPS .
+  methods GET_CAPACITY_TIME
+    importing
+      !R_HNAME type TY_R_HNAME optional
+      !R_AREA type TY_R_AREA optional
+      !R_SHIFT type TY_R_SHIFT optional
+      !R_ARBPL type TY_R_ARBPL optional
+      !R_DATES type TY_T_DATES optional
+    exporting
+      !CAPACITY type MENGV13 .
+  methods AJUST_TIME_INTERVAL
+    importing
+      !IS_KAKO type KAKO
+      !IS_SHIFT type ZABSF_PP001
+    changing
+      !E_SHIFT_WKTIME type MENGV13 .
 protected section.
 private section.
 
@@ -72,7 +72,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_DISPLAY_STATISTIC IMPLEMENTATION.
 
 
-  METHOD AJUST_TIME_INTERVAL.
+METHOD AJUST_TIME_INTERVAL.
 
 
     CONSTANTS: c_sec_day TYPE kapbegzt VALUE '86400',
@@ -403,7 +403,7 @@ METHOD display_reports.
   SELECT * FROM zabsf_pp011_t
     INTO CORRESPONDING FIELDS OF TABLE lt_stprsn_desc
     WHERE werks = inputobj-werks
-    AND spras = inputobj-language.
+    AND spras = sy-langu.
 
   IF sy-subrc NE 0.
 
@@ -608,7 +608,7 @@ METHOD display_reports.
 ENDMETHOD.
 
 
-  METHOD get_capacity_time.
+METHOD get_capacity_time.
 
 
     TYPES: BEGIN OF ty_arbpl,
@@ -1062,7 +1062,7 @@ METHOD get_filter.
       input_object  = inputobj.
 
 *Set local language for user
-  lv_langu = inputobj-language.
+  lv_langu = sy-langu.
 
   SET LOCALE LANGUAGE lv_langu.
 
@@ -1233,7 +1233,7 @@ METHOD get_filter.
 ENDMETHOD.
 
 
-  method GET_STOPS.
+method GET_STOPS.
   endmethod.
 
 

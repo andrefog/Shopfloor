@@ -11,11 +11,113 @@
    </PROGDIR>
    <TPOOL>
     <item>
+     <ID>I</ID>
+     <KEY>B01</KEY>
+     <ENTRY>Selection Parameters</ENTRY>
+     <LENGTH>132</LENGTH>
+    </item>
+    <item>
      <ID>R</ID>
-     <ENTRY>Shopfloor - Processamento de Quantidades e tempos</ENTRY>
-     <LENGTH>49</LENGTH>
+     <ENTRY>Shopfloor - Dashboard</ENTRY>
+     <LENGTH>70</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_30DAY</KEY>
+     <ENTRY>30 days period</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_DATE</KEY>
+     <ENTRY>Processing Date</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>P_WERKS</KEY>
+     <ENTRY>Plant</ENTRY>
+     <LENGTH>38</LENGTH>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_ARBPL</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_HNAME</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
+    </item>
+    <item>
+     <ID>S</ID>
+     <KEY>S_SHIFT</KEY>
+     <ENTRY>.</ENTRY>
+     <LENGTH>9</LENGTH>
+     <SPLIT>D</SPLIT>
     </item>
    </TPOOL>
+   <I18N_TPOOL>
+    <item>
+     <LANGUAGE>P</LANGUAGE>
+     <TEXTPOOL>
+      <item>
+       <ID>I</ID>
+       <KEY>B01</KEY>
+       <ENTRY>Parametros de Seleção</ENTRY>
+       <LENGTH>132</LENGTH>
+      </item>
+      <item>
+       <ID>R</ID>
+       <ENTRY>Shopfloor - Dashboard</ENTRY>
+       <LENGTH>21</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_30DAY</KEY>
+       <ENTRY>Período de 30 dias</ENTRY>
+       <LENGTH>26</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_DATE</KEY>
+       <ENTRY>Data de processamento</ENTRY>
+       <LENGTH>29</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>P_WERKS</KEY>
+       <ENTRY>Centro</ENTRY>
+       <LENGTH>14</LENGTH>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>S_ARBPL</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>9</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>S_HNAME</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>9</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+      <item>
+       <ID>S</ID>
+       <KEY>S_SHIFT</KEY>
+       <ENTRY>.</ENTRY>
+       <LENGTH>9</LENGTH>
+       <SPLIT>D</SPLIT>
+      </item>
+     </TEXTPOOL>
+    </item>
+   </I18N_TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

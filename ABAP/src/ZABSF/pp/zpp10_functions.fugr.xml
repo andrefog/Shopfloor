@@ -11,6 +11,7 @@
    <FUNCTIONS>
     <item>
      <FUNCNAME>Z_PP10_CHANGE_STATUS</FUNCNAME>
+     <SHORT_TEXT>Mudar status de utilizador de 0002 para 0004</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>IV_RUECK</PARAMETER>
@@ -39,23 +40,28 @@
       <RSFDO>
        <PARAMETER>IV_RUECK</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Nº confirmação da operação</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>IV_RMZHL</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Numerador da confirmação</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>IV_OPRID</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Shopfloor - ID de Operador Shopfloor</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>EV_FLAG</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Flag geral</STEXT>
       </RSFDO>
      </DOCUMENTATION>
     </item>
     <item>
      <FUNCNAME>Z_PP10_CREATE_BATCH</FUNCNAME>
+     <SHORT_TEXT>Criar Lote</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>IS_BATCH</PARAMETER>
@@ -80,19 +86,23 @@
       <RSFDO>
        <PARAMETER>IS_BATCH</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Estrutura paracriação de Lotes (PP)</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>EV_NEW_CHARG</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Número do lote</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>RETURN_TAB</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Parâmetro de retorno</STEXT>
       </RSFDO>
      </DOCUMENTATION>
     </item>
     <item>
      <FUNCNAME>Z_PP10_DATA_TO_CREATE_BATCH</FUNCNAME>
+     <SHORT_TEXT>Dados para a criação do lotes</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>IV_FIRST_CYCLE</PARAMETER>
@@ -141,35 +151,43 @@
       <RSFDO>
        <PARAMETER>IV_FIRST_CYCLE</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Flag geral</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>IV_SHIFTID</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Shopfloor - ID de Turno</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>IS_INPUTOBJECT</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Shopfloor - Dados de entrada</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>IV_REFDT</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Data de referência</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>IT_GOODMOVEMENTS</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Shopfloor - Ddos dos mov. de mercadoria para criação de lote</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>EV_NEW_BATCH</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Número do lote</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>RETURN_TAB</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Parâmetro de retorno</STEXT>
       </RSFDO>
      </DOCUMENTATION>
     </item>
     <item>
      <FUNCNAME>Z_PP10_GET_BATCH_CHARACTERISTC</FUNCNAME>
+     <SHORT_TEXT>Obter caracteristicas do lote</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>I_WERKS</PARAMETER>
@@ -198,23 +216,28 @@
       <RSFDO>
        <PARAMETER>I_WERKS</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Centro</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>I_BATCH</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Número do lote</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>I_MATNR</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Nº do material</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>E_BATCH_VULC</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Número do lote</STEXT>
       </RSFDO>
      </DOCUMENTATION>
     </item>
     <item>
      <FUNCNAME>Z_PP10_GET_MOULD</FUNCNAME>
+     <SHORT_TEXT>Obter mould da Ordem de Produção</SHORT_TEXT>
      <IMPORT>
       <RSIMP>
        <PARAMETER>IV_AUFPL</PARAMETER>
@@ -248,22 +271,27 @@
       <RSFDO>
        <PARAMETER>IV_AUFPL</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Nº de roteiro de operações na ordem</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>IV_APLZL</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Numerador geral da ordem</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>IV_WERKS</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Centro</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>EV_EQUNR</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Nº equipamento</STEXT>
       </RSFDO>
       <RSFDO>
        <PARAMETER>EV_EQKTX</PARAMETER>
        <KIND>P</KIND>
+       <STEXT>Denominação do objeto técnico</STEXT>
       </RSFDO>
      </DOCUMENTATION>
     </item>

@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_getworkcenters.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_GETWORKCENTERS.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(HNAME) TYPE  CR_HNAME
 *"     VALUE(WERKS) TYPE  WERKS_D OPTIONAL
@@ -9,9 +9,8 @@ FUNCTION zabsf_pp_getworkcenters.
 *"  EXPORTING
 *"     VALUE(WRKCTR_TAB) TYPE  ZABSF_PP_T_WRKCTR
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-
-  DATA lref_sf_wrkctr TYPE REF TO zabsf_pp_cl_wrkctr.
+*"--------------------------------------------------------------------
+DATA lref_sf_wrkctr TYPE REF TO zabsf_pp_cl_wrkctr.
   DATA ls_return TYPE bapiret2.
 
   CREATE OBJECT lref_sf_wrkctr
@@ -28,4 +27,9 @@ FUNCTION zabsf_pp_getworkcenters.
       return_tab = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

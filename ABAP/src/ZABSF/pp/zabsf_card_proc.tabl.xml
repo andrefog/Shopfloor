@@ -4,11 +4,9 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_CARD_PROC</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
     <LANGDEP>X</LANGDEP>
-    <DDTEXT>Cálculo dos KPIs dos Trabalhadores - Status das Fichas</DDTEXT>
     <CONTFLAG>A</CONTFLAG>
     <EXCLASS>4</EXCLASS>
    </DD02V>
@@ -79,10 +77,18 @@
      <ADMINFIELD>0</ADMINFIELD>
      <PRECFIELD>ZABSF_PP_S_CALC_WORKERS_KPI</PRECFIELD>
      <MASK>      S</MASK>
-     <DDTEXT>Estrut. para ALV do report dos Cálculos dos KPI&apos;s para Trab.</DDTEXT>
      <COMPTYPE>S</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Cálculo dos KPIs dos Trabalhadores - Status das Fichas</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

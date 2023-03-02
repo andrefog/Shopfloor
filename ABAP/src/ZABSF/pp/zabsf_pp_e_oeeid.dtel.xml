@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_OEEID</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
-    <DOMNAME>CHAR08</DOMNAME>
+    <DOMNAME>ZABSF_PP_D_OEEID</DOMNAME>
     <HEADLEN>13</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Indicador OEE</DDTEXT>
-    <REPTEXT>Indicador OEE</REPTEXT>
-    <SCRTEXT_S>Indi. OEE</SCRTEXT_S>
-    <SCRTEXT_M>Indicador OEE</SCRTEXT_M>
-    <SCRTEXT_L>Indicador OEE</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Indicador OEE</DDTEXT>
+     <REPTEXT>Indicador OEE</REPTEXT>
+     <SCRTEXT_S>Indi. OEE</SCRTEXT_S>
+     <SCRTEXT_M>Indicador OEE</SCRTEXT_M>
+     <SCRTEXT_L>Indicador OEE</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

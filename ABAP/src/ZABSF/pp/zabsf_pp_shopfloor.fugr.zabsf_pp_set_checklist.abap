@@ -16,8 +16,7 @@ FUNCTION zabsf_pp_set_checklist .
   DATA: l_langu TYPE sy-langu.
 
 *Set local language for user
-  l_langu = inputobj-language.
-  SET LOCALE LANGUAGE l_langu.
+  l_langu = sy-langu.
 
   CREATE OBJECT lref_checklist
     EXPORTING

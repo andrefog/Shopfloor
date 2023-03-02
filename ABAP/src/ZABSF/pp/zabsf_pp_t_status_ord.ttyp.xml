@@ -4,14 +4,12 @@
   <asx:values>
    <DD40V>
     <TYPENAME>ZABSF_PP_T_STATUS_ORD</TYPENAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <ROWTYPE>ZABSF_PP_S_STATUS_ORD</ROWTYPE>
     <ROWKIND>S</ROWKIND>
     <DATATYPE>STRU</DATATYPE>
     <ACCESSMODE>T</ACCESSMODE>
     <KEYDEF>D</KEYDEF>
     <KEYKIND>N</KEYKIND>
-    <DDTEXT>Shopfloor - Status da Ordem</DDTEXT>
    </DD40V>
   </asx:values>
  </asx:abap>

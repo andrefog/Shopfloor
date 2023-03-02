@@ -22,9 +22,7 @@ FUNCTION zabsf_pp_get_sched_reg.
   DATA: l_langu TYPE sy-langu.
 
 *Set local language for user
-  l_langu = inputobj-language.
-  SET LOCALE LANGUAGE l_langu.
-
+  l_langu = sy-langu.
 
     CREATE OBJECT lc_sf_schedules
       EXPORTING

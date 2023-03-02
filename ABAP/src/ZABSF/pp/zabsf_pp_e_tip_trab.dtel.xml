@@ -4,20 +4,33 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_TIP_TRAB</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_TIP_TRAB</DOMNAME>
     <HEADLEN>55</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Shopfloor - Tipo de trabalho</DDTEXT>
-    <REPTEXT>Tipo de Trabalho</REPTEXT>
-    <SCRTEXT_S>TipoTrab</SCRTEXT_S>
-    <SCRTEXT_M>Tipo de Trabalho</SCRTEXT_M>
-    <SCRTEXT_L>Tipo de Trabalho</SCRTEXT_L>
+    <DDTEXT>Shopfloor - Work type</DDTEXT>
+    <REPTEXT>Work type</REPTEXT>
+    <SCRTEXT_S>Work type</SCRTEXT_S>
+    <SCRTEXT_M>Work type</SCRTEXT_M>
+    <SCRTEXT_L>Work type</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Tipo de trabalho</DDTEXT>
+     <REPTEXT>Tipo de Trabalho</REPTEXT>
+     <SCRTEXT_S>TipoTrab</SCRTEXT_S>
+     <SCRTEXT_M>Tipo de Trabalho</SCRTEXT_M>
+     <SCRTEXT_L>Tipo de Trabalho</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -4,14 +4,12 @@
   <asx:values>
    <DD40V>
     <TYPENAME>ZABSF_PP_T_TIME_STOPREASON</TYPENAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <ROWTYPE>ZABSF_PP_S_TIME_STOPREASON</ROWTYPE>
     <ROWKIND>S</ROWKIND>
     <DATATYPE>STRU</DATATYPE>
     <ACCESSMODE>T</ACCESSMODE>
     <KEYDEF>D</KEYDEF>
     <KEYKIND>N</KEYKIND>
-    <DDTEXT>Shopfloor - Quantidade por causa de paragem</DDTEXT>
    </DD40V>
   </asx:values>
  </asx:abap>

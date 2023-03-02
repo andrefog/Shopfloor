@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_setpass_matnr .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SETPASS_MATNR.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(HNAME) TYPE  CR_HNAME
 *"     VALUE(RPOINT) TYPE  ZABSF_PP_E_RPOINT
@@ -13,8 +13,8 @@ FUNCTION zabsf_pp_setpass_matnr .
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_rpoint TYPE REF TO zabsf_pp_cl_rpoint.
+*"--------------------------------------------------------------------
+DATA lref_sf_rpoint TYPE REF TO zabsf_pp_cl_rpoint.
 
   CREATE OBJECT lref_sf_rpoint
     EXPORTING
@@ -34,4 +34,9 @@ FUNCTION zabsf_pp_setpass_matnr .
       return_tab = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

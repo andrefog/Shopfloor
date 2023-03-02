@@ -14,15 +14,19 @@ public section.
       !NEW_REFDT type VVDATUM optional .
   methods GET_STOP_REASON_OPR
     importing
-      !ARBPL type ARBPL
-      !WERKS type WERKS_D
+      !IV_ARBPL type ARBPL
+      !IV_WERKS type WERKS_D
+      !IV_SPRAS type SPRAS
+      !IV_AREAID type ZABSF_PP_E_AREAID
     changing
       !STOP_REASON_TAB type ZABSF_PP_T_STOP_REASON
       !RETURN_TAB type BAPIRET2_T .
   methods GET_STOP_REASON_WRK
     importing
-      !ARBPL type ARBPL
-      !WERKS type WERKS_D
+      !IV_ARBPL type ARBPL
+      !IV_WERKS type WERKS_D
+      !IV_SPRAS type SPRAS
+      !IV_AREAID type ZABSF_PP_E_AREAID
     changing
       !STOP_REASON_TAB type ZABSF_PP_T_STOP_REASON
       !RETURN_TAB type BAPIRET2_T .
@@ -46,6 +50,8 @@ public section.
       !TIME type ATIME
       !STPRSNID type ZABSF_PP_E_STPRSNID
       !COUNT_FIN_TAB type ZABSF_PP_T_COUNTERS optional
+      !SHIFTID type ZABSF_PP_E_SHIFTID optional
+      !HNAME type CR_HNAME optional
     changing
       !ACTIONID type ZABSF_PP_E_ACTION optional
       !RETURN_TAB type BAPIRET2_T .
@@ -76,62 +82,41 @@ ENDMETHOD.
 METHOD get_stop_reason_opr.
 *Range
   DATA r_arbpl TYPE RANGE OF arbpl.
-
 *Structure for range
-  DATA ls_r_arbpl LIKE LINE OF r_arbpl.
+  DATA ls_arbpl LIKE LINE OF r_arbpl.
 
 *Variables
-  DATA: l_langu TYPE spras.
+  DATA: lv_langu TYPE spras.
 
 *Set language local for user
-  l_langu = inputobj-language.
-
-  SET LOCALE LANGUAGE l_langu.
+  lv_langu = iv_spras.
 
 *Create ranges of workcenter
-  CLEAR ls_r_arbpl.
-  ls_r_arbpl-option = 'EQ'.
-  ls_r_arbpl-sign = 'I'.
-  ls_r_arbpl-low = space.
+  ls_arbpl-option = 'EQ'.
+  ls_arbpl-sign = 'I'.
+  ls_arbpl-low = iv_arbpl.
+  APPEND ls_arbpl TO r_arbpl.
 
-  APPEND ls_r_arbpl TO r_arbpl.
-
-  CLEAR ls_r_arbpl.
-  ls_r_arbpl-option = 'EQ'.
-  ls_r_arbpl-sign = 'I'.
-  ls_r_arbpl-low = arbpl.
-
-  APPEND ls_r_arbpl TO r_arbpl.
+***** BEGIN JOL - 07/12/2022 - get language - SPRAS field
+  IF lv_langu EQ ''.
+*  Get alternative language
+    SELECT SINGLE spras
+      FROM zabsf_pp061
+      INTO lv_langu
+     WHERE werks      EQ iv_werks
+       AND is_default NE space.
+  ENDIF.
+***** BEGIN JOL - 07/12/2022
 
 * Get stop reason
   SELECT *
     FROM zabsf_pp015_t
     INTO CORRESPONDING FIELDS OF TABLE stop_reason_tab
-    WHERE areaid EQ inputobj-areaid
-      AND arbpl  IN r_arbpl
-      AND werks  EQ werks
-      AND spras  EQ sy-langu.
+    WHERE areaid EQ iv_areaid
+         AND arbpl  IN r_arbpl
+         AND werks  EQ iv_werks
+         AND spras  EQ lv_langu.
 
-  IF stop_reason_tab[] IS INITIAL.
-    CLEAR l_langu.
-
-*  Get alternative language
-    SELECT SINGLE spras
-      FROM zabsf_pp061
-      INTO @l_langu
-     WHERE werks      EQ @werks
-       AND is_default NE @space.
-
-    IF sy-subrc EQ 0.
-*    Get stop reason
-      SELECT *
-        FROM zabsf_pp015_t
-        INTO CORRESPONDING FIELDS OF TABLE stop_reason_tab
-        WHERE areaid EQ inputobj-areaid
-          AND arbpl  IN r_arbpl
-          AND werks  EQ werks
-          AND spras  EQ l_langu.
-    ENDIF.
 *  No stop reason found for work center and operation
     IF stop_reason_tab[] IS INITIAL.
       CALL METHOD zabsf_pp_cl_log=>add_message
@@ -141,7 +126,6 @@ METHOD get_stop_reason_opr.
         CHANGING
           return_tab = return_tab.
     ENDIF.
-  ENDIF.
 ENDMETHOD.
 
 
@@ -151,87 +135,63 @@ METHOD get_stop_reason_wrk.
         ls_arbpl LIKE LINE OF r_arbpl.
 
 *Variables
-  DATA: l_langu.
-
-  DATA: lt_sf011 TYPE TABLE OF zabsf_pp011,
-        ls_sf011 LIKE LINE OF lt_sf011.
-  DATA: l_tabix TYPE sytabix.
+  DATA: lv_langu TYPE spras,
+        lt_sf011 TYPE TABLE OF zabsf_pp011,
+        ls_sf011 LIKE LINE OF lt_sf011,
+        l_tabix  TYPE sytabix.
 
 * Field Symbols
   FIELD-SYMBOLS: <fs_stop_reason> TYPE zabsf_pp_s_stop_reason.
 
-
 *Set language local for user
-  l_langu = inputobj-language.
-
-  SET LOCALE LANGUAGE l_langu.
+  lv_langu = iv_spras.
 
 *Create ranges of workcenter
   ls_arbpl-option = 'EQ'.
   ls_arbpl-sign = 'I'.
-  ls_arbpl-low = space.
-
+  ls_arbpl-low = iv_arbpl.
   APPEND ls_arbpl TO r_arbpl.
 
-  ls_arbpl-option = 'EQ'.
-  ls_arbpl-sign = 'I'.
-  ls_arbpl-low = arbpl.
-
-  APPEND ls_arbpl TO r_arbpl.
-
-*Get stop reasons
-  SELECT *
-    FROM zabsf_pp011_t
-    INTO CORRESPONDING FIELDS OF TABLE stop_reason_tab
-   WHERE areaid EQ inputobj-areaid
-     AND arbpl  IN r_arbpl
-     AND werks  EQ werks
-     AND spras  EQ sy-langu.
-
-  IF sy-subrc NE 0.
-    CLEAR l_langu.
-
+***** BEGIN JOL - 07/12/2022 - get language - SPRAS field
+  IF lv_langu EQ ''.
 *  Get alternative language
     SELECT SINGLE spras
       FROM zabsf_pp061
-      INTO l_langu
-     WHERE werks      EQ werks
+      INTO lv_langu
+     WHERE werks      EQ iv_werks
        AND is_default NE space.
-
-    IF sy-subrc EQ 0.
-*    Get stop reasons
-      SELECT *
-        FROM zabsf_pp011_t
-        INTO CORRESPONDING FIELDS OF TABLE stop_reason_tab
-       WHERE areaid EQ inputobj-areaid
-         AND arbpl  IN r_arbpl
-         AND werks  EQ werks
-         AND spras  EQ l_langu.
-    ENDIF.
   ENDIF.
+***** BEGIN JOL - 07/12/2022
 
-*No stop reason found for this work center
+** Get stop reasons
+  SELECT *
+    FROM zabsf_pp011_t
+    INTO CORRESPONDING FIELDS OF TABLE stop_reason_tab
+   WHERE areaid EQ iv_areaid
+     AND arbpl  IN r_arbpl
+     AND werks  EQ iv_werks
+     AND spras  EQ lv_langu.
+
+* No stop reason found for this work center
   IF stop_reason_tab[] IS INITIAL.
+
     CALL METHOD zabsf_pp_cl_log=>add_message
       EXPORTING
         msgty      = 'E'
-        msgno      = '009'
+        msgno      = '019'
       CHANGING
         return_tab = return_tab.
 
   ELSE.
-
-* BMR INSERT 26.08.2016 - get notify type for stop reason
     SELECT * FROM zabsf_pp011 INTO CORRESPONDING FIELDS OF TABLE lt_sf011
       FOR ALL ENTRIES IN stop_reason_tab
-        WHERE areaid = inputobj-areaid
-        AND werks = werks
+        WHERE areaid = iv_areaid
+        AND werks = iv_werks
         AND arbpl = stop_reason_tab-arbpl
         AND stprsnid  = stop_reason_tab-stprsnid
         AND inact = space.
 
     IF lt_sf011 IS NOT INITIAL.
-
       LOOP AT stop_reason_tab ASSIGNING <fs_stop_reason>.
         l_tabix = sy-tabix.
         READ TABLE lt_sf011 INTO ls_sf011 WITH KEY arbpl = <fs_stop_reason>-arbpl
@@ -245,8 +205,6 @@ METHOD get_stop_reason_wrk.
         CLEAR ls_sf011.
       ENDLOOP.
     ENDIF.
-
-* BMR END INSERT 26.08.2016.
   ENDIF.
 ENDMETHOD.
 
@@ -303,154 +261,162 @@ method SET_STOP_REASON_OPR.
 endmethod.
 
 
-method set_stop_reason_wrk.
+METHOD set_stop_reason_wrk.
 *Reference
-  data: lref_sf_status    type ref to zabsf_pp_cl_status,
-        lref_sf_event_act type ref to zif_absf_pp_event_act,
-        lref_sf_calc_min  type ref to zabsf_pp_cl_event_act.
+  DATA: lref_sf_status    TYPE REF TO zabsf_pp_cl_status,
+        lref_sf_event_act TYPE REF TO zif_absf_pp_event_act,
+        lref_sf_calc_min  TYPE REF TO zabsf_pp_cl_event_act.
 
 *Variables
-  data: l_time         type atime,
-        l_time_off     type atime,
-        l_time_act     type atime,
-        l_time_calc    type pr_time,
-        l_date_calc    type datum,
-        l_status_out   type j_status,
-        l_status_desc  type j_txt30,
-        l_stsma_out    type jsto-stsma,
-        l_activity     type ru_ismng,
-        l_actionid     type zabsf_pp_e_action value 'INIT',
-        l_flag_stop    type c, "Operation stop
-        l_gname        type seqg3-gname,
-        l_garg         type seqg3-garg,
-        l_guname       type seqg3-guname,
-        l_subrc        type sy-subrc,
-        l_wait         type i,
-        ls_zabsf_pp010 type zabsf_pp010.
-
+  DATA: l_time         TYPE atime,
+        l_time_off     TYPE atime,
+        l_time_act     TYPE atime,
+        l_time_calc    TYPE pr_time,
+        l_date_calc    TYPE datum,
+        l_status_out   TYPE j_status,
+        l_status_desc  TYPE j_txt30,
+        l_stsma_out    TYPE jsto-stsma,
+        l_activity     TYPE ru_ismng,
+        l_actionid     TYPE zabsf_pp_e_action VALUE 'INIT',
+        l_flag_stop    TYPE c, "Operation stop
+        l_gname        TYPE seqg3-gname,
+        l_garg         TYPE seqg3-garg,
+        l_guname       TYPE seqg3-guname,
+        l_subrc        TYPE sy-subrc,
+        l_wait         TYPE i,
+        ls_zabsf_pp010 TYPE zabsf_pp010.
 
 *Constants
-  constants: c_objty       type cr_objty          value 'A',    "Work center
-             c_at03        type zabsf_pp_e_tarea_id value 'AT03', "Repetitive production functionalities
-             c_obart_ov    type j_obart           value 'OV',   "Operation
-             c_obart_ca    type j_obart           value 'CA',   "Work center
-             c_time_offset type zabsf_pp_e_parid    value 'TIME_OFFSET',
-             c_wait        type zabsf_pp_e_parid value 'WAIT'.
+  CONSTANTS: c_objty       TYPE cr_objty          VALUE 'A',    "Work center
+             c_at03        TYPE zabsf_pp_e_tarea_id VALUE 'AT03', "Repetitive production functionalities
+             c_obart_ov    TYPE j_obart           VALUE 'OV',   "Operation
+             c_obart_ca    TYPE j_obart           VALUE 'CA',   "Work center
+             c_time_offset TYPE zabsf_pp_e_parid    VALUE 'TIME_OFFSET',
+             c_wait        TYPE zabsf_pp_e_parid VALUE 'WAIT'.
 
-  clear: l_time.
+  CLEAR: l_time.
 
 *Check lenght of time
-  data(l_lengh) = strlen( time ).
+  DATA(l_lengh) = strlen( time ).
 
-  if l_lengh lt 6.
-    concatenate '0' time into l_time.
-  else.
+  IF l_lengh LT 6.
+    CONCATENATE '0' time INTO l_time.
+  ELSE.
     l_time = time.
-  endif.
-
+  ENDIF.
 
 *Upper case operator
-  translate inputobj-oprid to upper case.
+  TRANSLATE inputobj-oprid TO UPPER CASE.
 
 *Update User number
-  if inputobj-pernr is initial.
-    inputobj-pernr = inputobj-oprid.
-  endif.
+*  if inputobj-pernr is initial.
+*    inputobj-pernr = inputobj-oprid.
+*  endif.
 
 *Get time wait
-  select single parva
-    from zabsf_pp032
-    into (@data(l_wait_param))
-   where parid eq @c_wait.
+  SELECT SINGLE parva
+    FROM zabsf_pp032
+    INTO @DATA(l_wait_param)
+   WHERE parid EQ @c_wait.
 
-  if l_wait_param is not initial.
+  IF l_wait_param IS NOT INITIAL.
     l_wait = l_wait_param.
-  endif.
+  ENDIF.
 
   l_time = l_time - l_wait.
 
+  IF shiftid IS INITIAL.
 *Get shift witch operator is associated
-  select single shiftid
-    from zabsf_pp052
-    into (@data(l_shiftid))
-   where areaid eq @inputobj-areaid
-     and oprid  eq @inputobj-oprid.
+    SELECT SINGLE shiftid
+      FROM zabsf_pp052
+      INTO (@DATA(l_shiftid))
+     WHERE areaid EQ @inputobj-areaid
+       AND oprid  EQ @inputobj-oprid.
 
-  if sy-subrc ne 0.
+    IF sy-subrc NE 0.
 *  Operator is not associated with shift
-    call method zabsf_pp_cl_log=>add_message
-      exporting
-        msgty      = 'E'
-        msgno      = '061'
-        msgv1      = inputobj-oprid
-      changing
-        return_tab = return_tab.
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = 'E'
+          msgno      = '061'
+          msgv1      = inputobj-oprid
+        CHANGING
+          return_tab = return_tab.
 
-    exit.
-  endif.
+      EXIT.
+    ENDIF.
+  ELSE.
+    l_shiftid = shiftid.
+  ENDIF.
+
+  IF hname IS INITIAL.
 
 *Get id of workcenter
-  select single objid
-    from crhd
-    into (@data(l_arbpl_id))
-   where arbpl eq @arbpl
-     and werks eq @inputobj-werks.
+    SELECT SINGLE objid
+      FROM crhd
+      INTO (@DATA(l_arbpl_id))
+     WHERE arbpl EQ @arbpl
+       AND werks EQ @inputobj-werks.
 
 *Get hierarchy of workcenter
-  select single objty_hy, objid_hy
-    from crhs
-    into (@data(l_hname_ty), @data(l_hname_id))
-   where objty_ho eq @c_objty     "Workcenter
-     and objid_ho eq @l_arbpl_id.
+    SELECT SINGLE objty_hy, objid_hy
+      FROM crhs
+      INTO (@DATA(l_hname_ty), @DATA(l_hname_id))
+     WHERE objty_ho EQ @c_objty     "Workcenter
+       AND objid_ho EQ @l_arbpl_id.
 
 *Get name of hierarchy
-  select single name
-    from crhh
-    into (@data(l_hname))
-   where objty eq @l_hname_ty
-     and objid eq @l_hname_id.
+    SELECT SINGLE name
+      FROM crhh
+      INTO (@DATA(l_hname))
+     WHERE objty EQ @l_hname_ty
+       AND objid EQ @l_hname_id.
+
+  ELSE.
+    l_hname = hname.
+  ENDIF.
 
 *Get class of interface for Time confirmation
-  select single imp_clname, methodname
-      from zabsf_pp003
-      into (@data(l_class),@data(l_method))
-     where werks    eq @inputobj-werks
-       and id_class eq '2'
-       and endda    ge @refdt
-       and begda    le @refdt.
+  SELECT SINGLE imp_clname, methodname
+      FROM zabsf_pp003
+      INTO (@DATA(l_class),@DATA(l_method))
+     WHERE werks    EQ @inputobj-werks
+       AND id_class EQ '2'
+       AND endda    GE @refdt
+       AND begda    LE @refdt.
 
-  try.
+  TRY.
 *    Create object of class
-      create object lref_sf_event_act type (l_class)
-        exporting
+      CREATE OBJECT lref_sf_event_act TYPE (l_class)
+        EXPORTING
           initial_refdt = refdt
           input_object  = inputobj.
 
-    catch cx_sy_create_object_error.
+    CATCH cx_sy_create_object_error.
 *    Send message erro
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '019'
           msgv1      = l_class
-        changing
+        CHANGING
           return_tab = return_tab.
-      exit.
-  endtry.
+      EXIT.
+  ENDTRY.
 
 *Create object of class - Calculate time in minutes
-  create object lref_sf_calc_min
-    exporting
+  CREATE OBJECT lref_sf_calc_min
+    EXPORTING
       initial_refdt = sy-datum
       input_object  = inputobj.
 
 *Create object of class - Status
-  create object lref_sf_status
-    exporting
+  CREATE OBJECT lref_sf_status
+    EXPORTING
       initial_refdt = sy-datum
       input_object  = inputobj.
 
-  if stprsnid is not initial.
+  IF stprsnid IS NOT INITIAL.
 *  Save data of stop reason
 *    INSERT INTO zabsf_pp010 VALUES @( VALUE #( areaid   = inputobj-areaid "Area
 *                                                hname    = l_hname         "Hierarchy
@@ -473,90 +439,92 @@ method set_stop_reason_wrk.
     ls_zabsf_pp010-shiftid  = l_shiftid.
     ls_zabsf_pp010-stprsnid = stprsnid.
     ls_zabsf_pp010-stopunit = c_min.
+    ls_zabsf_pp010-endda =  '00000000'.
 
-    insert into zabsf_pp010 values ls_zabsf_pp010.
-    if sy-subrc eq 0.
-      commit work and wait.
+
+    INSERT INTO zabsf_pp010 VALUES ls_zabsf_pp010.
+    IF sy-subrc EQ 0.
+      COMMIT WORK AND WAIT.
 
 *    Operation completed successfully
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'S'
           msgno      = '013'
-        changing
+        CHANGING
           return_tab = return_tab.
 
 *    Get area type
-      select single tarea_id
-        from zabsf_pp008
-        into (@data(l_tarea_id))
-       where areaid eq @inputobj-areaid
-         and werks  eq @inputobj-werks
-         and endda  gt @sy-datum
-         and begda  lt @sy-datum.
+      SELECT SINGLE tarea_id
+        FROM zabsf_pp008
+        INTO (@DATA(l_tarea_id))
+       WHERE areaid EQ @inputobj-areaid
+         AND werks  EQ @inputobj-werks
+         AND endda  GT @sy-datum
+         AND begda  LT @sy-datum.
 
 *    Check if area isn't equal to Assembly (Montagem)
-      if l_tarea_id ne c_at03.
+      IF l_tarea_id NE c_at03.
 *      Get next status for operation
-        select single status_next
-          from zabsf_pp022
-          into (@data(l_status_next))
-         where objty       eq @c_obart_ov
-           and status_last eq @space
-           and status_next ne @space.
+        SELECT SINGLE status_next
+          FROM zabsf_pp022
+          INTO (@DATA(l_status_next))
+         WHERE objty       EQ @c_obart_ov
+           AND status_last EQ @space
+           AND status_next NE @space.
 
 *      Change status of all operation of workcenter
-        select *
-          from zabsf_pp021
-          into table @data(lt_pp_sf021)
-         where arbpl       eq @arbpl
-           and status_oper ne @l_status_next.
+        SELECT *
+          FROM zabsf_pp021
+          INTO TABLE @DATA(lt_pp_sf021)
+         WHERE arbpl       EQ @arbpl
+           AND status_oper NE @l_status_next.
 
 *      Get confirmations
-        select distinct arbpl, aufnr, vornr, rueck, rmzhl, aufpl, aplzl, stprsnid
-          from zabsf_pp016
-          into table @data(lt_pp_sf016)
-           for all entries in @lt_pp_sf021
-         where areaid  eq @inputobj-areaid
-           and hname   eq @l_hname
-           and werks   eq @inputobj-werks
-           and arbpl   eq @lt_pp_sf021-arbpl
-           and aufnr   eq @lt_pp_sf021-aufnr
-           and vornr   eq @lt_pp_sf021-vornr.
+        SELECT DISTINCT arbpl, aufnr, vornr, rueck, rmzhl, aufpl, aplzl, stprsnid
+          FROM zabsf_pp016
+          INTO TABLE @DATA(lt_pp_sf016)
+           FOR ALL ENTRIES IN @lt_pp_sf021
+         WHERE areaid  EQ @inputobj-areaid
+           AND hname   EQ @l_hname
+           AND werks   EQ @inputobj-werks
+           AND arbpl   EQ @lt_pp_sf021-arbpl
+           AND aufnr   EQ @lt_pp_sf021-aufnr
+           AND vornr   EQ @lt_pp_sf021-vornr.
 *           AND shiftid EQ @l_shiftid.
 
-        loop at lt_pp_sf021 into data(ls_pp_sf021).
-          if ls_pp_sf021-status_oper ne 'AGU' and ls_pp_sf021-status_oper ne 'CONC' and
-             ls_pp_sf021-status_oper ne 'STOP'.
+        LOOP AT lt_pp_sf021 INTO DATA(ls_pp_sf021).
+          IF ls_pp_sf021-status_oper NE 'AGU' AND ls_pp_sf021-status_oper NE 'CONC' AND
+             ls_pp_sf021-status_oper NE 'STOP'.
 
 *          Get aufpl, aplzl and rueck
-            read table lt_pp_sf016 into data(ls_pp_sf016) with key arbpl = ls_pp_sf021-arbpl
+            READ TABLE lt_pp_sf016 INTO DATA(ls_pp_sf016) WITH KEY arbpl = ls_pp_sf021-arbpl
                                                                    aufnr = ls_pp_sf021-aufnr
                                                                    vornr = ls_pp_sf021-vornr.
-            if sy-subrc eq 0.
+            IF sy-subrc EQ 0.
 *            Get counter final
-              read table count_fin_tab into data(ls_count_fin) with key aufnr = ls_pp_sf021-aufnr
+              READ TABLE count_fin_tab INTO DATA(ls_count_fin) WITH KEY aufnr = ls_pp_sf021-aufnr
                                                                         vornr = ls_pp_sf021-vornr.
 
 
 *            Check blocks
-              call method zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_res
-                exporting
+              CALL METHOD zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_res
+                EXPORTING
                   i_aufnr    = ls_pp_sf021-aufnr
                   i_max_time = l_wait
-                importing
+                IMPORTING
                   e_gname    = l_gname
                   e_garg     = l_garg
                   e_guname   = l_guname
                   e_return   = l_subrc.
 
-              if l_subrc ne 0.
-                exit.
-              endif.
+              IF l_subrc NE 0.
+                EXIT.
+              ENDIF.
 
 *            Save stop time - Confirm times
-              call method lref_sf_event_act->(l_method)
-                exporting
+              CALL METHOD lref_sf_event_act->(l_method)
+                EXPORTING
                   arbpl      = arbpl
                   werks      = werks
                   aufnr      = ls_pp_sf021-aufnr
@@ -570,51 +538,51 @@ method set_stop_reason_wrk.
                   actv_id    = 'STOP_PRO'
                   stprsnid   = stprsnid
                   count_fin  = ls_count_fin-count_fin
-                changing
+                CHANGING
                   actionid   = actionid
                   return_tab = return_tab.
-            endif.
-          endif.
-        endloop.
+            ENDIF.
+          ENDIF.
+        ENDLOOP.
 
-        if l_subrc ne 0.
-          call method zabsf_pp_cl_log=>add_message
-            exporting
+        IF l_subrc NE 0.
+          CALL METHOD zabsf_pp_cl_log=>add_message
+            EXPORTING
               msgty      = 'E'
               msgno      = '093'
               msgv1      = l_guname
               msgv2      = l_gname
               msgv3      = l_guname
-            changing
+            CHANGING
               return_tab = return_tab.
-          exit.
-        endif.
+          EXIT.
+        ENDIF.
 
 * BMR INSERT 26.09.2016 -change WC status even if  lt_pp_sf021 is empty
-        call method lref_sf_status->status_object
-          exporting
+        CALL METHOD lref_sf_status->status_object
+          EXPORTING
             arbpl       = arbpl
             werks       = inputobj-werks
             objty       = c_obart_ca
             method      = 'G'
-          changing
+          CHANGING
             status_out  = l_status_out
             status_desc = l_status_desc
             stsma_out   = l_stsma_out
             return_tab  = return_tab.
 
 *      Get next  status for workcenter
-        select single status_next
-          from zabsf_pp022
-          into @l_status_next
-         where objty       eq @c_obart_ca
-           and status_last eq @l_status_out
-           and stsma       eq @l_stsma_out
-           and actionid    eq @actionid.
+        SELECT SINGLE status_next
+          FROM zabsf_pp022
+          INTO @l_status_next
+         WHERE objty       EQ @c_obart_ca
+           AND status_last EQ @l_status_out
+           AND stsma       EQ @l_stsma_out
+           AND actionid    EQ @actionid.
 
 *      Change status
-        call method lref_sf_status->status_object
-          exporting
+        CALL METHOD lref_sf_status->status_object
+          EXPORTING
             arbpl      = arbpl
             werks      = werks
             objty      = c_obart_ca
@@ -622,36 +590,36 @@ method set_stop_reason_wrk.
             stsma      = l_stsma_out
             method     = 'S'
             actionid   = actionid
-          changing
+          CHANGING
             return_tab = return_tab.
 
-      else.
+      ELSE.
 *      For other types areas
 *      Get current status of workcenter
-        call method lref_sf_status->status_object
-          exporting
+        CALL METHOD lref_sf_status->status_object
+          EXPORTING
             arbpl       = arbpl
             werks       = inputobj-werks
             objty       = c_obart_ca
             method      = 'G'
-          changing
+          CHANGING
             status_out  = l_status_out
             status_desc = l_status_desc
             stsma_out   = l_stsma_out
             return_tab  = return_tab.
 
 *      Get next  status for workcenter
-        select single status_next
-          from zabsf_pp022
-          into @l_status_next
-         where objty       eq @c_obart_ca
-           and status_last eq @l_status_out
-           and stsma       eq @l_stsma_out
-           and actionid    eq @actionid.
+        SELECT SINGLE status_next
+          FROM zabsf_pp022
+          INTO @l_status_next
+         WHERE objty       EQ @c_obart_ca
+           AND status_last EQ @l_status_out
+           AND stsma       EQ @l_stsma_out
+           AND actionid    EQ @actionid.
 
 *      Change status
-        call method lref_sf_status->status_object
-          exporting
+        CALL METHOD lref_sf_status->status_object
+          EXPORTING
             arbpl      = arbpl
             werks      = werks
             objty      = c_obart_ca
@@ -659,31 +627,31 @@ method set_stop_reason_wrk.
             stsma      = l_stsma_out
             method     = 'S'
             actionid   = actionid
-          changing
+          CHANGING
             return_tab = return_tab.
-      endif.
-    else.
+      ENDIF.
+    ELSE.
 *    Operation not completed
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '012'
-        changing
+        CHANGING
           return_tab = return_tab.
-    endif.
-  else.
+    ENDIF.
+  ELSE.
 *  Check if exist stop reason saved
-    select single *
-      from zabsf_pp010
-      into @data(ls_pp_sf010)
-     where areaid   eq @inputobj-areaid
-       and hname    eq @l_hname
-       and werks    eq @inputobj-werks
-       and arbpl    eq @arbpl
-       and timeend  eq '000000'.
+    SELECT SINGLE *
+      FROM zabsf_pp010
+      INTO @DATA(ls_pp_sf010)
+     WHERE areaid   EQ @inputobj-areaid
+       AND hname    EQ @l_hname
+       AND werks    EQ @inputobj-werks
+       AND arbpl    EQ @arbpl
+       AND timeend  EQ '000000'.
 
-    if sy-subrc eq 0.
-      clear l_activity.
+    IF sy-subrc EQ 0.
+      CLEAR l_activity.
 
 *    Time
       l_time_calc = l_time.
@@ -691,13 +659,13 @@ method set_stop_reason_wrk.
       l_date_calc = datesr.
 
 *    Calculate stop time in minutes
-      call method lref_sf_calc_min->calc_minutes
-        exporting
+      CALL METHOD lref_sf_calc_min->calc_minutes
+        EXPORTING
           date       = ls_pp_sf010-datesr
           time       = ls_pp_sf010-time
           proc_date  = l_date_calc
           proc_time  = l_time_calc
-        changing
+        CHANGING
           activity   = l_activity
           return_tab = return_tab.
 
@@ -711,58 +679,58 @@ method set_stop_reason_wrk.
       ls_pp_sf010-stopunit = c_min.
       ls_pp_sf010-endda    = datesr.
       ls_pp_sf010-timeend  = l_time.
-      update zabsf_pp010 from  ls_pp_sf010.
-      if sy-subrc eq 0.
-        clear: l_status_next,
+      UPDATE zabsf_pp010 FROM  ls_pp_sf010.
+      IF sy-subrc EQ 0.
+        CLEAR: l_status_next,
                l_flag_stop.
 
-        refresh: lt_pp_sf021,
+        REFRESH: lt_pp_sf021,
                  lt_pp_sf016.
 
 
-        commit work and wait.
+        COMMIT WORK AND WAIT.
 
 *      Get next status for operation
-        select single status_next
-          from zabsf_pp022
-          into @l_status_next
-         where objty       eq @c_obart_ov
-           and status_last eq @space
-           and status_next ne @space.
+        SELECT SINGLE status_next
+          FROM zabsf_pp022
+          INTO @l_status_next
+         WHERE objty       EQ @c_obart_ov
+           AND status_last EQ @space
+           AND status_next NE @space.
 
 *      Change status of all operation of workcenter
-        select *
-          from zabsf_pp021
-          into table @lt_pp_sf021
-         where arbpl       eq @arbpl
-           and status_oper ne @l_status_next.
+        SELECT *
+          FROM zabsf_pp021
+          INTO TABLE @lt_pp_sf021
+         WHERE arbpl       EQ @arbpl
+           AND status_oper NE @l_status_next.
 
 *      Get confirmations
-        select distinct arbpl, aufnr, vornr, rueck, rmzhl, aufpl, aplzl, stprsnid
-          from zabsf_pp016
-          into table @lt_pp_sf016
-           for all entries in @lt_pp_sf021
-         where areaid  eq @inputobj-areaid
-           and hname   eq @l_hname
-           and werks   eq @inputobj-werks
-           and arbpl   eq @lt_pp_sf021-arbpl
-           and aufnr   eq @lt_pp_sf021-aufnr
-           and vornr   eq @lt_pp_sf021-vornr.
+        SELECT DISTINCT arbpl, aufnr, vornr, rueck, rmzhl, aufpl, aplzl, stprsnid
+          FROM zabsf_pp016
+          INTO TABLE @lt_pp_sf016
+           FOR ALL ENTRIES IN @lt_pp_sf021
+         WHERE areaid  EQ @inputobj-areaid
+           AND hname   EQ @l_hname
+           AND werks   EQ @inputobj-werks
+           AND arbpl   EQ @lt_pp_sf021-arbpl
+           AND aufnr   EQ @lt_pp_sf021-aufnr
+           AND vornr   EQ @lt_pp_sf021-vornr.
 *           AND shiftid EQ @l_shiftid.
 
-        clear ls_pp_sf021.
+        CLEAR ls_pp_sf021.
 
-        loop at lt_pp_sf021 into ls_pp_sf021 where status_oper eq 'STOP'.
-          clear ls_pp_sf016.
+        LOOP AT lt_pp_sf021 INTO ls_pp_sf021 WHERE status_oper EQ 'STOP'.
+          CLEAR ls_pp_sf016.
 
 *        Get aufpl, aplzl and rueck
-          read table lt_pp_sf016 into ls_pp_sf016 with key arbpl = ls_pp_sf021-arbpl
+          READ TABLE lt_pp_sf016 INTO ls_pp_sf016 WITH KEY arbpl = ls_pp_sf021-arbpl
                                                            aufnr = ls_pp_sf021-aufnr
                                                            vornr = ls_pp_sf021-vornr.
 
 *        Save stop time
-          call method lref_sf_event_act->(l_method)
-            exporting
+          CALL METHOD lref_sf_event_act->(l_method)
+            EXPORTING
               arbpl      = arbpl
               werks      = werks
               aufnr      = ls_pp_sf021-aufnr
@@ -774,63 +742,63 @@ method set_stop_reason_wrk.
               aufpl      = ls_pp_sf016-aufpl
               aplzl      = ls_pp_sf016-aplzl
               actv_id    = 'END_PARC' "'INIT_PRO'
-            changing
+            CHANGING
               actionid   = l_actionid
               return_tab = return_tab.
 
           l_flag_stop = 'X'.
-        endloop.
+        ENDLOOP.
 
 *        if l_flag_stop is not initial.
 *        Get current status of Workcenter
-          call method lref_sf_status->status_object
-            exporting
-              arbpl       = arbpl
-              werks       = inputobj-werks
-              objty       = c_obart_ca
-              method      = 'G'
-            changing
-              status_out  = l_status_out
-              status_desc = l_status_desc
-              stsma_out   = l_stsma_out
-              return_tab  = return_tab.
+        CALL METHOD lref_sf_status->status_object
+          EXPORTING
+            arbpl       = arbpl
+            werks       = inputobj-werks
+            objty       = c_obart_ca
+            method      = 'G'
+          CHANGING
+            status_out  = l_status_out
+            status_desc = l_status_desc
+            stsma_out   = l_stsma_out
+            return_tab  = return_tab.
 
 *        Get next  status for workcenter
-          select single status_next
-            from zabsf_pp022
-            into @l_status_next
-           where objty       eq @c_obart_ca
-             and status_last eq @l_status_out
-             and stsma       eq @l_stsma_out
-             and actionid    eq @actionid.
+        SELECT SINGLE status_next
+          FROM zabsf_pp022
+          INTO @l_status_next
+         WHERE objty       EQ @c_obart_ca
+           AND status_last EQ @l_status_out
+           AND stsma       EQ @l_stsma_out
+           AND actionid    EQ @actionid.
 
 *        Change status
-          call method lref_sf_status->status_object
-            exporting
-              arbpl      = arbpl
-              werks      = werks
-              objty      = c_obart_ca
-              status     = l_status_next
-              stsma      = l_stsma_out
-              method     = 'S'
-              actionid   = actionid
-            changing
-              return_tab = return_tab.
+        CALL METHOD lref_sf_status->status_object
+          EXPORTING
+            arbpl      = arbpl
+            werks      = werks
+            objty      = c_obart_ca
+            status     = l_status_next
+            stsma      = l_stsma_out
+            method     = 'S'
+            actionid   = actionid
+          CHANGING
+            return_tab = return_tab.
 *        endif.
-      endif.
-    endif.
-  endif.
+      ENDIF.
+    ENDIF.
+  ENDIF.
 
-  check actionid = 'STOP'.
+  CHECK actionid = 'STOP'.
 
-  loop at lt_pp_sf021 into data(ls_sf021).
-    delete from zabsf_pp069 where werks = werks
-                               and aufnr = ls_sf021-aufnr
-                               and vornr = ls_sf021-vornr
-                               and flag_shift = abap_true.
-  endloop.
-  check sy-subrc = 0.
-  commit work.
+  LOOP AT lt_pp_sf021 INTO DATA(ls_sf021).
+    DELETE FROM zabsf_pp069 WHERE werks = werks
+                               AND aufnr = ls_sf021-aufnr
+                               AND vornr = ls_sf021-vornr
+                               AND flag_shift = abap_true.
+  ENDLOOP.
+  CHECK sy-subrc = 0.
+  COMMIT WORK.
 
-endmethod.
+ENDMETHOD.
 ENDCLASS.

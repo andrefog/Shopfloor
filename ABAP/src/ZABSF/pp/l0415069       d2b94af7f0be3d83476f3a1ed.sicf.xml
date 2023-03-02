@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_SICF" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <URL>/sap/opu/sdata/sap/L0415069/</URL>
+   <ICFSERVICE>
+    <ICF_NAME>L0415069</ICF_NAME>
+    <ORIG_NAME>L0415069</ORIG_NAME>
+    <ICFALTNME>Z_SF_ODATA_SERVICE_SRV</ICFALTNME>
+   </ICFSERVICE>
+   <ICFDOCU>
+    <ICF_NAME>L0415069</ICF_NAME>
+    <ICF_LANGU>E</ICF_LANGU>
+    <ICF_DOCU>Z_SF_ODATA_SERVICE_SRV</ICF_DOCU>
+   </ICFDOCU>
+  </asx:values>
+ </asx:abap>
+</abapGit>

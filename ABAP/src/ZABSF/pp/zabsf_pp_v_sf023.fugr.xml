@@ -2,7 +2,6 @@
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
-   <AREAT>atualização ampliada de tabelas (gerada)</AREAT>
    <INCLUDES>
     <SOBJ_NAME>LZABSF_PP_V_SF023F00</SOBJ_NAME>
     <SOBJ_NAME>LZABSF_PP_V_SF023I00</SOBJ_NAME>
@@ -529,7 +528,7 @@
        <ROLLING>X</ROLLING>
        <LINE>001</LINE>
        <COLUMN>003</COLUMN>
-       <LENGTH>040</LENGTH>
+       <LENGTH>018</LENGTH>
        <VISLENGTH>010</VISLENGTH>
        <HEIGHT>001</HEIGHT>
        <GROUP1>KEY</GROUP1>

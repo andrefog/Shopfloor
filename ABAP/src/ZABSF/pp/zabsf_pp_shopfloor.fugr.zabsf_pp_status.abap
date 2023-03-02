@@ -1,6 +1,6 @@
 FUNCTION zabsf_pp_status .
 *"----------------------------------------------------------------------
-*"*"Interface local:
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL) TYPE  ARBPL OPTIONAL
 *"     VALUE(AUFNR) TYPE  AUFNR OPTIONAL
@@ -15,6 +15,7 @@ FUNCTION zabsf_pp_status .
 *"     VALUE(ACTIONID) TYPE  ZABSF_PP_E_ACTION OPTIONAL
 *"     VALUE(REFDT) TYPE  VVDATUM DEFAULT SY-DATUM
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
+*"     VALUE(STPRSNID) TYPE  ZABSF_PP_E_STPRSNID OPTIONAL
 *"  EXPORTING
 *"     VALUE(STATUS_OUT) TYPE  J_STATUS
 *"     VALUE(STATUS_DESC) TYPE  J_TXT30
@@ -44,6 +45,7 @@ FUNCTION zabsf_pp_status .
       method           = method
       status_oper      = status_oper
       actionid         = actionid
+      stprsnid         = stprsnid
     CHANGING
       status_input_tab = status_input_tab
       status_out       = status_out

@@ -54,55 +54,57 @@ method CONSTRUCTOR.
 endmethod.
 
 
-  METHOD get_output_settings.
+METHOD get_output_settings.
 
-    FIELD-SYMBOLS <fs_field> TYPE any.
+  FIELD-SYMBOLS <fs_field> TYPE any.
 
-    IF get_all EQ abap_true.
+  IF get_all EQ abap_true.
 
-      SELECT * FROM zabsf_pp079 INTO TABLE @DATA(lt_pp079)
-        WHERE werks EQ @me->inputobj-werks
-        AND areaid EQ @me->inputobj-areaid.
+    SELECT * FROM zabsf_pp079 INTO TABLE @DATA(lt_pp079)
+      WHERE werks EQ @me->inputobj-werks
+      AND areaid EQ @me->inputobj-areaid.
 
-      IF sy-subrc NE 0.
+    IF sy-subrc NE 0.
 * Send Error message!
-        CALL METHOD zabsf_pp_cl_log=>add_message
-          EXPORTING
-            msgty      = 'E'
-            msgno      = '106'
-          CHANGING
-            return_tab = return_tab.
-      ELSE.
-
-        LOOP AT lt_pp079 INTO DATA(ls_pp079).
-
-          ASSIGN COMPONENT ls_pp079-parid OF STRUCTURE all_parameters TO <fs_field>.
-          IF <fs_field> IS ASSIGNED AND sy-subrc EQ 0.
-            <fs_field> = ls_pp079-status.
-          ENDIF.
-        ENDLOOP.
-      ENDIF.
-
+      IF 1 = 2. MESSAGE e106(zabsf_pp). ENDIF.
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = 'E'
+          msgno      = '106'
+        CHANGING
+          return_tab = return_tab.
     ELSE.
-      SELECT SINGLE status FROM zabsf_pp079 INTO parameter_value
-        WHERE werks EQ me->inputobj-werks
-        AND parid EQ parid
-        AND areaid EQ me->inputobj-areaid.
 
-      IF sy-subrc NE 0.
-* Send Error message!
-        CALL METHOD zabsf_pp_cl_log=>add_message
-          EXPORTING
-            msgty      = 'E'
-            msgno      = '107'
-            msgv1      = parid
-          CHANGING
-            return_tab = return_tab.
+      LOOP AT lt_pp079 INTO DATA(ls_pp079).
 
-      ENDIF.
+        ASSIGN COMPONENT ls_pp079-parid OF STRUCTURE all_parameters TO <fs_field>.
+        IF <fs_field> IS ASSIGNED AND sy-subrc EQ 0.
+          <fs_field> = ls_pp079-status.
+        ENDIF.
+      ENDLOOP.
     ENDIF.
 
-  ENDMETHOD.
+  ELSE.
+    SELECT SINGLE status FROM zabsf_pp079 INTO parameter_value
+      WHERE werks EQ me->inputobj-werks
+      AND parid EQ parid
+      AND areaid EQ me->inputobj-areaid.
+
+    IF sy-subrc NE 0.
+* Send Error message!
+      IF 1 = 2. MESSAGE e107(zabsf_pp). ENDIF.
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
+          msgty      = 'E'
+          msgno      = '107'
+          msgv1      = parid
+        CHANGING
+          return_tab = return_tab.
+
+    ENDIF.
+  ENDIF.
+
+ENDMETHOD.
 
 
 METHOD zif_absf_pp_parameters~get_parameters.
@@ -119,7 +121,7 @@ METHOD zif_absf_pp_parameters~get_parameters.
   FIELD-SYMBOLS: <fs_parameters> TYPE zabsf_pp_s_parameters.
 
 *Set local language for user
-  l_langu = inputobj-language.
+  l_langu = sy-langu.
 
   SET LOCALE LANGUAGE l_langu.
 
@@ -198,6 +200,6 @@ METHOD zif_absf_pp_parameters~get_parameters.
 ENDMETHOD.
 
 
-  method ZIF_ABSF_PP_PARAMETERS~SET_REFDT.
+method ZIF_ABSF_PP_PARAMETERS~SET_REFDT.
   endmethod.
 ENDCLASS.

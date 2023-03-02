@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_set_box_quantity .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SET_BOX_QUANTITY.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AUFNR) TYPE  AUFNR
 *"     VALUE(VORNR) TYPE  VORNR
@@ -11,7 +11,7 @@ FUNCTION zabsf_pp_set_box_quantity .
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
 *Reference
   DATA lref_sf_prdord TYPE REF TO zabsf_pp_cl_prdord.
 
@@ -42,4 +42,9 @@ FUNCTION zabsf_pp_set_box_quantity .
       return_tab = return_tab.
 
   DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

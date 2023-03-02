@@ -4,7 +4,7 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PALETE_DATA</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
     <DDTEXT>Dados de Palete incompletas por Lote</DDTEXT>
    </DD02V>
@@ -30,6 +30,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Dados de Palete incompletas por Lote</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

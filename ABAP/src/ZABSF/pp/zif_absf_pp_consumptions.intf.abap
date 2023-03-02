@@ -6,6 +6,7 @@ interface ZIF_ABSF_PP_CONSUMPTIONS
     importing
       !AUFNR type AUFNR
       !VORNR type VORNR optional
+      !AREAID type ZABSF_PP_E_AREAID optional
       !FOR_SUBPRODUCTS type FLAG optional
     changing
       !COMPONENTS_TAB type ZABSF_PP_T_COMPONENTS
@@ -18,6 +19,8 @@ interface ZIF_ABSF_PP_CONSUMPTIONS
       !MEINS type MEINS
       !PLANORDER type PLNUM optional
       !COMPONENTS_TAB type ZABSF_PP_T_COMPONENTS optional
+      !MATERIALBATCH type ZABSF_PP_T_MATERIALBATCH optional
+      !MATERIALSERIAL type ZABSF_PP_T_MATERIALSERIAL optional
     changing
       !RETURN_TAB type BAPIRET2_T .
   methods CREATE_CONSUM_ORDER
@@ -31,7 +34,7 @@ interface ZIF_ABSF_PP_CONSUMPTIONS
   methods GET_COMPONENTS_MATNR
     importing
       !MATNR type MATNR
-      !VORNE type PZPNR
+      !VORNR type PZPNR
       !LMNGA type LMNGA
       !MEINS type MEINS
     changing
@@ -54,4 +57,13 @@ interface ZIF_ABSF_PP_CONSUMPTIONS
     changing
       !COMPONENTS_TAB type ZABSF_PP_T_COMPONENTS
       !RETURN_TAB type BAPIRET2_T .
+  methods CREATE_TRANSF_POST
+    importing
+      !IV_MATNR type MATNR
+      !IV_LMNGA type LMNGA
+      !IV_MEINS type MEINS
+      !IV_SLGORT type LGORT_D
+      !IV_DLGORT type LGORT_D
+    changing
+      !CT_RETURN type BAPIRET2_T .
 endinterface.

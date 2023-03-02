@@ -4,9 +4,7 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP_S_PRODORD_UNASSIGN</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>INTTAB</TABCLASS>
-    <DDTEXT>Shopfloor - Detalhe Ordem por associar</DDTEXT>
     <EXCLASS>4</EXCLASS>
    </DD02V>
    <DD03P_TABLE>
@@ -73,7 +71,24 @@
      <ADMINFIELD>0</ADMINFIELD>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
+    <DD03P>
+     <FIELDNAME>QUANTITYTOMAKE</FIELDNAME>
+     <ROLLNAME>GAMNG</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <REFTABLE>MARA</REFTABLE>
+     <REFFIELD>MEINS</REFFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Detalhe Ordem por associar</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

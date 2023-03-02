@@ -1,6 +1,6 @@
-function zabsf_pp_set_oprid_and_restart .
+FUNCTION zabsf_pp_set_oprid_and_restart.
 *"----------------------------------------------------------------------
-*"*"Interface local:
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(ARBPL) TYPE  ARBPL
 *"     VALUE(AUFNR) TYPE  AUFNR
@@ -37,149 +37,149 @@ function zabsf_pp_set_oprid_and_restart .
   "- Arranca a produção.
 
 *References
-  data: lref_sf_event_act type ref to zif_absf_pp_event_act,
-        lref_sf_operator  type ref to zif_absf_pp_operator.
+  DATA: lref_sf_event_act TYPE REF TO zif_absf_pp_event_act,
+        lref_sf_operator  TYPE REF TO zif_absf_pp_operator.
 
-  data: ld_class  type recaimplclname,
-        ld_method type seocmpname.
+  DATA: ld_class  TYPE recaimplclname,
+        ld_method TYPE seocmpname.
 
 *Variables
-  data: l_gname       type seqg3-gname,
-        l_garg        type seqg3-garg,
-        l_guname      type seqg3-guname,
-        l_subrc       type sy-subrc,
-        l_wait        type i,
-        lf_error      type flag,
-        lv_pernr      type pernr_d,
-        lv_no_restart type flag,
-        lv_error      type flag.
+  DATA: l_gname       TYPE seqg3-gname,
+        l_garg        TYPE seqg3-garg,
+        l_guname      TYPE seqg3-guname,
+        l_subrc       TYPE sy-subrc,
+        l_wait        TYPE i,
+        lf_error      TYPE flag,
+        lv_pernr      TYPE pernr_d,
+        lv_no_restart TYPE flag,
+        lv_error      TYPE flag.
 
 *Structures
-  data: ls_return type bapireturn.
+  DATA: ls_return TYPE bapireturn.
 
 *Constants
-  constants: c_wait type zabsf_pp_e_parid value 'WAIT'.
+  CONSTANTS: c_wait TYPE zabsf_pp_e_parid VALUE 'WAIT'.
 
 *Get time wait
-  select single parva
-    from zabsf_pp032
-    into (@data(l_wait_param))
-   where parid eq @c_wait.
+  SELECT SINGLE parva
+    FROM zabsf_pp032
+    INTO (@DATA(l_wait_param))
+   WHERE parid EQ @c_wait.
 
-  if l_wait_param is not initial.
+  IF l_wait_param IS NOT INITIAL.
     l_wait = l_wait_param.
-  endif.
+  ENDIF.
 
 *Get class of interface
-  select single imp_clname, methodname
-      from zabsf_pp003
-      into (@data(l_class),@data(l_method) )
-     where werks    eq @inputobj-werks
-       and id_class eq '2'
-       and endda    ge @refdt
-       and begda    le @refdt.
+  SELECT SINGLE imp_clname, methodname
+      FROM zabsf_pp003
+      INTO (@DATA(l_class),@DATA(l_method) )
+     WHERE werks    EQ @inputobj-werks
+       AND id_class EQ '2'
+       AND endda    GE @refdt
+       AND begda    LE @refdt.
 
-  try .
-      create object lref_sf_event_act type (l_class)
-        exporting
+  TRY .
+      CREATE OBJECT lref_sf_event_act TYPE (l_class)
+        EXPORTING
           initial_refdt = refdt
           input_object  = inputobj.
 
-    catch cx_sy_create_object_error.
+    CATCH cx_sy_create_object_error.
 *
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '019'
           msgv1      = l_class
-        changing
+        CHANGING
           return_tab = return_tab.
-      exit.
-  endtry.
+      EXIT.
+  ENDTRY.
 
 *Get class of interface
-  select single imp_clname methodname
-      from zabsf_pp003
-      into (ld_class, ld_method)
-     where werks eq inputobj-werks
-       and id_class eq '3'
-       and endda ge refdt
-       and begda le refdt.
+  SELECT SINGLE imp_clname methodname
+      FROM zabsf_pp003
+      INTO (ld_class, ld_method)
+     WHERE werks EQ inputobj-werks
+       AND id_class EQ '3'
+       AND endda GE refdt
+       AND begda LE refdt.
 
-  try .
-      create object lref_sf_operator type (ld_class)
-        exporting
+  TRY .
+      CREATE OBJECT lref_sf_operator TYPE (ld_class)
+        EXPORTING
           initial_refdt = refdt
           input_object  = inputobj.
 
-    catch cx_sy_create_object_error.
+    CATCH cx_sy_create_object_error.
 *    No data for object in customizing table
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '019'
           msgv1      = ld_class
-        changing
+        CHANGING
           return_tab = return_tab.
 
-      exit.
-  endtry.
+      EXIT.
+  ENDTRY.
 
 *Check blocks
-  call method zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_res
-    exporting
+  CALL METHOD zabsf_pp_cl_wait_enqueue=>wait_for_dequeue_res
+    EXPORTING
       i_aufnr    = aufnr
       i_max_time = l_wait
-    importing
+    IMPORTING
       e_gname    = l_gname
       e_garg     = l_garg
       e_guname   = l_guname
       e_return   = l_subrc.
 
-  if l_subrc ne 0.
-    call method zabsf_pp_cl_log=>add_message
-      exporting
+  IF l_subrc NE 0.
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
         msgty      = 'E'
         msgno      = '093'
         msgv1      = l_guname
         msgv2      = l_gname
         msgv3      = l_guname
-      changing
+      CHANGING
         return_tab = return_tab.
-    exit.
-  endif.
+    EXIT.
+  ENDIF.
 *>> Validar se o utilizador existe
-  read table operator_tab into data(ls_operator) index 1.
+  READ TABLE operator_tab INTO DATA(ls_operator) INDEX 1.
 
-  move ls_operator-oprid to lv_pernr.
-  translate ls_operator-oprid to upper case.
+  MOVE ls_operator-oprid TO lv_pernr.
+  TRANSLATE ls_operator-oprid TO UPPER CASE.
 *  CALL FUNCTION 'BAPI_EMPLOYEE_CHECKEXISTENCE'
 *    EXPORTING
 *      number = lv_pernr
 *    IMPORTING
 *      return = ls_return.
 
-  if ls_return is initial.
+  IF ls_return IS INITIAL.
 * Check if user is allready on the selected state.
-    select single * from zabsf_pp014 into @data(ls_pp014)
-        where arbpl  eq @arbpl
-          and aufnr  eq @aufnr
-          and vornr  eq @vornr
-          and status eq @ls_operator-status
-          and tipord eq 'N' "@tipord.
-          and oprid  eq @ls_operator-oprid
-          and kapid  eq @kapid.
+    SELECT SINGLE * FROM zabsf_pp014 INTO @DATA(ls_pp014)
+        WHERE arbpl  EQ @arbpl
+          AND aufnr  EQ @aufnr
+          AND vornr  EQ @vornr
+          AND status EQ @ls_operator-status
+          AND tipord EQ 'N' "@tipord.
+          AND oprid  EQ @ls_operator-oprid
+          AND kapid  EQ @kapid.
 
-    if sy-subrc eq 0.
-      call method zabsf_pp_cl_log=>add_message
-        exporting
+    IF sy-subrc EQ 0.
+      CALL METHOD zabsf_pp_cl_log=>add_message
+        EXPORTING
           msgty      = 'E'
           msgno      = '113'
           msgv1      = ls_operator-oprid
-        changing
+        CHANGING
           return_tab = return_tab.
-      exit.
-    endif.
+      EXIT.
+    ENDIF.
 
 *>>BMR INSERT 11.06.2018 - Check if user is working on another workcenter/order/operation.
 *    CALL METHOD zabsf_pp_cl_operator=>check_if_operator_is_assgined
@@ -198,36 +198,53 @@ function zabsf_pp_set_oprid_and_restart .
 
 
     "Get all active Operators in this order type
-    select *
-      from zabsf_pp014
-      into table @data(lt_zabsf_pp014)
-      where arbpl  eq @arbpl
-        and aufnr  eq @aufnr
-        and vornr  eq @vornr
-        and status eq 'A'
-        and tipord eq 'N'. "@tipord.
+    SELECT *
+      FROM zabsf_pp014
+      INTO TABLE @DATA(lt_zabsf_pp014)
+      WHERE arbpl  EQ @arbpl
+        AND aufnr  EQ @aufnr
+        AND vornr  EQ @vornr
+        AND status EQ 'A'
+        AND tipord EQ 'N'. "@tipord.
 *    Read information from database, that we put above and the id of operator be the same that return in the Loop.
-    read table lt_zabsf_pp014 into data(ls_zabsf_pp014) with key oprid = ls_operator-oprid.
+    READ TABLE lt_zabsf_pp014 INTO DATA(ls_zabsf_pp014) WITH KEY oprid = ls_operator-oprid.
 
+    IF sy-subrc NE 0.
+      IF ( ls_operator-oprid NE '' AND ls_operator-status EQ 'A' ).
+
+        ls_zabsf_pp014-arbpl  = arbpl.
+        ls_zabsf_pp014-aufnr  = aufnr.
+        ls_zabsf_pp014-vornr  = vornr.
+        ls_zabsf_pp014-oprid  = ls_operator-oprid.
+        ls_zabsf_pp014-status = ls_operator-status.
+        ls_zabsf_pp014-tipord = 'N'.
+        ls_zabsf_pp014-udate  = sy-datum.
+        ls_zabsf_pp014-utime  = sy-uzeit.
+        ls_zabsf_pp014-kapid  = kapid.
+
+        INSERT INTO zabsf_pp014 VALUES ls_zabsf_pp014.
+
+      ENDIF.
+    ENDIF.
     "sy-subrc is component of the system, if everything ok so return 0 in sy-subrc. Then see  if the status of the operator is equal to inactive
-    if sy-subrc eq 0 and ls_operator-status eq 'I'."Inactive
+    IF sy-subrc EQ 0 AND ls_operator-status EQ 'I'."Inactive
 
 *      Get number operators assigned to Production Order
-      describe table lt_zabsf_pp014 lines data(l_nr_operator).
+      DESCRIBE TABLE lt_zabsf_pp014 LINES DATA(l_nr_operator).
 
 *      Get first operator assigned to Production Order
-      select oprid up to 1 rows
-        from zabsf_pp014
-        into (@data(l_first_operator))
-       where arbpl  eq @arbpl
-         and aufnr  eq @aufnr
-         and vornr  eq @vornr
-         and status eq 'A'
-         and tipord eq 'N' "@tipord
-       order by udate ascending, utime ascending.
-      endselect.
+      SELECT oprid UP TO 1 ROWS
+        FROM zabsf_pp014
+        INTO (@DATA(l_first_operator))
+       WHERE arbpl  EQ @arbpl
+         AND aufnr  EQ @aufnr
+         AND vornr  EQ @vornr
+         AND status EQ 'A'
+         AND tipord EQ 'N' "@tipord
+       ORDER BY udate ASCENDING, utime ASCENDING.
+      ENDSELECT.
 
-      if l_first_operator eq ls_operator-oprid and l_nr_operator gt 1.
+      IF l_first_operator EQ ls_operator-oprid AND l_nr_operator GT 1.
 *        Operd. principal não pode dissociar-se enquanto houver outros associados.
 *        CALL METHOD zabsf_pp_cl_log=>add_message
 *          EXPORTING
@@ -236,9 +253,9 @@ function zabsf_pp_set_oprid_and_restart .
 *          CHANGING
 *            return_tab = return_tab.
 *        EXIT.
-      endif.
+      ENDIF.
 
-      if l_nr_operator eq 1.
+      IF l_nr_operator EQ 1.
         "Ultimo operador da ordem. Não reenicia!
         lv_no_restart = abap_true.
 *        CALL METHOD zabsf_pp_cl_log=>add_message
@@ -248,28 +265,28 @@ function zabsf_pp_set_oprid_and_restart .
 *          CHANGING
 *            return_tab = return_tab.
 *          EXIT.
-      endif.
+      ENDIF.
 
-    endif.
-  else.
+    ENDIF.
+  ELSE.
 *    Não foi encontrado o utilizador & no sistema
-    call method zabsf_pp_cl_log=>add_message
-      exporting
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
         msgty      = 'E'
         msgno      = '024'
         msgv1      = ls_operator-oprid
-      changing
+      CHANGING
         return_tab = return_tab.
-    return.
-  endif.
+    RETURN.
+  ENDIF.
 
 
 *Save confirmation time
   actv_id = 'END_PARC'.
   actionid = 'NEXT'.
   "ZABSF_PP_CL_EVENT_ACT=>SET_CONF_EVENT_TIME
-  call method lref_sf_event_act->(l_method)
-    exporting
+  CALL METHOD lref_sf_event_act->(l_method)
+    EXPORTING
       arbpl                         = arbpl
       werks                         = inputobj-werks
       aufnr                         = aufnr
@@ -290,59 +307,59 @@ function zabsf_pp_set_oprid_and_restart .
       shiftid                       = shiftid
       no_clear_operators_from_order = abap_true "dont remove operators from order on partial close.
       kapid                         = kapid
-    changing
+    CHANGING
       actionid                      = actionid
       return_tab                    = return_tab.
 
-  delete adjacent duplicates from return_tab.
+  DELETE ADJACENT DUPLICATES FROM return_tab.
 
-  loop at return_tab transporting no fields
-    where type ca 'AEX'.
+  LOOP AT return_tab TRANSPORTING NO FIELDS
+    WHERE type CA 'AEX'.
 
     lf_error = abap_true.
-    exit.
-  endloop.
+    EXIT.
+  ENDLOOP.
 
-  check lf_error eq abap_false.
+  CHECK lf_error EQ abap_false.
 
 * Clear Batchs.
-  delete from zabsf_pp069 where werks = inputobj-werks
-                             and aufnr = aufnr
-                             and vornr = vornr
-                             and flag_shift = abap_true.
-  if sy-subrc = 0.
-    commit work.
-  endif.
+  DELETE FROM zabsf_pp069 WHERE werks = inputobj-werks
+                             AND aufnr = aufnr
+                             AND vornr = vornr
+                             AND flag_shift = abap_true.
+  IF sy-subrc = 0.
+    COMMIT WORK.
+  ENDIF.
 * Remove / Add operator
   " ZABSF_PP_CL_OPERATOR->SET_OPERATOR
-  call method lref_sf_operator->(ld_method)
-    exporting
+  CALL METHOD lref_sf_operator->(ld_method)
+    EXPORTING
       arbpl        = arbpl
       aufnr        = aufnr
       vornr        = vornr
       operator_tab = operator_tab
       kapid        = kapid
-    changing
+    CHANGING
       return_tab   = return_tab.
 
-  delete adjacent duplicates from return_tab.
+  DELETE ADJACENT DUPLICATES FROM return_tab.
 
 * Look for errors.
-  loop at return_tab transporting no fields
-  where type ca 'AEX'.
+  LOOP AT return_tab TRANSPORTING NO FIELDS
+  WHERE type CA 'AEX'.
 
     lf_error = abap_true.
-    exit.
-  endloop.
+    EXIT.
+  ENDLOOP.
 
-  check lf_error eq abap_false and lv_no_restart eq abap_false.
+  CHECK lf_error EQ abap_false AND lv_no_restart EQ abap_false.
 
   "Re-Start production
   actv_id = 'INIT_PRO'.
   actionid = 'PROD'.
   "ZABSF_PP_CL_EVENT_ACT=>SET_CONF_EVENT_TIME
-  call method lref_sf_event_act->(l_method)
-    exporting
+  CALL METHOD lref_sf_event_act->(l_method)
+    EXPORTING
       arbpl       = arbpl
       werks       = inputobj-werks
       aufnr       = aufnr
@@ -362,10 +379,14 @@ function zabsf_pp_set_oprid_and_restart .
       backoffice  = backoffice
       shiftid     = shiftid
       kapid       = kapid
-    changing
+    CHANGING
       actionid    = actionid
       return_tab  = return_tab.
 
-  delete adjacent duplicates from return_tab.
+  DELETE ADJACENT DUPLICATES FROM return_tab.
 
-endfunction.
+
+
+
+
+ENDFUNCTION.

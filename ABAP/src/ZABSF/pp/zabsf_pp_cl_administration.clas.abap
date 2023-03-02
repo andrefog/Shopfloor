@@ -36,7 +36,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_ADMINISTRATION IMPLEMENTATION.
 
 
-  METHOD CONSTRUCTOR.
+METHOD CONSTRUCTOR.
 *  Ref. Date
     refdt = initial_refdt.
 
@@ -45,7 +45,7 @@ CLASS ZABSF_PP_CL_ADMINISTRATION IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_area_with_type_area.
+METHOD get_area_with_type_area.
 *  Variables
     DATA: lv_tarea_desc TYPE zabsf_pp_e_tarea_desc,
           lv_area_desc  TYPE zabsf_pp_e_areadesc.
@@ -129,7 +129,7 @@ CLASS ZABSF_PP_CL_ADMINISTRATION IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_languages.
+METHOD get_languages.
 *  Internal tables
     DATA: lt_pp_sf061 TYPE TABLE OF zabsf_pp061.
 
@@ -172,7 +172,7 @@ CLASS ZABSF_PP_CL_ADMINISTRATION IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_plants.
+METHOD get_plants.
 *  Get all plants
     SELECT werks name1
       FROM t001w
@@ -192,7 +192,7 @@ CLASS ZABSF_PP_CL_ADMINISTRATION IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD SET_REFDT.
+METHOD SET_REFDT.
 *  Set new reference date
     refdt = new_refdt.
   ENDMETHOD.

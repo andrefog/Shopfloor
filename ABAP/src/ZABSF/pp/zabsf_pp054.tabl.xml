@@ -4,10 +4,9 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP054</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Shopfloor - Descrição do grupo de material</DDTEXT>
+    <MAINFLAG>X</MAINFLAG>
     <CONTFLAG>A</CONTFLAG>
     <EXCLASS>4</EXCLASS>
    </DD02V>
@@ -111,6 +110,15 @@
      <CHECKTABLE>T002</CHECKTABLE>
     </DD08V>
    </DD08V_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Descrição do grupo de material</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

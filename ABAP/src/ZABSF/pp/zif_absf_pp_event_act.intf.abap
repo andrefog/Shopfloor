@@ -27,6 +27,7 @@ interface ZIF_ABSF_PP_EVENT_ACT
       value(BACKOFFICE) type FLAG optional
       value(SHIFTID) type ZABSF_PP_E_SHIFTID optional
       !KAPID type KAPID optional
+      !LV_EQUIPAMENT type CHAR100 optional
     changing
       !ACTIONID type ZABSF_PP_E_ACTION optional
       !RETURN_TAB type BAPIRET2_T .
@@ -65,6 +66,7 @@ interface ZIF_ABSF_PP_EVENT_ACT
       value(SHIFTID) type ZABSF_PP_E_SHIFTID optional
       value(NO_CLEAR_OPERATORS_FROM_ORDER) type FLAG optional
       !KAPID type KAPID optional
+      !IV_EQUIPMENT type CHAR100 optional
     changing
       !ACTIONID type ZABSF_PP_E_ACTION optional
       !RETURN_TAB type BAPIRET2_T .

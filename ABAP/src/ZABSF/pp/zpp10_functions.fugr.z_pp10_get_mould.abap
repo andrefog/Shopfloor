@@ -1,6 +1,6 @@
 FUNCTION Z_PP10_GET_MOULD.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     REFERENCE(IV_AUFPL) TYPE  CO_AUFPL
 *"     REFERENCE(IV_APLZL) TYPE  CO_APLZL
@@ -8,8 +8,7 @@ FUNCTION Z_PP10_GET_MOULD.
 *"  EXPORTING
 *"     REFERENCE(EV_EQUNR) TYPE  EQUNR
 *"     REFERENCE(EV_EQKTX) TYPE  KTX01
-*"----------------------------------------------------------------------
-
+*"--------------------------------------------------------------------
 *Structures
   DATA: ls_affh TYPE affh.
 
@@ -84,4 +83,9 @@ FUNCTION Z_PP10_GET_MOULD.
 *  Equipment description
     ev_eqktx = l_eqktx.
   ENDIF.
+
+
+
+
+
 ENDFUNCTION.

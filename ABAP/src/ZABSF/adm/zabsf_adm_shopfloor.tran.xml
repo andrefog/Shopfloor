@@ -12,15 +12,16 @@
     <S_WIN32>X</S_WIN32>
     <S_PLATIN>X</S_PLATIN>
    </TSTCC>
-   <TSTCT>
-    <SPRSL>P</SPRSL>
-    <TCODE>ZABSF_ADM_SHOPFLOOR</TCODE>
-    <TTEXT>Shopfloor - Config. Administração</TTEXT>
-   </TSTCT>
    <TSTCP>
     <TCODE>ZABSF_ADM_SHOPFLOOR</TCODE>
     <PARAM>/*SM34 SHOW=X;VCLDIR-VCLNAME=ZABSF_ADM_SHOPFLOOR;</PARAM>
    </TSTCP>
+   <I18N_TPOOL>
+    <TSTCT>
+     <SPRSL>P</SPRSL>
+     <TTEXT>Shopfloor - Config. Administração</TTEXT>
+    </TSTCT>
+   </I18N_TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

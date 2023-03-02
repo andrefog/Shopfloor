@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_CRON_VALUE</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>INT2</DOMNAME>
     <HEADLEN>18</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Valor do Cronómetro</DDTEXT>
-    <REPTEXT>Cronómetro</REPTEXT>
-    <SCRTEXT_S>Cronómetro</SCRTEXT_S>
-    <SCRTEXT_M>Cronómetro</SCRTEXT_M>
-    <SCRTEXT_L>Cronómetro</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Valor do Cronómetro</DDTEXT>
+     <REPTEXT>Cronómetro</REPTEXT>
+     <SCRTEXT_S>Cronómetro</SCRTEXT_S>
+     <SCRTEXT_M>Cronómetro</SCRTEXT_M>
+     <SCRTEXT_L>Cronómetro</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

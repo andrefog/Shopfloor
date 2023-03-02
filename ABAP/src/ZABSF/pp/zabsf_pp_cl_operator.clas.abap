@@ -7,6 +7,21 @@ public section.
 
   interfaces ZIF_ABSF_PP_OPERATOR .
 
+  aliases GET_OPERATOR
+    for ZIF_ABSF_PP_OPERATOR~GET_OPERATOR .
+  aliases GET_OPERATOR_ORD
+    for ZIF_ABSF_PP_OPERATOR~GET_OPERATOR_ORD .
+  aliases GET_OPERATOR_RPOINT
+    for ZIF_ABSF_PP_OPERATOR~GET_OPERATOR_RPOINT .
+  aliases GET_OPERATOR_WRKCTR
+    for ZIF_ABSF_PP_OPERATOR~GET_OPERATOR_WRKCTR .
+  aliases SET_OPERATOR
+    for ZIF_ABSF_PP_OPERATOR~SET_OPERATOR .
+  aliases SET_OPERATOR_RPOINT
+    for ZIF_ABSF_PP_OPERATOR~SET_OPERATOR_RPOINT .
+  aliases SET_REFDT
+    for ZIF_ABSF_PP_OPERATOR~SET_REFDT .
+
   methods CONSTRUCTOR
     importing
       !INITIAL_REFDT type VVDATUM
@@ -37,7 +52,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_OPERATOR IMPLEMENTATION.
 
 
-  METHOD check_if_operator_is_assgined.
+METHOD check_if_operator_is_assgined.
 
 *    READ TABLE operator_tab INTO DATA(ls_operator) INDEX 1.
 *
@@ -90,7 +105,7 @@ METHOD zif_absf_pp_operator~get_operator.
     INTO CORRESPONDING FIELDS OF TABLE it_ZABSF_PPRHFNC.
 
 *Get operator by work center
-  SELECT n_func arbpl
+  SELECT username arbpl
     FROM zabsf_pprhfncwrk
     INTO CORRESPONDING FIELDS OF TABLE it_func
     WHERE arbpl EQ arbpl
@@ -101,15 +116,15 @@ METHOD zif_absf_pp_operator~get_operator.
     LOOP AT it_func INTO wa_func.
       CLEAR wa_zabsf_pp014.
 *    Get name of operator
-      READ TABLE it_ZABSF_PPRHFNC INTO wa_ZABSF_PPRHFNC WITH KEY n_func = wa_func-n_func.
+      READ TABLE it_ZABSF_PPRHFNC INTO wa_ZABSF_PPRHFNC WITH KEY N_FUNC = wa_func-username.
       wa_oprid-nome = wa_ZABSF_PPRHFNC-nome.
 
 *    Number of operator
-      wa_oprid-oprid = wa_func-n_func.
+      wa_oprid-oprid = wa_func-username.
       SELECT SINGLE *
         FROM zabsf_pp014
         INTO CORRESPONDING FIELDS OF wa_zabsf_pp014
-       WHERE oprid  EQ wa_func-n_func
+       WHERE oprid  EQ wa_func-username
          AND arbpl  EQ wa_func-arbpl
          AND aufnr  EQ aufnr
          AND vornr  EQ vornr
@@ -134,7 +149,7 @@ METHOD zif_absf_pp_operator~get_operator.
 ENDMETHOD.
 
 
-  METHOD zif_absf_pp_operator~get_operator_ord.
+METHOD zif_absf_pp_operator~get_operator_ord.
 *  Structures
     DATA: ls_oprid       TYPE zabsf_pp_s_operador,
           ls_zabsf_pp014 TYPE zabsf_pp014.
@@ -146,7 +161,7 @@ ENDMETHOD.
      WHERE arbpl  EQ @arbpl
        AND aufnr  EQ @aufnr
        AND vornr  EQ @vornr
-       AND tipord EQ @tipord
+       AND tipord EQ 'N'
        AND status EQ 'A'.
 
 *>>BMR INSERT - order operators table
@@ -191,49 +206,35 @@ ENDMETHOD.
 
 
 METHOD zif_absf_pp_operator~get_operator_rpoint.
-  DATA: it_func          TYPE TABLE OF zabsf_pprhfncwrk,
-        it_zabsf_pp045   TYPE TABLE OF zabsf_pp045,
-        it_zabsf_pprhfnc TYPE TABLE OF zabsf_pprhfnc.
-
-  DATA: wa_func          TYPE zabsf_pprhfncwrk,
-        wa_zabsf_pp045   TYPE zabsf_pp045,
-        wa_oprid         TYPE zabsf_pp_s_operador,
-        wa_zabsf_pprhfnc TYPE zabsf_pprhfnc.
-
-*Get operator information
   SELECT *
-    FROM zabsf_pprhfnc
-    INTO CORRESPONDING FIELDS OF TABLE it_zabsf_pprhfnc.
+    FROM zsf_users
+    INTO TABLE @DATA(lt_users).
 
 *Get operator by work center
-  SELECT n_func arbpl
+  SELECT username, arbpl
     FROM zabsf_pprhfncwrk
-    INTO CORRESPONDING FIELDS OF TABLE it_func
-    WHERE arbpl EQ rpoint
-      AND begda LE refdt
-      AND endda GE refdt.
+    INTO TABLE @DATA(lt_func)
+    WHERE arbpl EQ @rpoint
+      AND begda LE @refdt
+      AND endda GE @refdt.
 
-  IF it_func[] IS NOT INITIAL.
-    LOOP AT it_func INTO wa_func.
-      CLEAR wa_zabsf_pp045.
-*    Get name of operator
-      READ TABLE it_zabsf_pprhfnc INTO wa_zabsf_pprhfnc WITH KEY n_func = wa_func-n_func.
-      wa_oprid-nome = wa_zabsf_pprhfnc-nome.
+  IF lt_func[] IS NOT INITIAL.
+    SELECT  *
+      FROM zabsf_pp045
+      INTO TABLE @DATA(lt_pp045)
+      FOR ALL ENTRIES IN @lt_func
+      WHERE rpoint EQ @lt_func-arbpl
+        AND status EQ 'A'.
 
-*    Number of operator
-      wa_oprid-oprid = wa_func-n_func.
-      SELECT SINGLE *
-        FROM zabsf_pp045
-        INTO CORRESPONDING FIELDS OF wa_zabsf_pp045
-       WHERE oprid  EQ wa_func-n_func
-         AND rpoint EQ wa_func-arbpl
-         AND status EQ 'A'.
+    LOOP AT lt_func ASSIGNING FIELD-SYMBOL(<ls_func>).
+      CHECK line_exists( lt_pp045[ oprid = <ls_func>-username rpoint = <ls_func>-arbpl ] ).
 
-      IF wa_zabsf_pp045 IS NOT INITIAL.
-*      Status
-        wa_oprid-status = wa_zabsf_pp045-status.
-        APPEND wa_oprid TO operator_tab.
-      ENDIF.
+      APPEND
+        VALUE #(
+          oprid = <ls_func>-username
+          nome  = VALUE #( lt_users[ username = <ls_func>-username ]-name OPTIONAL )
+          status = VALUE #( lt_pp045[ oprid = <ls_func>-username rpoint = <ls_func>-arbpl ]-status OPTIONAL )
+        ) TO operator_tab.
     ENDLOOP.
   ELSE.
 *  No operator for the input (Work center)
@@ -248,35 +249,27 @@ ENDMETHOD.
 
 
 METHOD zif_absf_pp_operator~get_operator_wrkctr.
-  DATA: it_func     TYPE TABLE OF zabsf_pprhfncwrk,
-        wa_func     TYPE zabsf_pprhfncwrk,
-        it_ZABSF_PPRHFNC TYPE TABLE OF zabsf_pprhfnc,
-        wa_ZABSF_PPRHFNC TYPE zabsf_pprhfnc,
-        wa_oprid    TYPE zabsf_pp_s_operador.
-
 *Get operator information
   SELECT *
-    FROM zabsf_pprhfnc
-    INTO CORRESPONDING FIELDS OF TABLE it_ZABSF_PPRHFNC.
+    FROM zsf_users
+*    FROM zabsf_pprhfnc
+    INTO TABLE @DATA(lt_users).
 
 *Get operator by work center
-  SELECT n_func arbpl
+  SELECT username, arbpl
     FROM zabsf_pprhfncwrk
-    INTO CORRESPONDING FIELDS OF TABLE it_func
-    WHERE arbpl EQ arbpl
-      AND begda LE refdt
-      AND endda GE refdt.
+    INTO TABLE @DATA(lt_func)
+    WHERE arbpl EQ @arbpl
+      AND begda LE @refdt
+      AND endda GE @refdt.
 
-  IF it_func[] IS NOT INITIAL.
-    LOOP AT it_func INTO wa_func.
-*    Get name of operator
-      READ TABLE it_ZABSF_PPRHFNC INTO wa_ZABSF_PPRHFNC WITH KEY n_func = wa_func-n_func.
-      wa_oprid-nome = wa_ZABSF_PPRHFNC-nome.
-
-*    Number of operator
-      wa_oprid-oprid = wa_func-n_func.
-
-      APPEND wa_oprid TO oper_wrkctr_tab.
+  IF lt_func[] IS NOT INITIAL.
+    LOOP AT lt_func ASSIGNING FIELD-SYMBOL(<ls_func>).
+      APPEND
+        VALUE #(
+          oprid = <ls_func>-username
+          nome  = VALUE #( lt_users[ username = <ls_func>-username ]-name OPTIONAL )
+        ) TO oper_wrkctr_tab.
     ENDLOOP.
   ELSE.
 *  No operator for the input (Work center)
@@ -448,15 +441,15 @@ method zif_absf_pp_operator~set_operator.
               msgno      = '013'
             changing
               return_tab = return_tab.
-        else.
-*          Operation not completed
-          call method zabsf_pp_cl_log=>add_message
-            exporting
-              msgty      = 'E'
-              msgno      = '012'
-            changing
-              return_tab = return_tab.
-          exit.
+*        else.
+**          Operation not completed
+*          call method zabsf_pp_cl_log=>add_message
+*            exporting
+*              msgty      = 'E'
+*              msgno      = '012'
+*            changing
+*              return_tab = return_tab.
+*          exit.
         endif.
       endif.
     else.
@@ -514,7 +507,7 @@ METHOD zif_absf_pp_operator~set_operator_rpoint.
   DATA: wa_zabsf_pp045 TYPE zabsf_pp045,
         wa_zabsf_pp046 TYPE zabsf_pp046,
         ls_zabsf_pp045 TYPE zabsf_pp045,
-        ls_ZABSF_PPRHFNC    TYPE ZABSF_PPRHFNC,
+*        ls_zabsf_pprhfnc TYPE zabsf_pprhfnc,
         wa_operator    TYPE zabsf_pp_s_operador,
         ld_arbpl_id    TYPE cr_objid,
         ld_hname_ty    TYPE cr_objty,
@@ -536,25 +529,26 @@ METHOD zif_absf_pp_operator~set_operator_rpoint.
       input_object  = inputobj.
 
   TRANSLATE inputobj-oprid TO UPPER CASE. "CLS 16.06.2015
-*Get shift witch operator is associated
-  SELECT SINGLE shiftid
-    FROM zabsf_pp052
-    INTO ld_shiftid
-   WHERE areaid EQ inputobj-areaid
-     AND oprid EQ inputobj-oprid.
-
-  IF sy-subrc NE 0.
-*  Operator is not associated with shift
-    CALL METHOD zabsf_pp_cl_log=>add_message
-      EXPORTING
-        msgty      = 'E'
-        msgno      = '061'
-        msgv1      = inputobj-oprid
-      CHANGING
-        return_tab = return_tab.
-
-    EXIT.
-  ENDIF.
+**Get shift witch operator is associated
+*  SELECT SINGLE shiftid
+*    FROM zabsf_pp052
+*    INTO ld_shiftid
+*   WHERE areaid EQ inputobj-areaid
+*     AND oprid  EQ inputobj-oprid.
+*
+*  IF sy-subrc NE 0.
+**  Operator is not associated with shift
+*    IF 1 EQ 2. MESSAGE e061(zabsf_pp). ENDIF.
+*    CALL METHOD zabsf_pp_cl_log=>add_message
+*      EXPORTING
+*        msgty      = 'E'
+*        msgno      = '061'
+*        msgv1      = inputobj-oprid
+*      CHANGING
+*        return_tab = return_tab.
+*
+*    EXIT.
+*  ENDIF.
 
 *Get id of workcenter
   SELECT SINGLE objid
@@ -580,33 +574,36 @@ METHOD zif_absf_pp_operator~set_operator_rpoint.
   SELECT *
     FROM zabsf_pp045
     INTO CORRESPONDING FIELDS OF TABLE it_zabsf_pp045
-   WHERE "rpoint EQ rpoint AND
-      status EQ 'A'.
+   WHERE rpoint EQ rpoint
+     AND status EQ 'A'.
 
+* JPC 21/10/2020
 *Get all worktime for selected operators
   SELECT *
     FROM zabsf_pp046
     INTO CORRESPONDING FIELDS OF TABLE it_zabsf_pp046
      FOR ALL ENTRIES IN operator_tab
    WHERE areaid   EQ inputobj-areaid
-*     AND hname    EQ ld_hname
+     AND hname    EQ ld_hname
+     AND rpoint EQ rpoint
      AND werks    EQ inputobj-werks
      AND oprid    EQ operator_tab-oprid
      AND datesr   EQ refdt
-     AND shiftid  EQ ld_shiftid
+     AND shiftid  EQ shiftid
      AND endtime  EQ '000000'
      AND worktime EQ space.
 
   LOOP AT operator_tab INTO wa_operator.
-    CLEAR: ls_ZABSF_PPRHFNC,
-           wa_zabsf_pp045,
+    CLEAR: wa_zabsf_pp045,
            wa_zabsf_pp046.
+*           ls_zabsf_pprhfnc.
 
 *  Check if operator exist in system
     SELECT SINGLE *
-      FROM ZABSF_PPRHFNC
-      INTO CORRESPONDING FIELDS OF ls_ZABSF_PPRHFNC
-     WHERE n_func EQ wa_operator-oprid.
+      FROM zsf_users
+      INTO @DATA(ls_user)
+*      INTO CORRESPONDING FIELDS OF ls_zabsf_pprhfnc
+     WHERE username EQ @wa_operator-oprid.
 
     IF sy-subrc EQ 0.
 *    Read information from database
@@ -619,7 +616,7 @@ METHOD zif_absf_pp_operator~set_operator_rpoint.
         IF sy-subrc EQ 0.
 *        Record end worktime
           READ TABLE it_zabsf_pp046 INTO wa_zabsf_pp046 WITH KEY oprid  = wa_operator-oprid
-                                                                   datesr = refdt.
+                                                                 datesr = refdt.
 
           IF sy-subrc EQ 0.
 *          End time
@@ -668,7 +665,7 @@ METHOD zif_absf_pp_operator~set_operator_rpoint.
             CHANGING
               return_tab = return_tab.
         ENDIF.
-      ELSEIF wa_operator-status EQ oprid_status_active.
+      ELSEIF sy-subrc <> 0 AND wa_operator-status EQ oprid_status_active.
 
 *      If not exist insert line in database
 *       Reporting point
@@ -678,9 +675,46 @@ METHOD zif_absf_pp_operator~set_operator_rpoint.
 *      Operator Status
         ls_zabsf_pp045-status = wa_operator-status.
 
+        ls_zabsf_pp045-shiftid = shiftid.
+
         INSERT INTO zabsf_pp045 VALUES ls_zabsf_pp045.
 
         IF sy-subrc EQ 0.
+
+          "JPC - 25/11/2022
+          "-------------------------------------------------------------------------------------------
+          zcl_bc_fixed_values=>get_single_value( EXPORTING
+                                                   im_paramter_var = zcl_bc_fixed_values=>gc_tolerance
+                                                   im_modulesp_var = zcl_bc_fixed_values=>gc_productn_cst
+                                                   im_werksval_var = inputobj-werks
+                                                 IMPORTING
+                                                   ex_prmvalue_var = DATA(lv_tolerance) ).
+
+          DATA(lv_tolerance_converted) = replace( val = lv_tolerance sub = `:` with = `` occ = 0 ).
+          DATA(lv_tolerance_conv) = CONV tims( lv_tolerance_converted ).
+
+          SELECT SINGLE shift_start
+            FROM zabsf_pp001
+            WHERE areaid EQ @inputobj-areaid
+            AND werks EQ @inputobj-werks
+            AND shiftid EQ @shiftid
+            INTO @DATA(lv_starttimeshift).
+
+          DATA: lv_timewithtolerance TYPE t.
+          CALL FUNCTION 'C14B_ADD_TIME'
+            EXPORTING
+              i_starttime = CONV t( lv_starttimeshift )
+              i_startdate = CONV d( refdt )
+              i_addtime   = CONV t( lv_tolerance_converted )
+            IMPORTING
+              e_endtime   = lv_timewithtolerance.
+
+          DATA(lv_time) = replace( val = time sub = `:` with = `` occ = 0 ).
+          lv_time = COND #( WHEN lv_time GE lv_starttimeshift AND lv_time LE lv_timewithtolerance
+                          THEN lv_starttimeshift
+                          ELSE lv_time ).
+          "-------------------------------------------------------------------------------------------
+
 *        Record start worktime
 *        Area
           wa_zabsf_pp046-areaid = inputobj-areaid.
@@ -694,10 +728,10 @@ METHOD zif_absf_pp_operator~set_operator_rpoint.
           wa_zabsf_pp046-oprid = wa_operator-oprid.
 *        Date
           wa_zabsf_pp046-datesr = refdt.
-*        Star time
-          wa_zabsf_pp046-begtime = time.
+*        Start time
+          wa_zabsf_pp046-begtime = lv_time.
 *        Shift
-          wa_zabsf_pp046-shiftid = ld_shiftid.
+          wa_zabsf_pp046-shiftid = shiftid.
 
           INSERT INTO zabsf_pp046 VALUES wa_zabsf_pp046.
 

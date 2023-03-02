@@ -4,10 +4,9 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP046</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Shopfloor - Registo de tempos de operador por P. de contagem</DDTEXT>
+    <MAINFLAG>X</MAINFLAG>
     <CONTFLAG>A</CONTFLAG>
     <EXCLASS>4</EXCLASS>
    </DD02V>
@@ -116,6 +115,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Registo de tempos de operador por P. de contagem</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

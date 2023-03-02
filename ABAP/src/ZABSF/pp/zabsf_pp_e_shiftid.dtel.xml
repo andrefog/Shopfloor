@@ -4,20 +4,33 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_SHIFTID</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_SHIFTID</DOMNAME>
     <HEADLEN>11</HEADLEN>
     <SCRLEN1>08</SCRLEN1>
     <SCRLEN2>11</SCRLEN2>
     <SCRLEN3>11</SCRLEN3>
-    <DDTEXT>Shopfloor - ID de Turno</DDTEXT>
-    <REPTEXT>ID de Turno</REPTEXT>
-    <SCRTEXT_S>ID Turno</SCRTEXT_S>
-    <SCRTEXT_M>ID de Turno</SCRTEXT_M>
-    <SCRTEXT_L>ID de Turno</SCRTEXT_L>
+    <DDTEXT>Shopfloor - Shift ID</DDTEXT>
+    <REPTEXT>Shift ID</REPTEXT>
+    <SCRTEXT_S>Shift ID</SCRTEXT_S>
+    <SCRTEXT_M>Shift ID</SCRTEXT_M>
+    <SCRTEXT_L>Shift ID</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - ID de Turno</DDTEXT>
+     <REPTEXT>ID de Turno</REPTEXT>
+     <SCRTEXT_S>ID Turno</SCRTEXT_S>
+     <SCRTEXT_M>ID de Turno</SCRTEXT_M>
+     <SCRTEXT_L>ID de Turno</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

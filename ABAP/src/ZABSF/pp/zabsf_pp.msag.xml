@@ -1,0 +1,967 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_MSAG" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <T100A>
+    <ARBGB>ZABSF_PP</ARBGB>
+    <MASTERLANG>P</MASTERLANG>
+   </T100A>
+   <T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+     <MSGNR>057</MSGNR>
+     <TEXT>Data saved successfully in database</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+     <MSGNR>058</MSGNR>
+     <TEXT>Data not saved successfully in database</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+     <MSGNR>092</MSGNR>
+     <TEXT>Plant is required!</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+     <MSGNR>167</MSGNR>
+     <TEXT>Not found any area for plant &amp;1</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+     <MSGNR>168</MSGNR>
+     <TEXT>&amp;1 new records inserted and modified &amp;2 records already loaded</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+     <MSGNR>169</MSGNR>
+     <TEXT>No Data Found</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+     <MSGNR>170</MSGNR>
+     <TEXT>Field &amp;1 in line &amp;2 is not filled in and is required.</TEXT>
+    </T100>
+    <T100>
+     <SPRSL>E</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+     <MSGNR>171</MSGNR>
+     <TEXT>Stop entries successfully updated.</TEXT>
+    </T100>
+   </T100>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <T100T>
+    <T100T>
+     <SPRSL>P</SPRSL>
+     <ARBGB>ZABSF_PP</ARBGB>
+    </T100T>
+   </T100T>
+   <T100_TEXTS>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>000</MSGNR>
+     <TEXT>&amp; &amp; &amp; &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>001</MSGNR>
+     <TEXT>Não existem turnos para os dados indicados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>002</MSGNR>
+     <TEXT>Não existem associações de Turnos a dias da semana</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>003</MSGNR>
+     <TEXT>Não foi definido calendário de fábrica para Turno &amp; / &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>004</MSGNR>
+     <TEXT>Não existem Turnos ativos para o período indicado</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>005</MSGNR>
+     <TEXT>Não foram encontradas hierarquias para os dados indicados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>006</MSGNR>
+     <TEXT>Não foram encontrados Centros de Trabalho associados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>007</MSGNR>
+     <TEXT>Não foi possível obter detalhe de Turno</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>008</MSGNR>
+     <TEXT>Não existem colaboradores para este Centro de Trabalho</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>009</MSGNR>
+     <TEXT>Não foram encontrados Tipos de Causa para este Centro de Trabalho</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>010</MSGNR>
+     <TEXT>Não foram encontrados Tipo de Causa para este Centro Trabalho e Operação</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>011</MSGNR>
+     <TEXT>Não foram encontradas Ordens para este Centro de Trabalho</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>012</MSGNR>
+     <TEXT>Operação não concluída</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>013</MSGNR>
+     <TEXT>Operação concluída com sucesso</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>014</MSGNR>
+     <TEXT>Número máximo de Operadores ultrapassado</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>015</MSGNR>
+     <TEXT>Não existe objecto</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>016</MSGNR>
+     <TEXT>Não foi possivel obter detalhe do Centro de Trabalho</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>017</MSGNR>
+     <TEXT>Não foram encontrados Actividades</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>018</MSGNR>
+     <TEXT>Não foram encontrados dados para a selecção</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>019</MSGNR>
+     <TEXT>Não existe o objecto &amp; criado na tabela de customização</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>020</MSGNR>
+     <TEXT>Não existe dados para este material &amp; na tabela de customização</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>021</MSGNR>
+     <TEXT>Não existem dados na Tabela de Registo dados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>022</MSGNR>
+     <TEXT>Não existe tipo de proc. para o Cent. Trab. &amp; na tabela de customização</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>023</MSGNR>
+     <TEXT>Não existe url para este Centro &amp; na tabela de customização</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>024</MSGNR>
+     <TEXT>Não foi encontrado o utilizador &amp; no sistema</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>025</MSGNR>
+     <TEXT>Obrigatório preencher o campo Motivo</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>026</MSGNR>
+     <TEXT>Não existe grp. tarefas associado ao defeito &amp; na tabela de customização</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>027</MSGNR>
+     <TEXT>Não existe tipo de ordem associado a Área &amp; na tab. de customização</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>028</MSGNR>
+     <TEXT>Não existem Parâmetros Shopfloor para este Centro &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>029</MSGNR>
+     <TEXT>A ordem &amp; foi incrementada com a quantidade de retrabalho</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>030</MSGNR>
+     <TEXT>Não existe ordem de rework criada para o defeito &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>031</MSGNR>
+     <TEXT>Foi criada a Ordem de Retrabalho &amp; para o Material &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>032</MSGNR>
+     <TEXT>Não existem Defeitos: Área &amp;, Cent. traba. &amp; e Centro &amp; na tabela custom.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>033</MSGNR>
+     <TEXT>Não existem Motivos para Sucata criados para o Centro &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>034</MSGNR>
+     <TEXT>Consumo da Ordem Produção efectuado com o Documento nº &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>035</MSGNR>
+     <TEXT>Material &amp; não existe no Centro &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>036</MSGNR>
+     <TEXT>Não foram encontrados Armazens para a Área &amp; e Centro &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>037</MSGNR>
+     <TEXT>Não existem Defeitos: Área &amp;, Armazém &amp; e Centro &amp; na tabela custom.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>038</MSGNR>
+     <TEXT>Não existe informação para o Armazém &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>039</MSGNR>
+     <TEXT>Não existe Armazém seguinte para o Armazém &amp; na tabela de customização.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>040</MSGNR>
+     <TEXT>Quantidade insuficiente no Armazém &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>041</MSGNR>
+     <TEXT>Não foram encontradas Ordens para este Material &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>042</MSGNR>
+     <TEXT>Quantidade registada no Armazem &amp; (Qtd: &amp; ) é inferior a inserida</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>043</MSGNR>
+     <TEXT>Não existe Armazem\Material para a Hierarquia &amp; na tab. de customização.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>044</MSGNR>
+     <TEXT>Não existe material para gerar Plano de Produção</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>045</MSGNR>
+     <TEXT>Não existe dados parametrizados na tabela de customização.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>046</MSGNR>
+     <TEXT>Não existem materiais para a Área &amp; e P. Contagem &amp; na tab. de custom.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>047</MSGNR>
+     <TEXT>Foi criado o Documento nº &amp; para o consumo deste componentes.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>048</MSGNR>
+     <TEXT>Ordem planeada Nº &amp; não existe em sistema.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>049</MSGNR>
+     <TEXT>Material não planeado &amp; já se encontra adicionado.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>050</MSGNR>
+     <TEXT>Utilizador &amp; já se encontra associado ao turno &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>051</MSGNR>
+     <TEXT>Utilizador &amp; já associado ao turno &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>052</MSGNR>
+     <TEXT>Necessita de executar antes os seguintes indicadores: &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>053</MSGNR>
+     <TEXT>Falta preencher o parâmetro de selecção Hierarquia.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>054</MSGNR>
+     <TEXT>Não existem dados para o registo de quantidades.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>055</MSGNR>
+     <TEXT>Não existem dados para o registo de tempos de paragem.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>056</MSGNR>
+     <TEXT>Não existem dados para o registo de tempos de produção.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>057</MSGNR>
+     <TEXT>Dados do relatório guardados com sucesso em Base de Dados.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>058</MSGNR>
+     <TEXT>Erro ao guardar dados em Base de Dados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>059</MSGNR>
+     <TEXT>Não existe layout configurado: Área &amp; e Cent. trab. &amp; tab. customização.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>060</MSGNR>
+     <TEXT>ATENÇÂO!!! Utilizador &amp; dissociado do ponto de contagem &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>061</MSGNR>
+     <TEXT>User &amp; não está associado a turno. Regresse ao inicio e selecione o Turno</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>062</MSGNR>
+     <TEXT>Registos no futuro não permitidos (Hora de sistema: &amp;)</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>063</MSGNR>
+     <TEXT>Já existem registos posteriores à hora indicada (Último registo às &amp;)</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>064</MSGNR>
+     <TEXT>Não existem regimes associados ao horário</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>065</MSGNR>
+     <TEXT>Sem Horários Parametrizados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>066</MSGNR>
+     <TEXT>Nenhum Equipamento encontrado</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>067</MSGNR>
+     <TEXT>Centro de Trabalho Inválido</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>068</MSGNR>
+     <TEXT>Ocorreu um erro ao actualizar registo na Base de Dados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>069</MSGNR>
+     <TEXT>Registo não encontrado. Não foi possivel fechar lote!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>070</MSGNR>
+     <TEXT>Notificação &amp; criada com sucesso!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>071</MSGNR>
+     <TEXT>Ocorreu um erro ao realizar operação!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>072</MSGNR>
+     <TEXT>Nº de Lote inválido!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>073</MSGNR>
+     <TEXT>Necessário definir tipo de notificação a ser criada!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>074</MSGNR>
+     <TEXT>Ocorreu um erro ao imprimir etiqueta!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>075</MSGNR>
+     <TEXT>Erro ao submeter o programa de impressão!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>076</MSGNR>
+     <TEXT>Necessário enviar campos Centro Trabalho, Material e Ordem!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>077</MSGNR>
+     <TEXT>Etiqueta a imprimir não definida. Falta parametrização!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>078</MSGNR>
+     <TEXT>Impressora não definida para o centro de trabalho &amp;!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>079</MSGNR>
+     <TEXT>Checklist registada com sucesso!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>080</MSGNR>
+     <TEXT>Quantidade acima da capacidade caixa (&amp;) (lote: &amp;)</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>081</MSGNR>
+     <TEXT>Batch not created.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>082</MSGNR>
+     <TEXT>Centro de trabalho &amp; sem Responsabilidade atribuida</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>083</MSGNR>
+     <TEXT>Falta parametrização de escalas para o centro de trabalho &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>084</MSGNR>
+     <TEXT>Operd. principal não pode dissociar-se enquanto houver outros associados.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>085</MSGNR>
+     <TEXT>Falta parametrização de duração do turno</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>086</MSGNR>
+     <TEXT>Quantidade acima da capacidade da caixa a criar.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>087</MSGNR>
+     <TEXT>Não há indicação de lote de consumo na tela anterior.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>088</MSGNR>
+     <TEXT>Quantidade indicada já está confirmada ou igual a 0 (verificar entrada).</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>089</MSGNR>
+     <TEXT>O lote (&amp;) não corresponde ao material (&amp;) indicado.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>090</MSGNR>
+     <TEXT>Não há stock disponivel para o lote &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>091</MSGNR>
+     <TEXT>Notificação Alterada com sucesso!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>092</MSGNR>
+     <TEXT>Obrigatório indicar Centro!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>093</MSGNR>
+     <TEXT>Utilizador &amp;. Objecto &amp;. Chave &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>094</MSGNR>
+     <TEXT>Lote &amp; não se encontra em controlo de qualidade.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>095</MSGNR>
+     <TEXT>Não existe stock disponível nos lotes de consumo para o registo.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>096</MSGNR>
+     <TEXT>Atenção: Não stock disponível.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>097</MSGNR>
+     <TEXT>Atenção: Material &amp; com quantidade em falta &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>098</MSGNR>
+     <TEXT>Erro: Lote &amp; uso restrito!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>099</MSGNR>
+     <TEXT>O Lote &amp; ainda possuí stock disponível.Enviado para proc. posterior!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>100</MSGNR>
+     <TEXT>O material &amp; não existe na lista de componentes da Ordem!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>101</MSGNR>
+     <TEXT>Não existem componentes para a Ordem!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>102</MSGNR>
+     <TEXT>Registo da Sucata realizado com Sucesso!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>103</MSGNR>
+     <TEXT>Erro: Stock em Controlo de Qualidade!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>104</MSGNR>
+     <TEXT>Erro: Stock de Devolução!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>105</MSGNR>
+     <TEXT>Erro: Stock Bloqueado!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>106</MSGNR>
+     <TEXT>Falta parametrização de opções de visualização!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>107</MSGNR>
+     <TEXT>Parâmetro &amp;1 de visualização não está configurado!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>108</MSGNR>
+     <TEXT>Falta parametrizar tipo de movimento para consumos na ordem</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>109</MSGNR>
+     <TEXT>Falta parametrizar tipo de movimento para consumos de subproduto na ordem</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>110</MSGNR>
+     <TEXT>Nº da Palete não encontrado na zona de abastecimento de produção!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>111</MSGNR>
+     <TEXT>Palete sem materiais associados!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>112</MSGNR>
+     <TEXT>Operador não pode sair da ordem com a produção a decorrer!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>113</MSGNR>
+     <TEXT>Operador &amp; já se encontra na status seleccionado!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>114</MSGNR>
+     <TEXT>Falta parametrizar Depósito default para os subprodutos!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>115</MSGNR>
+     <TEXT>Falta parametrizar Depósito default para consumo de produtos!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>116</MSGNR>
+     <TEXT>Falta parametrizar tipo de movimento para as devoluções</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>117</MSGNR>
+     <TEXT>Ordem sem consumos! Não é possivel efectuar devoluções.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>118</MSGNR>
+     <TEXT>Falta parametrizar Tipo de depósito da zona de abastecimento</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>119</MSGNR>
+     <TEXT>Falta parametrizar Posição no depósito da zona de abastecimento</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>120</MSGNR>
+     <TEXT>Nº do lote é Inválido!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>121</MSGNR>
+     <TEXT>Palete não pertence à ordem de produção!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>122</MSGNR>
+     <TEXT>Operador &amp;1 está atribuido à ordem &amp;2 operação &amp;3!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>123</MSGNR>
+     <TEXT>Stock insuficiente na área Abast Prod p/ Mat &amp; Lote &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>124</MSGNR>
+     <TEXT>Qtd Devolvida superior a Qtd Consumida para OP.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>125</MSGNR>
+     <TEXT>Quantidade em Falta na Palete: &amp; &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>126</MSGNR>
+     <TEXT>Nº do lote é Obrigatório!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>127</MSGNR>
+     <TEXT>Material &amp; não foi consumido.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>128</MSGNR>
+     <TEXT>Consumo de MP só é possível através do número da palete!</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>129</MSGNR>
+     <TEXT>Material não possui validade cadastrada</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>130</MSGNR>
+     <TEXT>Erro ao abrir o formulário</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>131</MSGNR>
+     <TEXT>Erro ao obter o nome do formulário</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>132</MSGNR>
+     <TEXT>Erro ao encerrar o formulário</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>133</MSGNR>
+     <TEXT>Nenhuma etiqueta encontrada para os critérios indicados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>134</MSGNR>
+     <TEXT>Nenhuma impressora configurada para &amp;1 - &amp;2</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>135</MSGNR>
+     <TEXT>Quantidade excedida! Apenas permitido &amp;1</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>136</MSGNR>
+     <TEXT>Obrigatório indicar numeração da etiqueta</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>137</MSGNR>
+     <TEXT>Material &amp;1 não associado à ordem de produção &amp;2</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>138</MSGNR>
+     <TEXT>Ordem &amp;1 já está bloqueada</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>139</MSGNR>
+     <TEXT>Ordem &amp;1 já está encerrada técnicamente</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>140</MSGNR>
+     <TEXT>Lote &amp;1 sem classe de classificação 023</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>141</MSGNR>
+     <TEXT>Lote &amp;1 sem valor na caracteristica Sequenciador</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>142</MSGNR>
+     <TEXT>Erro ao resgistar operadores na confirmação</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>143</MSGNR>
+     <TEXT>Etiqueta não pertence a esta ordem</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>144</MSGNR>
+     <TEXT>Não foi possivel a geração da etiqueta pretendida.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>145</MSGNR>
+     <TEXT>Não foi possivel verificar a existencia de um documento na selecção.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>146</MSGNR>
+     <TEXT>Não foi possivel abrir o formulário.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>147</MSGNR>
+     <TEXT>Não foi possivel obter o nome do formulário.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>148</MSGNR>
+     <TEXT>Não foi possivel encerrar o formulário.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>149</MSGNR>
+     <TEXT>Não foi possivel determinar um documento para as condições seleccionadas.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>150</MSGNR>
+     <TEXT>Não foi possivel gerar o formulário.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>151</MSGNR>
+     <TEXT>Operação já está no status pretendido</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>152</MSGNR>
+     <TEXT>Operação não tem esquema de status ZBYSTEEL</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>153</MSGNR>
+     <TEXT>Ordem de produção &amp;1 não existe</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>154</MSGNR>
+     <TEXT>Lote com múltiplas características para calcular</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>155</MSGNR>
+     <TEXT>Característica: &amp;1 - inserir valores em mm ( milímetros )</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>156</MSGNR>
+     <TEXT>Lote não tem característica &amp;1</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>157</MSGNR>
+     <TEXT>Característica &amp;1 sem valor</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>158</MSGNR>
+     <TEXT>Erro ao calcular o factor de conversão para o material &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>159</MSGNR>
+     <TEXT>Erro ao determinar valor para a caracteristica na devolução</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>160</MSGNR>
+     <TEXT>Material &amp;1 &amp;2 não foi consumido</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>161</MSGNR>
+     <TEXT>Ordem sem consumos! Não é possível lançar produção</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>162</MSGNR>
+     <TEXT>Erro ao actualizar lotes na ordem de produção</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>163</MSGNR>
+     <TEXT>Ocorreu erro a actualizar sequência das ordens</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>164</MSGNR>
+     <TEXT>PEP não é válido</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>165</MSGNR>
+     <TEXT>Material inválido</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>166</MSGNR>
+     <TEXT>Existe um alerta ativo para combinação Material: &amp; e Operação: &amp;.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>167</MSGNR>
+     <TEXT>Não foi encontrado nenhuma área para o centro &amp;1</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>168</MSGNR>
+     <TEXT>Foi inserido &amp;1 novos registos e modificado &amp;2 registos já carregados</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>169</MSGNR>
+     <TEXT>Nenhum Dado Encontrado</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>170</MSGNR>
+     <TEXT>Campo &amp;1 na linha &amp;2 não foi preenchido e é requerido.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>171</MSGNR>
+     <TEXT>Registro de paragens atualizados com sucesso.</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>201</MSGNR>
+     <TEXT>Parâmetro &amp; é obrigatório</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>202</MSGNR>
+     <TEXT>Não foram encontrados consumíveis rastreados para a ordem &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>203</MSGNR>
+     <TEXT>Foram atualizados &amp; registos</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>204</MSGNR>
+     <TEXT>Erro ao atualizar dados na tabela &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>205</MSGNR>
+     <TEXT>Foram eliminados &amp; registos</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>206</MSGNR>
+     <TEXT>Erro ao eliminar dados na tabela &amp;</TEXT>
+    </item>
+    <item>
+     <SPRSL>P</SPRSL>
+     <MSGNR>207</MSGNR>
+     <TEXT>Erro ao incorporar as colunas dinâmicas na listagem ALV</TEXT>
+    </item>
+   </T100_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

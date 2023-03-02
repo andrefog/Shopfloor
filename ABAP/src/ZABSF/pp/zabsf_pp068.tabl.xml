@@ -4,10 +4,9 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP068</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Shopfloor - Parametrização Causas &lt;-&gt; Cor do Dashboard</DDTEXT>
+    <MAINFLAG>X</MAINFLAG>
     <CONTFLAG>C</CONTFLAG>
     <EXCLASS>4</EXCLASS>
    </DD02V>
@@ -54,6 +53,15 @@
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Parametrização Causas &lt;-&gt; Cor do Dashboard</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

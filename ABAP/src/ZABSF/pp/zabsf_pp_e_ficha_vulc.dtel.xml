@@ -4,20 +4,33 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_FICHA_VULC</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_FICHA</DOMNAME>
     <HEADLEN>55</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Ficha de lote de Vulcanização</DDTEXT>
-    <REPTEXT>Ficha de lote de Vulcanização</REPTEXT>
-    <SCRTEXT_S>FchLoteVul</SCRTEXT_S>
-    <SCRTEXT_M>Ficha de lote Vulcan</SCRTEXT_M>
-    <SCRTEXT_L>Ficha de lote de Vulcanização</SCRTEXT_L>
+    <DDTEXT>Batch Card for vulcanization</DDTEXT>
+    <REPTEXT>Batch Card for vulcanization</REPTEXT>
+    <SCRTEXT_S>BtcCardVul</SCRTEXT_S>
+    <SCRTEXT_M>Batch Card Vulcaniz</SCRTEXT_M>
+    <SCRTEXT_L>Batch Card for vulcanization</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Ficha de lote de Vulcanização</DDTEXT>
+     <REPTEXT>Ficha de lote de Vulcanização</REPTEXT>
+     <SCRTEXT_S>FchLoteVul</SCRTEXT_S>
+     <SCRTEXT_M>Ficha de lote Vulcan</SCRTEXT_M>
+     <SCRTEXT_L>Ficha de lote de Vulcanização</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

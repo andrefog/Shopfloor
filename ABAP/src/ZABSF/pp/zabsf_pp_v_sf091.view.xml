@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_VIEW" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DD25V>
+    <VIEWNAME>ZABSF_PP_V_SF091</VIEWNAME>
+    <AS4LOCAL>A</AS4LOCAL>
+    <DDLANGUAGE>E</DDLANGUAGE>
+    <AGGTYPE>V</AGGTYPE>
+    <ROOTTAB>ZABSF_PP091</ROOTTAB>
+    <DDTEXT>Shopfloor - Quality Workcenter Goals</DDTEXT>
+    <VIEWCLASS>C</VIEWCLASS>
+    <CUSTOMAUTH>A</CUSTOMAUTH>
+    <GLOBALFLAG>X</GLOBALFLAG>
+   </DD25V>
+   <DD26V_TABLE>
+    <DD26V>
+     <VIEWNAME>ZABSF_PP_V_SF091</VIEWNAME>
+     <TABNAME>ZABSF_PP091</TABNAME>
+     <TABPOS>0001</TABPOS>
+     <FORTABNAME>ZABSF_PP091</FORTABNAME>
+    </DD26V>
+   </DD26V_TABLE>
+   <DD27P_TABLE>
+    <DD27P>
+     <VIEWFIELD>MANDT</VIEWFIELD>
+     <TABNAME>ZABSF_PP091</TABNAME>
+     <FIELDNAME>MANDT</FIELDNAME>
+     <KEYFLAG>X</KEYFLAG>
+    </DD27P>
+    <DD27P>
+     <VIEWFIELD>ARBPL</VIEWFIELD>
+     <TABNAME>ZABSF_PP091</TABNAME>
+     <FIELDNAME>ARBPL</FIELDNAME>
+     <KEYFLAG>X</KEYFLAG>
+     <LOGFLAG>X</LOGFLAG>
+    </DD27P>
+    <DD27P>
+     <VIEWFIELD>ENDDA</VIEWFIELD>
+     <TABNAME>ZABSF_PP091</TABNAME>
+     <FIELDNAME>ENDDA</FIELDNAME>
+     <KEYFLAG>X</KEYFLAG>
+     <SHLPORIGIN>T</SHLPORIGIN>
+    </DD27P>
+    <DD27P>
+     <VIEWFIELD>BEGDA</VIEWFIELD>
+     <TABNAME>ZABSF_PP091</TABNAME>
+     <FIELDNAME>BEGDA</FIELDNAME>
+     <SHLPORIGIN>T</SHLPORIGIN>
+    </DD27P>
+    <DD27P>
+     <VIEWFIELD>GOAL</VIEWFIELD>
+     <TABNAME>ZABSF_PP091</TABNAME>
+     <FIELDNAME>GOAL</FIELDNAME>
+    </DD27P>
+   </DD27P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD25_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Objetivos de Qualidade por Centro de Trabalho</DDTEXT>
+    </item>
+   </DD25_TEXTS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

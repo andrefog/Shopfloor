@@ -4,10 +4,8 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP025</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Shopfloor - Armazem virtuais</DDTEXT>
     <MAINFLAG>X</MAINFLAG>
     <CONTFLAG>C</CONTFLAG>
     <EXCLASS>4</EXCLASS>
@@ -111,6 +109,15 @@
      <CHECKTABLE>T001W</CHECKTABLE>
     </DD08V>
    </DD08V_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Armazem virtuais</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

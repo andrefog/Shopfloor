@@ -20,8 +20,10 @@ FUNCTION zabsf_pp_getstop_reason_opr .
 
   CALL METHOD lref_sf_stop->get_stop_reason_opr
     EXPORTING
-      arbpl           = arbpl
-      werks           = inputobj-werks "Werks
+      iv_arbpl        = arbpl
+      iv_werks        = inputobj-werks
+      iv_spras        = sy-langu
+      iv_areaid       = inputobj-areaid
     CHANGING
       stop_reason_tab = stop_reason_tab
       return_tab      = return_tab.

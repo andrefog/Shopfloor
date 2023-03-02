@@ -1,6 +1,6 @@
-function zabsf_pp_setgoodsmvt.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SETGOODSMVT.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AUFNR) TYPE  AUFNR
 *"     VALUE(COMPONENTS_ST) TYPE  ZABSF_PP_S_COMPONENTS OPTIONAL
@@ -10,7 +10,7 @@ function zabsf_pp_setgoodsmvt.
 *"     VALUE(LENUM) TYPE  LENUM OPTIONAL
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
 *  DATA lref_sf_prdord TYPE REF TO ZABSF_PP_CL_prdord.
 *
 *  CREATE OBJECT lref_sf_prdord
@@ -70,4 +70,8 @@ function zabsf_pp_setgoodsmvt.
     changing
       return_tab    = return_tab.
 
-endfunction.
+
+
+
+
+ENDFUNCTION.

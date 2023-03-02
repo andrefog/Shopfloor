@@ -84,6 +84,7 @@ FORM get_time_prod .
     INTO CORRESPONDING FIELDS OF TABLE lt_zafru
    WHERE areaid EQ pa_area
      AND iebd IN so_date.
+  CHECK sy-subrc IS INITIAL.
 
 *Get production order for material
   SELECT aufnr stlbez
@@ -92,6 +93,7 @@ FORM get_time_prod .
      FOR ALL ENTRIES IN lt_zafru
    WHERE aufnr  EQ lt_zafru-aufnr
      AND stlbez IN so_matnr.
+  CHECK sy-subrc IS INITIAL.
 
 *Get material descriptions
   SELECT matnr maktx
@@ -100,6 +102,7 @@ FORM get_time_prod .
      FOR ALL ENTRIES IN lt_afko
    WHERE matnr EQ lt_afko-stlbez
      AND spras EQ sy-langu.
+  CHECK sy-subrc IS INITIAL.
 
 *Create range for production order
   LOOP AT lt_afko INTO ls_afko.
@@ -214,6 +217,7 @@ FORM get_time_stop .
     INTO CORRESPONDING FIELDS OF TABLE lt_zafru
    WHERE areaid EQ pa_area
      AND iebd IN so_date.
+  CHECK sy-subrc IS INITIAL.
 
 *Get production order for material
   SELECT aufnr stlbez
@@ -222,6 +226,7 @@ FORM get_time_stop .
      FOR ALL ENTRIES IN lt_zafru
    WHERE aufnr  EQ lt_zafru-aufnr
      AND stlbez IN so_matnr.
+  CHECK sy-subrc IS INITIAL.
 
 *Get material descriptions
   SELECT matnr maktx
@@ -230,6 +235,7 @@ FORM get_time_stop .
      FOR ALL ENTRIES IN lt_afko
    WHERE matnr EQ lt_afko-stlbez
      AND spras EQ sy-langu.
+  CHECK sy-subrc IS INITIAL.
 
 *Create range for production order
   LOOP AT lt_afko INTO ls_afko.
@@ -344,6 +350,7 @@ FORM get_qtd_scrap .
     INTO CORRESPONDING FIELDS OF TABLE lt_afru
    WHERE iebd IN so_date
      AND grund NE space.
+  CHECK sy-subrc IS INITIAL.
 
 *Get production order for material
   SELECT aufnr stlbez
@@ -352,6 +359,7 @@ FORM get_qtd_scrap .
      FOR ALL ENTRIES IN lt_afru
    WHERE aufnr  EQ lt_afru-aufnr
      AND stlbez IN so_matnr.
+  CHECK sy-subrc IS INITIAL.
 
 *Get material descriptions
   SELECT matnr maktx
@@ -360,6 +368,7 @@ FORM get_qtd_scrap .
      FOR ALL ENTRIES IN lt_afko
    WHERE matnr EQ lt_afko-stlbez
      AND spras EQ sy-langu.
+  CHECK sy-subrc IS INITIAL.
 
 *Create range for production order
   LOOP AT lt_afko INTO ls_afko.
@@ -469,6 +478,7 @@ FORM get_qtd_rewrk .
     FROM zabsf_pp004
     INTO CORRESPONDING FIELDS OF TABLE lt_rework
    WHERE data IN so_date.
+  CHECK sy-subrc IS INITIAL.
 
 *Get production order for material
   SELECT aufnr stlbez
@@ -477,6 +487,7 @@ FORM get_qtd_rewrk .
      FOR ALL ENTRIES IN lt_rework
    WHERE aufnr  EQ lt_rework-aufnr
      AND stlbez IN so_matnr.
+  CHECK sy-subrc IS INITIAL.
 
 *Get material descriptions
   SELECT matnr maktx
@@ -485,6 +496,7 @@ FORM get_qtd_rewrk .
      FOR ALL ENTRIES IN lt_afko
    WHERE matnr EQ lt_afko-stlbez
      AND spras EQ sy-langu.
+  CHECK sy-subrc IS INITIAL.
 
 *Create range for production order
   LOOP AT lt_afko INTO ls_afko.

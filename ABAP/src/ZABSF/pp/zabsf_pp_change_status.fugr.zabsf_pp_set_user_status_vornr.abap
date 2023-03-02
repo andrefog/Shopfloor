@@ -1,6 +1,6 @@
-function zabsf_pp_set_user_status_vornr .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION zabsf_pp_set_user_status_vornr.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(OBJNR) TYPE  J_OBJNR
 *"     VALUE(OLD_STATUS) TYPE  J_STATUS OPTIONAL
@@ -9,64 +9,70 @@ function zabsf_pp_set_user_status_vornr .
 *"  EXPORTING
 *"     REFERENCE(RETURN) TYPE  BAPIRET2
 *"     REFERENCE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
 *{   INSERT         DEVK931753                                        1
-  data: jest_ins type table of jest_upd,
-        jest_upd type table of jest_upd,
-        jsto_ins type table of jsto,
-        jsto_upd type table of jsto_upd,
-        obj_del  type table of onr00.
+  DATA: jest_ins TYPE TABLE OF jest_upd,
+        jest_upd TYPE TABLE OF jest_upd,
+        jsto_ins TYPE TABLE OF jsto,
+        jsto_upd TYPE TABLE OF jsto_upd,
+        obj_del  TYPE TABLE OF onr00.
 
-  data: ls_jest_old type jest,
-        ls_jest_new type jest,
-        ls_jsto     type jsto,
-        wa_update   type jest_upd,
-        wa_insert   type jest_upd.
+  DATA: ls_jest_old TYPE jest,
+        ls_jest_new TYPE jest,
+        ls_jsto     TYPE jsto,
+        wa_update   TYPE jest_upd,
+        wa_insert   TYPE jest_upd.
 
-  refresh: jest_ins,
+  REFRESH: jest_ins,
            jest_upd,
            jsto_upd,
            jsto_ins,
            obj_del.
 
-  clear: wa_update,
+  CLEAR: wa_update,
          wa_insert,
          ls_jest_new,
          ls_jest_old,
          ls_jsto.
 
+  "10/10/2022 - JPC
+  SELECT SINGLE STSMA
+    FROM zabsf_pp022
+    WHERE objty = 'OV'
+    INTO @DATA(status_type).
+
 *Get data from jsto
-  select single *
-    from jsto
-    into corresponding fields of ls_jsto
-    where objnr eq objnr
-      and stsma eq 'ZBYSTEEL'.
-  if sy-subrc ne 0.
-    call method zabsf_pp_cl_log=>add_message
-      exporting
+  SELECT SINGLE *
+    FROM jsto
+    INTO CORRESPONDING FIELDS OF ls_jsto
+    WHERE objnr EQ objnr
+      AND stsma EQ status_type.
+  IF sy-subrc NE 0.
+    CALL METHOD zabsf_pp_cl_log=>add_message
+      EXPORTING
         msgno      = '152'
         msgty      = 'E'
-      changing
+      CHANGING
         return_tab = return_tab.
-    return.
-  endif.
+    RETURN.
+  ENDIF.
 *Get information for old status
-  if old_status is not initial.
-    select single *
-      from jest
-      into corresponding fields of ls_jest_old
-      where objnr eq objnr
-        and stat  eq old_status.
-  endif.
+  IF old_status IS NOT INITIAL.
+    SELECT SINGLE *
+      FROM jest
+      INTO CORRESPONDING FIELDS OF ls_jest_old
+      WHERE objnr EQ objnr
+        AND stat  EQ old_status.
+  ENDIF.
 
 *Get information for new status
-  select single *
-    from jest
-    into corresponding fields of ls_jest_new
-    where objnr eq objnr
-      and stat  eq new_status.
+  SELECT SINGLE *
+    FROM jest
+    INTO CORRESPONDING FIELDS OF ls_jest_new
+    WHERE objnr EQ objnr
+      AND stat  EQ new_status.
 
-  if sy-subrc ne 0.
+  IF sy-subrc NE 0.
 *  Insert new status
     wa_insert-mandt = sy-mandt.
     wa_insert-objnr = objnr.
@@ -77,10 +83,10 @@ function zabsf_pp_set_user_status_vornr .
     wa_insert-obtyp = ls_jsto-obtyp.
     wa_insert-stsma = ls_jsto-stsma.
 
-    append wa_insert to jest_ins.
+    APPEND wa_insert TO jest_ins.
 
-    clear wa_insert.
-  else.
+    CLEAR wa_insert.
+  ELSE.
 *Update new status
     wa_update-mandt = sy-mandt.
     wa_update-objnr = objnr.
@@ -91,13 +97,13 @@ function zabsf_pp_set_user_status_vornr .
     wa_update-obtyp = ls_jsto-obtyp.
     wa_update-stsma = ls_jsto-stsma.
 
-    append wa_update to jest_upd.
+    APPEND wa_update TO jest_upd.
 
-    clear wa_update.
-  endif.
+    CLEAR wa_update.
+  ENDIF.
 
 *Update old status to inative
-  if old_status is not initial.
+  IF old_status IS NOT INITIAL.
     wa_update-mandt = sy-mandt.
     wa_update-objnr = objnr.
     wa_update-stat = old_status.
@@ -107,40 +113,45 @@ function zabsf_pp_set_user_status_vornr .
     wa_update-obtyp = ls_jsto-obtyp.
     wa_update-stsma = ls_jsto-stsma.
 
-    append wa_update to jest_upd.
+    APPEND wa_update TO jest_upd.
 
-  endif.
-  call function 'STATUS_UPDATE'
-    tables
+  ENDIF.
+  CALL FUNCTION 'STATUS_UPDATE'
+    TABLES
       jest_ins = jest_ins
       jest_upd = jest_upd
       jsto_ins = jsto_ins
       jsto_upd = jsto_upd
       obj_del  = obj_del.
 
-  if sy-subrc eq 0.
-    call function 'BALW_BAPIRETURN_GET2'
-      exporting
+  IF sy-subrc EQ 0.
+    CALL FUNCTION 'BALW_BAPIRETURN_GET2'
+      EXPORTING
         type   = 'S'
         cl     = message_class
         number = '013'
-      importing
+      IMPORTING
         return = return.
 
-    call function 'BAPI_TRANSACTION_COMMIT'
-      exporting
+    CALL FUNCTION 'BAPI_TRANSACTION_COMMIT'
+      EXPORTING
         wait = 'X'.
-  else.
-    call function 'BALW_BAPIRETURN_GET2'
-      exporting
+  ELSE.
+    CALL FUNCTION 'BALW_BAPIRETURN_GET2'
+      EXPORTING
         type   = 'E'
         cl     = message_class
         number = '012'
-      importing
+      IMPORTING
         return = return.
 
-    call function 'BAPI_TRANSACTION_ROLLBACK'.
+    CALL FUNCTION 'BAPI_TRANSACTION_ROLLBACK'.
 
-  endif.
+  ENDIF.
 *}   INSERT
-endfunction.
+
+
+
+
+
+ENDFUNCTION.

@@ -4,10 +4,8 @@
   <asx:values>
    <DD02V>
     <TABNAME>ZABSF_PP016</TABNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <TABCLASS>TRANSP</TABCLASS>
     <CLIDEP>X</CLIDEP>
-    <DDTEXT>Shopfloor - Registo de Tempos</DDTEXT>
     <CONTFLAG>A</CONTFLAG>
     <EXCLASS>4</EXCLASS>
    </DD02V>
@@ -309,7 +307,22 @@
      <ADMINFIELD>0</ADMINFIELD>
      <COMPTYPE>E</COMPTYPE>
     </DD03P>
+    <DD03P>
+     <FIELDNAME>EQUIPMENT</FIELDNAME>
+     <ROLLNAME>CHAR100</ROLLNAME>
+     <ADMINFIELD>0</ADMINFIELD>
+     <COMPTYPE>E</COMPTYPE>
+    </DD03P>
    </DD03P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD02_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Registo de Tempos</DDTEXT>
+    </item>
+   </DD02_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

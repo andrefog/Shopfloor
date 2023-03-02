@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_delcomponents.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_DELCOMPONENTS.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AUFNR) TYPE  AUFNR
 *"     VALUE(VORNR) TYPE  VORNR OPTIONAL
@@ -10,7 +10,7 @@ FUNCTION zabsf_pp_delcomponents.
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
 *"  CHANGING
 *"     VALUE(COMPONENTS_TAB) TYPE  ZABSF_PP_T_COMPONENTS OPTIONAL
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
 *References
   DATA: lref_sf_consum TYPE REF TO zif_absf_pp_consumptions.
 
@@ -71,4 +71,9 @@ FUNCTION zabsf_pp_delcomponents.
 
     DELETE ADJACENT DUPLICATES FROM return_tab.
   ENDIF.
+
+
+
+
+
 ENDFUNCTION.

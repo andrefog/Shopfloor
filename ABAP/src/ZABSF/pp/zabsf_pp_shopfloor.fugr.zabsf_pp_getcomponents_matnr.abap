@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_getcomponents_matnr.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_GETCOMPONENTS_MATNR.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(MATNR) TYPE  MATNR
 *"     VALUE(VORNE) TYPE  PZPNR
@@ -11,8 +11,8 @@ FUNCTION zabsf_pp_getcomponents_matnr.
 *"  EXPORTING
 *"     VALUE(COMPONENTS_TAB) TYPE  ZABSF_PP_T_COMPONENTS
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_consum TYPE REF TO zif_absf_pp_consumptions.
+*"--------------------------------------------------------------------
+DATA lref_sf_consum TYPE REF TO zif_absf_pp_consumptions.
 
   DATA: ld_class  TYPE recaimplclname,
         ld_method TYPE seocmpname.
@@ -57,4 +57,9 @@ FUNCTION zabsf_pp_getcomponents_matnr.
         return_tab     = return_tab.
 
     DELETE ADJACENT DUPLICATES FROM return_tab.
+
+
+
+
+
 ENDFUNCTION.

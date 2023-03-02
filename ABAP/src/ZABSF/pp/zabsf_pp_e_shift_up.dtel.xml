@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_SHIFT_UP</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>INT4</DOMNAME>
     <HEADLEN>35</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>35</SCRLEN3>
-    <DDTEXT>Shopfloor - Disponibilidade do Turno(Posterior)</DDTEXT>
-    <REPTEXT>Disponibilidade do Turno(Posterior)</REPTEXT>
-    <SCRTEXT_S>DispTurnPo</SCRTEXT_S>
-    <SCRTEXT_M>DispTurnPost</SCRTEXT_M>
-    <SCRTEXT_L>Disponibilidade do Turno(Posterior)</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Disponibilidade do Turno(Posterior)</DDTEXT>
+     <REPTEXT>Disponibilidade do Turno(Posterior)</REPTEXT>
+     <SCRTEXT_S>DispTurnPo</SCRTEXT_S>
+     <SCRTEXT_M>DispTurnPost</SCRTEXT_M>
+     <SCRTEXT_L>Disponibilidade do Turno(Posterior)</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

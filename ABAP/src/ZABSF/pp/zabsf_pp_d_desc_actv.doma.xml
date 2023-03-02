@@ -4,13 +4,20 @@
   <asx:values>
    <DD01V>
     <DOMNAME>ZABSF_PP_D_DESC_ACTV</DOMNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DATATYPE>CHAR</DATATYPE>
     <LENG>000030</LENG>
     <OUTPUTLEN>000030</OUTPUTLEN>
     <LOWERCASE>X</LOWERCASE>
-    <DDTEXT>Shopfloor - Descrição da actividade</DDTEXT>
    </DD01V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD01_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Descrição da actividade</DDTEXT>
+    </item>
+   </DD01_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

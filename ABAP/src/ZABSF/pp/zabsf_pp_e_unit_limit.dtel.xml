@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_UNIT_LIMIT</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>MEINS</DOMNAME>
     <HEADLEN>31</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>17</SCRLEN2>
     <SCRLEN3>31</SCRLEN3>
-    <DDTEXT>Shopfloor - Unidade de Medida do Cronómetro</DDTEXT>
-    <REPTEXT>Unidade de Medida do Cronómetro</REPTEXT>
-    <SCRTEXT_S>Unidade</SCRTEXT_S>
-    <SCRTEXT_M>Unidade de Medida</SCRTEXT_M>
-    <SCRTEXT_L>Unidade de Medida do Cronómetro</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Unidade de Medida do Cronómetro</DDTEXT>
+     <REPTEXT>Unidade de Medida do Cronómetro</REPTEXT>
+     <SCRTEXT_S>Unidade</SCRTEXT_S>
+     <SCRTEXT_M>Unidade de Medida</SCRTEXT_M>
+     <SCRTEXT_L>Unidade de Medida do Cronómetro</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

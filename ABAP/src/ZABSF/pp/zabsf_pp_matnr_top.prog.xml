@@ -8,13 +8,6 @@
     <RLOAD>P</RLOAD>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <TPOOL>
-    <item>
-     <ID>R</ID>
-     <ENTRY>Include Z_LP_PP_SF_MATNR_TOP</ENTRY>
-     <LENGTH>28</LENGTH>
-    </item>
-   </TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

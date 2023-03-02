@@ -8,13 +8,6 @@
     <RLOAD>P</RLOAD>
     <UCCHECK>X</UCCHECK>
    </PROGDIR>
-   <TPOOL>
-    <item>
-     <ID>R</ID>
-     <ENTRY>Include ZABSF_DASHBOARD_JOB_F01</ENTRY>
-     <LENGTH>31</LENGTH>
-    </item>
-   </TPOOL>
   </asx:values>
  </asx:abap>
 </abapGit>

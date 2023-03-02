@@ -2,7 +2,6 @@
 <abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
-   <AREAT>atualização ampliada de tabelas (gerada)</AREAT>
    <INCLUDES>
     <SOBJ_NAME>LZABSF_PP_V_SF029F00</SOBJ_NAME>
     <SOBJ_NAME>LZABSF_PP_V_SF029I00</SOBJ_NAME>
@@ -482,7 +481,6 @@
        <FORMAT>CHAR</FORMAT>
        <FROM_DICT>X</FROM_DICT>
        <MODIFIC>X</MODIFIC>
-       <FOREIGNKEY>X</FOREIGNKEY>
        <OUTPUT_FLD>X</OUTPUT_FLD>
        <REQU_ENTRY>N</REQU_ENTRY>
        <DICT_I_FKY>X</DICT_I_FKY>
@@ -523,7 +521,6 @@
        <FORMAT>CHAR</FORMAT>
        <FROM_DICT>X</FROM_DICT>
        <MODIFIC>X</MODIFIC>
-       <FOREIGNKEY>X</FOREIGNKEY>
        <OUTPUT_FLD>X</OUTPUT_FLD>
        <REQU_ENTRY>N</REQU_ENTRY>
        <DICT_I_FKY>X</DICT_I_FKY>
@@ -543,7 +540,6 @@
        <FORMAT>CHAR</FORMAT>
        <FROM_DICT>X</FROM_DICT>
        <MODIFIC>X</MODIFIC>
-       <FOREIGNKEY>X</FOREIGNKEY>
        <OUTPUT_FLD>X</OUTPUT_FLD>
        <REQU_ENTRY>N</REQU_ENTRY>
        <DICT_I_FKY>X</DICT_I_FKY>
@@ -562,7 +558,6 @@
        <FORMAT>CHAR</FORMAT>
        <FROM_DICT>X</FROM_DICT>
        <MODIFIC>X</MODIFIC>
-       <FOREIGNKEY>X</FOREIGNKEY>
        <INPUT_FLD>X</INPUT_FLD>
        <OUTPUT_FLD>X</OUTPUT_FLD>
        <DICT_I_FKY>X</DICT_I_FKY>
@@ -588,6 +583,9 @@
       </RPY_DYFATC>
      </FIELDS>
      <FLOW_LOGIC>
+      <RPY_DYFLOW>
+       <LINE>* VCL-Modifications</LINE>
+      </RPY_DYFLOW>
       <RPY_DYFLOW>
        <LINE>PROCESS BEFORE OUTPUT.</LINE>
       </RPY_DYFLOW>
@@ -670,6 +668,9 @@
        <LINE>    FIELD ZABSF_PP_V_SF029-WARE_NEXT .</LINE>
       </RPY_DYFLOW>
       <RPY_DYFLOW>
+       <LINE>    FIELD ZABSF_PP_V_SF029-WARE_DEFECT.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
        <LINE>    MODULE LISTE_UPDATE_LISTE.</LINE>
       </RPY_DYFLOW>
       <RPY_DYFLOW>
@@ -680,6 +681,24 @@
       </RPY_DYFLOW>
       <RPY_DYFLOW>
        <LINE> MODULE LISTE_AFTER_LOOP.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>*</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>PROCESS ON VALUE-REQUEST.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>    FIELD  ZABSF_PP_V_SF029-WARE_NEXT MODULE VCL_HELP_VALUES.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>    FIELD  ZABSF_PP_V_SF029-WARE_DEFECT MODULE VCL_HELP_VALUES.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>    FIELD  ZABSF_PP_V_SF029-WAREID MODULE VCL_HELP_VALUES.</LINE>
+      </RPY_DYFLOW>
+      <RPY_DYFLOW>
+       <LINE>    FIELD  ZABSF_PP_V_SF029-AREAID MODULE VCL_HELP_VALUES.</LINE>
       </RPY_DYFLOW>
      </FLOW_LOGIC>
     </item>

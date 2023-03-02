@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_getwrkcenter_detail .
+FUNCTION ZABSF_PP_GETWRKCENTER_DETAIL.
 *"----------------------------------------------------------------------
-*"*"Interface local:
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AREADID) TYPE  ZABSF_PP_E_AREAID OPTIONAL
 *"     VALUE(WERKS) TYPE  WERKS_D OPTIONAL
@@ -10,12 +10,12 @@ FUNCTION zabsf_pp_getwrkcenter_detail .
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"     VALUE(AUFNR) TYPE  AUFNR OPTIONAL
 *"     VALUE(VORNR) TYPE  VORNR OPTIONAL
+*"     VALUE(IT_ISTAT_FILTERS) TYPE  STRING_TABLE OPTIONAL
 *"  EXPORTING
 *"     VALUE(WRKCTR_DETAIL) TYPE  ZABSF_PP_S_WRKCTR_DETAIL
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
 *"----------------------------------------------------------------------
-
-  DATA: lref_sf_wrkctr     TYPE REF TO zabsf_pp_cl_wrkctr,
+DATA: lref_sf_wrkctr     TYPE REF TO zabsf_pp_cl_wrkctr,
         lref_sf_parameters TYPE REF TO zabsf_pp_cl_parameters.
 
   DATA ls_return TYPE bapiret2.
@@ -33,6 +33,7 @@ FUNCTION zabsf_pp_getwrkcenter_detail .
       arbpl         = arbpl
       aufnr         = aufnr
       vornr         = vornr
+      IT_ISTAT_FILTERS = IT_ISTAT_FILTERS
     CHANGING
       wrkctr_detail = wrkctr_detail
       return_tab    = return_tab.

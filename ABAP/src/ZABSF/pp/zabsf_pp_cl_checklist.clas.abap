@@ -35,7 +35,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_CHECKLIST IMPLEMENTATION.
 
 
-  METHOD CONSTRUCTOR.
+METHOD CONSTRUCTOR.
 
 *ref. date
   refdt = initial_refdt.
@@ -45,7 +45,7 @@ CLASS ZABSF_PP_CL_CHECKLIST IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_checklist.
+METHOD get_checklist.
 
     DATA: ls_checklist TYPE zabsf_pp_s_checklist,
           ls_v_equi    TYPE v_equi,
@@ -127,7 +127,7 @@ CLASS ZABSF_PP_CL_CHECKLIST IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD set_checklist.
+METHOD set_checklist.
 
     CONSTANTS: gc_ok(5)  VALUE '[OK.]:',
                gc_nok(5) VALUE '[NOK]:',
@@ -200,7 +200,7 @@ CLASS ZABSF_PP_CL_CHECKLIST IMPLEMENTATION.
                   <fs_notes>     TYPE ty_notes.
 
 * set local language
-    lv_spras = inputobj-language.
+    lv_spras = sy-langu.
     SET LOCALE LANGUAGE lv_spras.
 
 * get order type

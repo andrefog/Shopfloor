@@ -5,10 +5,8 @@
    <DD25V>
     <VIEWNAME>ZABSF_PP_V_SF019</VIEWNAME>
     <AS4LOCAL>A</AS4LOCAL>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <AGGTYPE>V</AGGTYPE>
     <ROOTTAB>ZABSF_PP058</ROOTTAB>
-    <DDTEXT>Shopfloor - Excepções hierarquia sucata</DDTEXT>
     <VIEWCLASS>C</VIEWCLASS>
     <CUSTOMAUTH>C</CUSTOMAUTH>
     <GLOBALFLAG>X</GLOBALFLAG>
@@ -48,6 +46,15 @@
      <LOGFLAG>X</LOGFLAG>
     </DD27P>
    </DD27P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD25_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Excepções hierarquia sucata</DDTEXT>
+    </item>
+   </DD25_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

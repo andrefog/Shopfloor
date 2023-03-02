@@ -77,7 +77,44 @@
      <LANGU>P</LANGU>
      <DESCRIPT>Indica nova data de referência de seleção</DESCRIPT>
     </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>SET_SCRAP_RPOINT</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Indicar quantidade de socata por material</DESCRIPT>
+    </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_RPOINT_DETAIL</CMPNAME>
+     <SCONAME>RPOINT_DETAIL</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Detalhe dos Pontos de Contagem</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_SCRAP_RPOINT</CMPNAME>
+     <SCONAME>IS_INPUTOBJ</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_SCRAP_RPOINT</CMPNAME>
+     <SCONAME>PLANORDER</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Nº ordem planejada</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_SCRAP_RPOINT</CMPNAME>
+     <SCONAME>REFDT</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Data</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>SET_SCRAP_RPOINT</CMPNAME>
+     <SCONAME>SCRAP_TAB</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - Quantidade deSUCATA e tipo de defeito</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>

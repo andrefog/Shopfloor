@@ -4,20 +4,33 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_HOURS_CHG</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <DOMNAME>NUMC02</DOMNAME>
     <HEADLEN>55</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Shopfloor - Nr Horas abertas para modificação</DDTEXT>
-    <REPTEXT>Horas Abertas Modificação</REPTEXT>
-    <SCRTEXT_S>HrAbertMod</SCRTEXT_S>
-    <SCRTEXT_M>Hrs Abertas Modif</SCRTEXT_M>
-    <SCRTEXT_L>Horas Abertas Modificação</SCRTEXT_L>
+    <DDTEXT>Shopfloor - Nr Hours open for modify</DDTEXT>
+    <REPTEXT>Hours Open for Modify</REPTEXT>
+    <SCRTEXT_S>HrsOpenMod</SCRTEXT_S>
+    <SCRTEXT_M>Hrs Open Modify</SCRTEXT_M>
+    <SCRTEXT_L>Hours Open for Modify</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Nr Horas abertas para modificação</DDTEXT>
+     <REPTEXT>Horas Abertas Modificação</REPTEXT>
+     <SCRTEXT_S>HrAbertMod</SCRTEXT_S>
+     <SCRTEXT_M>Hrs Abertas Modif</SCRTEXT_M>
+     <SCRTEXT_L>Horas Abertas Modificação</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

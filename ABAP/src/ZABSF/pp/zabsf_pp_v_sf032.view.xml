@@ -5,10 +5,8 @@
    <DD25V>
     <VIEWNAME>ZABSF_PP_V_SF032</VIEWNAME>
     <AS4LOCAL>A</AS4LOCAL>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <AGGTYPE>V</AGGTYPE>
     <ROOTTAB>ZABSF_PP043</ROOTTAB>
-    <DDTEXT>Shopfloor - Relatórios Planos de Produção</DDTEXT>
     <VIEWCLASS>C</VIEWCLASS>
     <CUSTOMAUTH>C</CUSTOMAUTH>
     <GLOBALFLAG>X</GLOBALFLAG>
@@ -70,6 +68,15 @@
      <FIELDNAME>EXT_FILE</FIELDNAME>
     </DD27P>
    </DD27P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD25_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Relatórios Planos de Produção</DDTEXT>
+    </item>
+   </DD25_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -5,10 +5,8 @@
    <DD25V>
     <VIEWNAME>ZABSF_PP_V_SF040</VIEWNAME>
     <AS4LOCAL>A</AS4LOCAL>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <AGGTYPE>V</AGGTYPE>
     <ROOTTAB>ZABSF_PP061</ROOTTAB>
-    <DDTEXT>Shopfloor - Línguas</DDTEXT>
     <VIEWCLASS>C</VIEWCLASS>
     <CUSTOMAUTH>C</CUSTOMAUTH>
     <GLOBALFLAG>X</GLOBALFLAG>
@@ -56,6 +54,15 @@
      <VALEXI>X</VALEXI>
     </DD27P>
    </DD27P_TABLE>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD25_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Línguas</DDTEXT>
+    </item>
+   </DD25_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

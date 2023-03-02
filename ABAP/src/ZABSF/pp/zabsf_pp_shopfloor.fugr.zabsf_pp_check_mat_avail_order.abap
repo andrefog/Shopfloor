@@ -1,14 +1,13 @@
-function zabsf_pp_check_mat_avail_order .
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_CHECK_MAT_AVAIL_ORDER.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AUFNR) TYPE  AUFNR
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(ET_MISSING_MATS_TAB) TYPE  ZBAPI_ORDER_RETURN_TT
-*"----------------------------------------------------------------------
-
-  "variávis locais
+*"--------------------------------------------------------------------
+"variávis locais
   data:lv_reset_avail_data_var   type bapi_order_func_cntrl-reset_avail_data,
        lt_orders_tab             type standard table of bapi_order_key,
        ls_orders_str             type bapi_order_key,
@@ -46,4 +45,8 @@ function zabsf_pp_check_mat_avail_order .
     importing
       ex_mssing_mats_descript_tab = et_missing_mats_tab.
 
-endfunction.
+
+
+
+
+ENDFUNCTION.

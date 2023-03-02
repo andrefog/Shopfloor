@@ -4,21 +4,28 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSFSEQUENCE</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <HEADLEN>10</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Número sequencial da etapa do processo</DDTEXT>
-    <REPTEXT>Nº seq.</REPTEXT>
-    <SCRTEXT_S>Nº seq.</SCRTEXT_S>
-    <SCRTEXT_M>Nº sequencial</SCRTEXT_M>
-    <SCRTEXT_L>Nº sequencial</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <DATATYPE>NUMC</DATATYPE>
     <LENG>000010</LENG>
     <OUTPUTLEN>000010</OUTPUTLEN>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Número sequencial da etapa do processo</DDTEXT>
+     <REPTEXT>Nº seq.</REPTEXT>
+     <SCRTEXT_S>Nº seq.</SCRTEXT_S>
+     <SCRTEXT_M>Nº sequencial</SCRTEXT_M>
+     <SCRTEXT_L>Nº sequencial</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

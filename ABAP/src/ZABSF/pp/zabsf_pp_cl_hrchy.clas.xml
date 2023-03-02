@@ -43,6 +43,20 @@
      <DESCRIPT>Indica nova data de referência de seleção</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_HIERARCHIES</CMPNAME>
+     <SCONAME>OPRID</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - ID de Operador Shopfloor</DESCRIPT>
+    </SEOSUBCOTX>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_HIERARCHY_DETAIL</CMPNAME>
+     <SCONAME>OPRID</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Shopfloor - ID de Operador Shopfloor</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
   </asx:values>
  </asx:abap>
 </abapGit>

@@ -40,7 +40,7 @@ start-of-selection.
                                           im_shopflor_var = p_shopf
                                           im_so_numbr_tab = so_numb[] ).
 
-    catch zcx_bc_exceptions into go_excption_obj.
+    catch zcx_pp_exceptions into go_excption_obj.
       "mostrar mensagem de erro
       message id go_excption_obj->msgid
             type sy-abcde+18(1)

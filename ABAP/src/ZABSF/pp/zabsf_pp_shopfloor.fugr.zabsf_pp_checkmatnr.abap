@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_checkmatnr.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_CHECKMATNR.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(MATNR) TYPE  MATNR
 *"     VALUE(REFDT) TYPE  VVDATUM DEFAULT SY-DATUM
@@ -11,8 +11,8 @@ FUNCTION zabsf_pp_checkmatnr.
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
 *"     VALUE(XCHPF) TYPE  XCHPF
 *"     VALUE(MEINS_OUTPUT) TYPE  MEINS
-*"----------------------------------------------------------------------
-  DATA lref_sf_prdord TYPE REF TO zabsf_pp_cl_prdord.
+*"--------------------------------------------------------------------
+DATA lref_sf_prdord TYPE REF TO zabsf_pp_cl_prdord.
 
   CREATE OBJECT lref_sf_prdord
     EXPORTING
@@ -28,5 +28,9 @@ FUNCTION zabsf_pp_checkmatnr.
       xchpf        = xchpf
       meins_output = meins_output
       return_tab   = return_tab.
+
+
+
+
 
 ENDFUNCTION.

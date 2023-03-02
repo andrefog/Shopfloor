@@ -4,20 +4,27 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_NAME_LABEL</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
     <DOMNAME>CHAR30</DOMNAME>
     <HEADLEN>55</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Name label</DDTEXT>
-    <REPTEXT>Name Label</REPTEXT>
-    <SCRTEXT_S>Name Label</SCRTEXT_S>
-    <SCRTEXT_M>Name Label</SCRTEXT_M>
-    <SCRTEXT_L>Name Label</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Name label</DDTEXT>
+     <REPTEXT>Name Label</REPTEXT>
+     <SCRTEXT_S>Name Label</SCRTEXT_S>
+     <SCRTEXT_M>Name Label</SCRTEXT_M>
+     <SCRTEXT_L>Name Label</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

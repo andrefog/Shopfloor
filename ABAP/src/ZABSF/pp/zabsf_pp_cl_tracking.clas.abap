@@ -1,84 +1,84 @@
-class ZABSF_PP_CL_TRACKING definition
-  public
-  final
-  create public .
+CLASS zabsf_pp_cl_tracking DEFINITION
+  PUBLIC
+  FINAL
+  CREATE PUBLIC .
 
-public section.
+  PUBLIC SECTION.
 
-  class-methods CALCULATE_NUMBER_OF_BATCHES
-    importing
-      !IM_QUANTITY_VAR type MENGE_D
-      !IM_QTTYUNIT_VAR type MEINS
-      !IM_BACTHNUM_VAR type CHARG_D
-      !IM_MATERIAL_VAR type MATNR
-    exporting
-      !ET_RETURN_TAB type BAPIRET2_T
-      !EX_NUMBER_BATCHES_VAR type INT4 .
-  class-methods GET_NEXT_BATCH_NUMBERS
-    importing
-      !IM_QUANTITY_VAR type NRQUAN
-      !IM_SKIPSEQ_VAR type FLAG optional
-    exporting
-      !EX_BATCHNUM_TAB type ZABSF_MOB_TT_NEW_BATCH
-      !EX_ERRORFLAG_VAR type FLAG
-      !ET_RETURN_TAB type BAPIRET2_T .
-  class-methods GET_NEXT_SEQUENCE_NUMBER
-    exporting
-      !EX_ERRORFLAG_VAR type FLAG
-      !EX_SEQUENCER_VAR type ZABSF_PP_E_SEQ
-      !ET_RETURN_TAB type BAPIRET2_T .
-  class-methods UPDATE_SEQUENCE_TABLE
-    importing
-      !IM_NEWBATCH_TAB type ZABSF_MOB_TT_NEW_BATCH
-      !IM_OPRIDVAL_VAR type ZABSF_MOB_E_OPRID
-      !IM_DOCUMENT_VAR type MBLNR
-      !IM_RETBATCH_VAR type CHARG_D optional
-      !IM_SEQLANTK_VAR type ZABSF_PP_E_SEQ_LANTEK optional .
-  class-methods CREATE_BATCH
-    importing
-      !IM_REFBATCH_VAR type CHARG_D
-      !IM_REFMATNR_VAR type MATNR
-      !IM_REFWERKS_VAR type WERKS_D
-      !IT_CHARACTS_TAB type ZABSF_MOB_TT_BATCH_CHARACT
-    exporting
-      !ET_RETURN_TAB type BAPIRET2_T
-      !EX_NEWBATCH_VAR type CHARG_D
-      !EX_ERROR_VAR type FLAG .
-  class-methods CONVERT_CHAR_VALUE_TO_INTERNAL
-    importing
-      !IM_ATNAM_VAR type ATNAM
-      value(IM_ATWRT_VAR) type ATWRT
-    exporting
-      !EX_VALFROM_VAR type ATFLV
-      !EX_VALUETO_VAR type ATFLB
-      !EX_VALUERL_VAR type ATCOD
-      !ET_RETURN_TAB type BAPIRET2_T .
-  class-methods CONVERT_TO_UNITS
-    importing
-      !IM_QUANTITY_VAR type MENGE_D
-      !IM_QTTYUNIT_VAR type MEINS
-      !IM_MATERIAL_VAR type MATNR
-      !IM_BATCHNUM_VAR type CHARG_D
-      !IM_RAISE_ERROR_VAR type BOOLE_D optional
-    exporting
-      !EX_UNITS_VAR type INT4
-      !ET_RETURN_TAB type BAPIRET2_T .
-  class-methods COPY_CHARS_TO_NEW_BATCH
-    importing
-      !IT_CHARSTAB_TAB type ZABSF_PP_TT_BATCH_CHARACT
-      !IM_NEWBATCH_VAR type CHARG_D
-      !IM_MATERIAL_VAR type MATNR
-    exporting
-      !EX_RETURN_TAB type BAPIRET2_T .
-  class-methods CONVERT_TO_MEINS
-    importing
-      !IM_QTTYUNIT_VAR type INT4
-      !IM_MEINS_VAR type MEINS
-      !IM_MATERIAL_VAR type MATNR
-      !IM_BATCHNUM_VAR type CHARG_D
-    exporting
-      !EX_QUANTITY_VAR type MENGE_D
-      !ET_RETURN_TAB type BAPIRET2_T .
+    CLASS-METHODS calculate_number_of_batches
+      IMPORTING
+        !im_quantity_var       TYPE menge_d
+        !im_qttyunit_var       TYPE meins
+        !im_bacthnum_var       TYPE charg_d
+        !im_material_var       TYPE matnr
+      EXPORTING
+        !et_return_tab         TYPE bapiret2_t
+        !ex_number_batches_var TYPE int4 .
+    CLASS-METHODS get_next_batch_numbers
+      IMPORTING
+        !im_quantity_var  TYPE nrquan
+        !im_skipseq_var   TYPE flag OPTIONAL
+      EXPORTING
+        !ex_batchnum_tab  TYPE zabsf_pp_tt_new_batch
+        !ex_errorflag_var TYPE flag
+        !et_return_tab    TYPE bapiret2_t .
+    CLASS-METHODS get_next_sequence_number
+      EXPORTING
+        !ex_errorflag_var TYPE flag
+        !ex_sequencer_var TYPE zabsf_pp_e_seq
+        !et_return_tab    TYPE bapiret2_t .
+    CLASS-METHODS update_sequence_table
+      IMPORTING
+        !im_newbatch_tab TYPE zabsf_pp_tt_new_batch
+        !im_opridval_var TYPE zabsf_pp_e_oprid
+        !im_document_var TYPE mblnr
+        !im_retbatch_var TYPE charg_d OPTIONAL
+        !im_seqlantk_var TYPE zabsf_pp_e_seq_lantek OPTIONAL .
+    CLASS-METHODS create_batch
+      IMPORTING
+        !im_refbatch_var TYPE charg_d
+        !im_refmatnr_var TYPE matnr
+        !im_refwerks_var TYPE werks_d
+        !it_characts_tab TYPE zabsf_pp_tt_batch_charact
+      EXPORTING
+        !et_return_tab   TYPE bapiret2_t
+        !ex_newbatch_var TYPE charg_d
+        !ex_error_var    TYPE flag .
+    CLASS-METHODS convert_char_value_to_internal
+      IMPORTING
+        !im_atnam_var       TYPE atnam
+        VALUE(im_atwrt_var) TYPE atwrt
+      EXPORTING
+        !ex_valfrom_var     TYPE atflv
+        !ex_valueto_var     TYPE atflb
+        !ex_valuerl_var     TYPE atcod
+        !et_return_tab      TYPE bapiret2_t .
+    CLASS-METHODS convert_to_units
+      IMPORTING
+        !im_quantity_var    TYPE menge_d
+        !im_qttyunit_var    TYPE meins
+        !im_material_var    TYPE matnr
+        !im_batchnum_var    TYPE charg_d
+        !im_raise_error_var TYPE boole_d OPTIONAL
+      EXPORTING
+        !ex_units_var       TYPE int4
+        !et_return_tab      TYPE bapiret2_t .
+    CLASS-METHODS copy_chars_to_new_batch
+      IMPORTING
+        !it_charstab_tab TYPE zabsf_pp_tt_batch_charact
+        !im_newbatch_var TYPE charg_d
+        !im_material_var TYPE matnr
+      EXPORTING
+        !ex_return_tab   TYPE bapiret2_t .
+    CLASS-METHODS convert_to_meins
+      IMPORTING
+        !im_qttyunit_var TYPE int4
+        !im_meins_var    TYPE meins
+        !im_material_var TYPE matnr
+        !im_batchnum_var TYPE charg_d
+      EXPORTING
+        !ex_quantity_var TYPE menge_d
+        !et_return_tab   TYPE bapiret2_t .
 protected section.
 private section.
 ENDCLASS.
@@ -88,7 +88,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
 
 
-  method calculate_number_of_batches.
+method calculate_number_of_batches.
     "converter para unidades
     zabsf_pp_cl_tracking=>convert_to_units( exporting
                                               im_quantity_var    = im_quantity_var
@@ -102,7 +102,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
     "verificar se determinou nº de lotes
     if ex_number_batches_var is initial.
       "Erro ao converter &1 para nº de lotes
-      call method zabsf_mob_cl_log=>add_message
+      call method zabsf_pp_cl_log=>add_message
         exporting
           msgty      = 'E'
           msgno      = '007'
@@ -114,7 +114,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
   endmethod.
 
 
-  method convert_char_value_to_internal.
+method convert_char_value_to_internal.
     "variáveis locais
     data: charactname    type  bapicharactkey-charactname,
           value_from     type  atflv,
@@ -161,7 +161,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
           others            = 6.
       if sy-subrc <> 0.
         "mensagem de erro
-        call method zabsf_mob_cl_log=>add_message
+        call method zabsf_pp_cl_log=>add_message
           exporting
             msgid      = sy-msgid
             msgty      = sy-msgty
@@ -177,7 +177,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
   endmethod.
 
 
-  method convert_to_meins.
+method convert_to_meins.
     "variáveis locais
     data: lr_charmetr_rng  type range of atnam,
           lr_charconv_rng  type range of atnam,
@@ -208,8 +208,8 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
                                                importing
                                                  ex_valrange_tab = lr_char_m2_rng   ).
 
-      catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
-        call method zabsf_mob_cl_log=>add_message
+      catch zcx_pp_exceptions into data(lo_bcexceptions_obj).
+        call method zabsf_pp_cl_log=>add_message
           exporting
             msgty      = lo_bcexceptions_obj->msgty
             msgno      = lo_bcexceptions_obj->msgno
@@ -277,7 +277,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
         ex_quantity_var  = im_qttyunit_var * lv_conv_aux.
       when  others.
         "Unidade &1 sem conversão para unidades
-        call method zabsf_mob_cl_log=>add_message
+        call method zabsf_pp_cl_log=>add_message
           exporting
             msgty      = 'E'
             msgno      = '006'
@@ -291,7 +291,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
 
     if ex_quantity_var is initial.
       "Erro ao converter unidades para &1
-      call method zabsf_mob_cl_log=>add_message
+      call method zabsf_pp_cl_log=>add_message
         exporting
           msgty      = 'E'
           msgno      = '021'
@@ -303,7 +303,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
   endmethod.
 
 
-  method convert_to_units.
+method convert_to_units.
     "variáveis locias
     data: lr_charmetr_rng  type range of atnam,
           lr_charconv_rng  type range of atnam,
@@ -333,8 +333,8 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
                                                importing
                                                  ex_valrange_tab = lr_char_m2_rng   ).
 
-      catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
-        call method zabsf_mob_cl_log=>add_message
+      catch zcx_pp_exceptions into data(lo_bcexceptions_obj).
+        call method zabsf_pp_cl_log=>add_message
           exporting
             msgty      = lo_bcexceptions_obj->msgty
             msgno      = lo_bcexceptions_obj->msgno
@@ -400,7 +400,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
           else.
             if im_raise_error_var eq abap_true.
               "Não é possível dar entrada de unidades parciais
-              call method zabsf_mob_cl_log=>add_message
+              call method zabsf_pp_cl_log=>add_message
                 exporting
                   msgty      = 'E'
                   msgno      = '008'
@@ -425,7 +425,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
           else.
             if im_raise_error_var eq abap_true.
               "Não é possível dar entrada de unidades parciais
-              call method zabsf_mob_cl_log=>add_message
+              call method zabsf_pp_cl_log=>add_message
                 exporting
                   msgty      = 'E'
                   msgno      = '008'
@@ -450,7 +450,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
           else.
             if im_raise_error_var eq abap_true.
               "Não é possível dar entrada de unidades parciais
-              call method zabsf_mob_cl_log=>add_message
+              call method zabsf_pp_cl_log=>add_message
                 exporting
                   msgty      = 'E'
                   msgno      = '008'
@@ -465,7 +465,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
         endif.
       when  others.
         "Unidade &1 sem conversão para unidades
-        call method zabsf_mob_cl_log=>add_message
+        call method zabsf_pp_cl_log=>add_message
           exporting
             msgty      = 'E'
             msgno      = '006'
@@ -477,7 +477,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
   endmethod.
 
 
-  method copy_chars_to_new_batch.
+method copy_chars_to_new_batch.
     "variáveis locais
     data:lt_allocchar       type table of bapi1003_alloc_values_char,
          ls_allocchar       type bapi1003_alloc_values_char,
@@ -589,7 +589,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
   endmethod.
 
 
-  method create_batch.
+method create_batch.
     "constantes
     constants: c_kzcla type t156-kzcla value '1', "Option to classify batches
                c_xkcfc type t156-xkcfc value 'X'. "Extended classification via CFC
@@ -680,7 +680,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
   endmethod.
 
 
-  method get_next_batch_numbers.
+method get_next_batch_numbers.
     "variáveis locais
     data: lv_nextnumb_var type charg_d.
     "limpar variáveis de exportação
@@ -698,7 +698,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
       endif.
       if ex_errorflag_var eq abap_true.
         "mensagem de erro
-        call method zabsf_mob_cl_log=>add_message
+        call method zabsf_pp_cl_log=>add_message
           exporting
             msgid      = sy-msgid
             msgty      = sy-msgty
@@ -750,7 +750,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
       commit work and wait.
       if ex_errorflag_var is not initial.
         "mensagem de erro
-        call method zabsf_mob_cl_log=>add_message
+        call method zabsf_pp_cl_log=>add_message
           exporting
             msgid      = sy-msgid
             msgty      = sy-msgty
@@ -772,7 +772,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
   endmethod.
 
 
-  method get_next_sequence_number.
+method get_next_sequence_number.
     "variáveis locais
     data: lv_nextnumb_var type zabsf_pp_e_seq_range.
     refresh: et_return_tab.
@@ -803,7 +803,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
     commit work and wait.
     if ex_errorflag_var is not initial.
       "mensagem de erro
-      call method zabsf_mob_cl_log=>add_message
+      call method zabsf_pp_cl_log=>add_message
         exporting
           msgid      = sy-msgid
           msgty      = sy-msgty
@@ -822,7 +822,7 @@ CLASS ZABSF_PP_CL_TRACKING IMPLEMENTATION.
   endmethod.
 
 
-  method update_sequence_table.
+method update_sequence_table.
     loop at im_newbatch_tab into data(ls_newbatch_str).
       data(ls_newnetry_str) = value zabsf_sequence_t( sequenciador = ls_newbatch_str-sequenciador
                                                       mblnr        = im_document_var

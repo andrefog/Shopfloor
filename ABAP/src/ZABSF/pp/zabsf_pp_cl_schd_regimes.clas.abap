@@ -45,7 +45,7 @@ ENDCLASS.
 CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
 
 
-  method CONSTRUCTOR.
+method CONSTRUCTOR.
 
 *Ref. Date
   refdt    = initial_refdt.
@@ -57,7 +57,7 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
   endmethod.
 
 
-  METHOD get_info_for_prodorder.
+METHOD get_info_for_prodorder.
 *  Get default language
     SELECT SINGLE spras
       FROM zabsf_pp061
@@ -95,7 +95,7 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
           INTO schedule_desc
          WHERE werks       EQ inputobj-werks
            AND schedule_id EQ ls_pp_sf065-schedule_id
-           AND spras       EQ inputobj-language.
+           AND spras       EQ sy-langu.
 
         IF sy-subrc NE 0.
 *        Get schedule description for default language
@@ -113,7 +113,7 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
           INTO regime_desc
          WHERE werks     EQ inputobj-werks
            AND regime_id EQ ls_pp_sf065-regime_id
-           AND spras     EQ inputobj-language.
+           AND spras     EQ sy-langu.
 
         IF sy-subrc NE 0.
 *        Get regime description for default language
@@ -132,7 +132,7 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_regimes.
+METHOD get_regimes.
 
     DATA: lt_associations TYPE TABLE OF zabsf_pp063,
           lt_regimes_txt  TYPE TABLE OF zabsf_pp062_t,
@@ -161,7 +161,7 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
     SELECT * FROM zabsf_pp062_t INTO TABLE lt_regimes_txt
       FOR ALL ENTRIES IN regimes
            WHERE regime_id = regimes-regime_id
-           AND spras = me->inputobj-language
+           AND spras = sy-langu
            AND werks = me->inputobj-werks.
 
     IF lt_regimes_txt IS INITIAL.
@@ -193,7 +193,7 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD get_schedules.
+METHOD get_schedules.
 
     DATA: lt_schedules     TYPE TABLE OF zabsf_pp060,
           ls_schedules     LIKE LINE OF lt_schedules,
@@ -213,7 +213,7 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
       FOR ALL ENTRIES IN lt_schedules
         WHERE werks EQ me->inputobj-werks
         AND schedule_id EQ lt_schedules-schedule_id
-        AND spras EQ  me->inputobj-language.
+        AND spras EQ sy-langu.
 
     IF lt_schedules_txt IS INITIAL.
 
@@ -232,7 +232,6 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
       ENDIF.
     ENDIF.
 
-
 * get descriptions
     LOOP AT lt_schedules INTO ls_schedules.
 
@@ -246,13 +245,10 @@ CLASS ZABSF_PP_CL_SCHD_REGIMES IMPLEMENTATION.
       CLEAR: ls_schedules, ls_out_schedules.
 
     ENDLOOP.
-
-
-
   ENDMETHOD.
 
 
-  METHOD save_schedules_and_regimes.
+METHOD save_schedules_and_regimes.
 
     DATA: ls_sf065 TYPE zabsf_pp065.
 

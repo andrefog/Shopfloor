@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_BC_FIXED_VALUES</CLSNAME>
+    <LANGU>P</LANGU>
+    <DESCRIPT>Classe leitura de valores fixos</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_ALL_OP_TP_AREA_CST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_DEFAULT_ALTREWORKDEP</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_DEFAULT_EXECUTABLE_NAME</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_DEFAULT_PDF_DIRECTORY</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_DEFAULT_SHIFT_CST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_DEFAULT_WERKS_CST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_REFRESH_TIME</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_REG_TIME_QUANT_CST</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GC_TOLERANCE</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>ID Parâmetro</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+   <DESCRIPTIONS_SUB>
+    <SEOSUBCOTX>
+     <CMPNAME>GET_RANGES_VALUE</CMPNAME>
+     <SCONAME>IM_WERKS</SCONAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Centro</DESCRIPT>
+    </SEOSUBCOTX>
+   </DESCRIPTIONS_SUB>
+  </asx:values>
+ </asx:abap>
+</abapGit>

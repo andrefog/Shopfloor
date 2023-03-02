@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_setgoodsmvt_matnr.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_SETGOODSMVT_MATNR.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(MATNR) TYPE  MATNR
 *"     VALUE(VORNE) TYPE  PZPNR
@@ -12,8 +12,8 @@ FUNCTION zabsf_pp_setgoodsmvt_matnr.
 *"     VALUE(INPUTOBJ) TYPE  ZABSF_PP_S_INPUTOBJECT
 *"  EXPORTING
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
-  DATA lref_sf_consum TYPE REF TO zif_absf_pp_consumptions.
+*"--------------------------------------------------------------------
+DATA lref_sf_consum TYPE REF TO zif_absf_pp_consumptions.
 
   DATA: ld_class  TYPE recaimplclname,
         ld_method TYPE seocmpname.
@@ -57,4 +57,9 @@ FUNCTION zabsf_pp_setgoodsmvt_matnr.
         components_tab = components_tab
       CHANGING
         return_tab     = return_tab.
+
+
+
+
+
 ENDFUNCTION.

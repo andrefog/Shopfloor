@@ -18,14 +18,34 @@
      <DESCRIPT>Construtor</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>DST_PRINT_PP_LABEL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Impressão etiqueta Produção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>GET_PRODUCTION_LABELS_DATA</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Obter dados das etiquetas de produção</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>INPUTOBJ</CMPNAME>
      <LANGU>P</LANGU>
      <DESCRIPT>Shopfloor - Dados de entrada</DESCRIPT>
     </SEOCOMPOTX>
     <SEOCOMPOTX>
+     <CMPNAME>PRINT_SHORT_LABEL</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Impressão etiqueta Lite</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
      <CMPNAME>REFDT</CMPNAME>
      <LANGU>P</LANGU>
      <DESCRIPT>Data de referência</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CMPNAME>VENDOR_PP_LABEL_PROCESS</CMPNAME>
+     <LANGU>P</LANGU>
+     <DESCRIPT>Processo de impressão etiquetas fornecedor</DESCRIPT>
     </SEOCOMPOTX>
    </DESCRIPTIONS>
   </asx:values>

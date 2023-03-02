@@ -1,17 +1,18 @@
-FUNCTION z_pp10_data_to_create_batch.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION Z_PP10_DATA_TO_CREATE_BATCH.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     REFERENCE(IV_FIRST_CYCLE) TYPE  FLAG OPTIONAL
 *"     REFERENCE(IV_SHIFTID) TYPE  ZABSF_PP_E_SHIFTID OPTIONAL
-*"     REFERENCE(IS_INPUTOBJECT) TYPE  ZABSF_PP_S_INPUTOBJECT OPTIONAL
+*"     REFERENCE(IS_INPUTOBJECT) TYPE  ZABSF_PP_S_INPUTOBJECT
+*"         OPTIONAL
 *"     REFERENCE(IV_REFDT) TYPE  VVDATUM OPTIONAL
 *"     REFERENCE(IT_GOODMOVEMENTS) TYPE  ZABSF_PP_T_GOODMOVEMENTS
 *"  EXPORTING
 *"     REFERENCE(EV_NEW_BATCH) TYPE  CHARG_D
 *"  TABLES
 *"      RETURN_TAB STRUCTURE  BAPIRET2
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
 *Internal tables
   DATA: lt_return     TYPE TABLE OF bapiret2,
         lt_return_tab TYPE bapiret2_t.
@@ -440,4 +441,9 @@ FUNCTION z_pp10_data_to_create_batch.
       ENDIF.
     ENDIF.
   ENDLOOP.
+
+
+
+
+
 ENDFUNCTION.

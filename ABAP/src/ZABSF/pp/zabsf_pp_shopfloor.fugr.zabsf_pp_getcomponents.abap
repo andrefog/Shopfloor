@@ -1,6 +1,6 @@
-FUNCTION zabsf_pp_getcomponents.
-*"----------------------------------------------------------------------
-*"*"Interface local:
+FUNCTION ZABSF_PP_GETCOMPONENTS.
+*"--------------------------------------------------------------------
+*"*"Local Interface:
 *"  IMPORTING
 *"     VALUE(AUFNR) TYPE  AUFNR OPTIONAL
 *"     VALUE(VORNR) TYPE  VORNR OPTIONAL
@@ -12,7 +12,7 @@ FUNCTION zabsf_pp_getcomponents.
 *"  EXPORTING
 *"     VALUE(COMPONENTS_TAB) TYPE  ZABSF_PP_T_COMPONENTS
 *"     VALUE(RETURN_TAB) TYPE  BAPIRET2_T
-*"----------------------------------------------------------------------
+*"--------------------------------------------------------------------
 *References
   DATA: lref_sf_consum TYPE REF TO zabsf_pp_cl_consumptions. "zif_absf_pp_consumptions.
 
@@ -88,6 +88,7 @@ FUNCTION zabsf_pp_getcomponents.
         EXPORTING
           aufnr           = aufnr
           vornr           = vornr
+          areaid          = inputobj-areaid
           for_subproducts = for_subproducts
         CHANGING
           components_tab  = components_tab
@@ -152,6 +153,9 @@ FUNCTION zabsf_pp_getcomponents.
 * Implement suitable error handling here
     ENDIF.
   ENDLOOP.
+
+
+
 
 
 ENDFUNCTION.

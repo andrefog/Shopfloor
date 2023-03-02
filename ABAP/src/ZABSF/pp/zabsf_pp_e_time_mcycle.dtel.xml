@@ -4,20 +4,33 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_TIME_MCYCLE</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <DOMNAME>INT4</DOMNAME>
     <HEADLEN>55</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>20</SCRLEN2>
     <SCRLEN3>40</SCRLEN3>
-    <DDTEXT>Shopfloor - Tempo Teórico Ciclo de Molde</DDTEXT>
-    <REPTEXT>Tempo Teórico Ciclo de Molde</REPTEXT>
-    <SCRTEXT_S>tmp.Molde</SCRTEXT_S>
-    <SCRTEXT_M>Tmp.Teórico Ciclo M</SCRTEXT_M>
-    <SCRTEXT_L>Tempo Teórico Ciclo de Molde</SCRTEXT_L>
+    <DDTEXT>Shopfloor PM - Status</DDTEXT>
+    <REPTEXT>Time Mould Cycle</REPTEXT>
+    <SCRTEXT_S>Tm MCycle</SCRTEXT_S>
+    <SCRTEXT_M>Time Mould Cycle</SCRTEXT_M>
+    <SCRTEXT_L>Time Mould Cycle</SCRTEXT_L>
     <DTELMASTER>E</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Tempo Teórico Ciclo de Molde</DDTEXT>
+     <REPTEXT>Tempo Teórico Ciclo de Molde</REPTEXT>
+     <SCRTEXT_S>tmp.Molde</SCRTEXT_S>
+     <SCRTEXT_M>Tmp.Teórico Ciclo M</SCRTEXT_M>
+     <SCRTEXT_L>Tempo Teórico Ciclo de Molde</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

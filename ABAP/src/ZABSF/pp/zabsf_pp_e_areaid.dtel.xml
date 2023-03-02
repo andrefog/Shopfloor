@@ -4,20 +4,33 @@
   <asx:values>
    <DD04V>
     <ROLLNAME>ZABSF_PP_E_AREAID</ROLLNAME>
-    <DDLANGUAGE>P</DDLANGUAGE>
+    <DDLANGUAGE>E</DDLANGUAGE>
     <DOMNAME>ZABSF_PP_D_AREAID</DOMNAME>
     <HEADLEN>04</HEADLEN>
     <SCRLEN1>10</SCRLEN1>
     <SCRLEN2>15</SCRLEN2>
     <SCRLEN3>20</SCRLEN3>
-    <DDTEXT>Shopfloor - Área</DDTEXT>
-    <REPTEXT>Área</REPTEXT>
-    <SCRTEXT_S>Área</SCRTEXT_S>
-    <SCRTEXT_M>Área</SCRTEXT_M>
-    <SCRTEXT_L>Área</SCRTEXT_L>
+    <DDTEXT>Shopfloor - Area</DDTEXT>
+    <REPTEXT>Area</REPTEXT>
+    <SCRTEXT_S>Area</SCRTEXT_S>
+    <SCRTEXT_M>Area</SCRTEXT_M>
+    <SCRTEXT_L>Area</SCRTEXT_L>
     <DTELMASTER>P</DTELMASTER>
     <REFKIND>D</REFKIND>
    </DD04V>
+   <I18N_LANGS>
+    <LANGU>P</LANGU>
+   </I18N_LANGS>
+   <DD04_TEXTS>
+    <item>
+     <DDLANGUAGE>P</DDLANGUAGE>
+     <DDTEXT>Shopfloor - Área</DDTEXT>
+     <REPTEXT>Área</REPTEXT>
+     <SCRTEXT_S>Área</SCRTEXT_S>
+     <SCRTEXT_M>Área</SCRTEXT_M>
+     <SCRTEXT_L>Área</SCRTEXT_L>
+    </item>
+   </DD04_TEXTS>
   </asx:values>
  </asx:abap>
 </abapGit>

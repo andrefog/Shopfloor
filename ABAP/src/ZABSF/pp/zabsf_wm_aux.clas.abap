@@ -29,7 +29,7 @@ ENDCLASS.
 CLASS ZABSF_WM_AUX IMPLEMENTATION.
 
 
-  METHOD create_to.
+METHOD create_to.
 *
 *    DATA: lv_tanum      TYPE tanum,
 *          lt_ltap_creat TYPE TABLE OF ltap_creat,

@@ -15,7 +15,7 @@
     <S_PLATIN>X</S_PLATIN>
    </TSTCC>
    <TSTCT>
-    <SPRSL>P</SPRSL>
+    <SPRSL>E</SPRSL>
     <TCODE>ZABSF_PPREPORT_MATNR</TCODE>
     <TTEXT>Report registo por material</TTEXT>
    </TSTCT>

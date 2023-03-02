@@ -60,7 +60,7 @@ function zabsf_pp_stocks.
       append lines of lr_halb_rng to lr_mart_rng.
       append lines of lr_fert_rng to lr_mart_rng.
 
-    catch zcx_bc_exceptions into data(lo_bcexceptions_obj).
+    catch zcx_pp_exceptions into data(lo_bcexceptions_obj).
       "mostrar mensagem de erro
       "falta configuração
       call method zabsf_pp_cl_log=>add_message
@@ -95,7 +95,7 @@ function zabsf_pp_stocks.
                                              importing
                                                ex_valrange_tab = lr_pf_rng ).
 
-    catch zcx_bc_exceptions into data(lo_excpetion_obj).  ##NEEDED
+    catch zcx_pp_exceptions into data(lo_excpetion_obj).  ##NEEDED
       "falta configuração
       call method zabsf_pp_cl_log=>add_message
         exporting
@@ -120,7 +120,7 @@ function zabsf_pp_stocks.
                                              importing
                                                ex_valrange_tab = lr_name_rng ).
 
-    catch zcx_bc_exceptions into lo_excpetion_obj.  ##NEEDED
+    catch zcx_pp_exceptions into lo_excpetion_obj.  ##NEEDED
       "falta configuração
       call method zabsf_pp_cl_log=>add_message
         exporting
